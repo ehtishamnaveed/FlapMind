@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // #include <SFML/Graphics.hpp>
 // #include "../Header/GameManager.h"
 // #include "../Header/Game.h"
@@ -22,6 +23,8 @@
 // }
 
 
+=======
+>>>>>>> d45a4c28e6ca61ae5d00cadee7f4dba1dfe12a10
 #include <SFML/Graphics.hpp>
 #include "../Header/GameManager.h"
 #include "../Header/Game.h"
@@ -41,12 +44,7 @@ int main() {
     sf::Event event;
     while (window.isOpen()) {
         if (window.pollEvent(event)) {
-            // if (event.type == sf::Event::Closed) {
-            //     window.close();
-            // }
-            // else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-            //     Game::gameState = true;
-            // }
+>>>>>>> d45a4c28e6ca61ae5d00cadee7f4dba1dfe12a10
             gameController.eventHandler(window,event);
         }
 
