@@ -9,12 +9,16 @@ namespace Game {
     public:
         GameManager();
         void renderDisplay(sf::RenderWindow& i_window);
-        void run(sf::RenderWindow& i_window);
+        void runGame(sf::RenderWindow& i_window);
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes) ;
 
         void updateScore();
         void resetGameState();
         void resetScore();
+
+        // Event Handler functions
+        void KeyPressedHandler(const sf::Keyboard::Key&);
+        void eventHandler(sf::RenderWindow& i_window, const sf::Event& event);
 
     private:
         Bird bird;

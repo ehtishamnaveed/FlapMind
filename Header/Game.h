@@ -5,6 +5,7 @@
 
 namespace Game {
     extern const float gravity;
+    extern bool gameState;
 
     namespace Screen {
         extern const short screenWidth;
