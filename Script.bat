@@ -18,17 +18,14 @@ goto :menu
 
 :build_project
     make
-    pause
     goto :eof
 
 :run_project
     make run
-    pause
     goto :eof
 
 :clean_project
     make clean
-    pause
     goto :eof
 
 :exit

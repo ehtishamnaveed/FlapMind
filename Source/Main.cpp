@@ -1,60 +1,55 @@
-<<<<<<< HEAD
-// #include <SFML/Graphics.hpp>
-// #include "../Header/GameManager.h"
-// #include "../Header/Game.h"
-
-// int main() {
-//     sf::RenderWindow window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds");
-//     Game::GameManager FlappyBirds;
-    
-//     sf::Event event;
-//     while (window.isOpen()) {
-//         while (window.pollEvent(event)) {
-//             if (event.type == sf::Event::Closed) {
-//                 window.close();
-//             }
-//         }
-//         Game::Screen::drawBackground(window);
-//         FlappyBirds.run(window);
-//         window.display();
-//     }
-
-//     return 0;
-// }
-
-
-=======
->>>>>>> d45a4c28e6ca61ae5d00cadee7f4dba1dfe12a10
 #include <SFML/Graphics.hpp>
 #include "../Header/GameManager.h"
 #include "../Header/Game.h"
+#include "../Header/UI.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds");
+    window.setFramerateLimit(30);
     
     sf::Texture background_texture;
     sf::Sprite background_sprite;
 
     Game::GameManager gameController;
+    UI::MainMenu Menu;
 
-    // Draw the MainScreen initially
-    Game::Screen::drawScreen(window,background_texture,background_sprite,"MainScreen.png");
-    window.display();
-
-    sf::Event event;
     while (window.isOpen()) {
-        if (window.pollEvent(event)) {
->>>>>>> d45a4c28e6ca61ae5d00cadee7f4dba1dfe12a10
-            gameController.eventHandler(window,event);
-        }
+        window.clear();
 
-        if (Game::gameState) {
-            // Draw the background and run the game
-            Game::Screen::drawScreen(window,background_texture,background_sprite,"background.png");
-            gameController.runGame(window);
-            window.display();
+        sf::Event event;
+        if (window.pollEvent(event)){
+            switch (event.type) {
+                // Close the window if the close button is pressed
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+
+                // Handle key presses
+                case sf::Event::KeyPressed:
+
+                    switch (event.key.code) {
+                        // Start the game when the Enter key is pressed
+                        case sf::Keyboard::Enter:
+                            // gameController.runGame(window);
+                            break;
+
+                        case sf::Keyboard::Up:
+                            Menu.moveUp();
+                            break;
+
+                        case sf::Keyboard::Down:
+                            Menu.moveDown();
+                            break;
+                    }
+                    break;
+            }
         }
+        Game::Screen::drawBackground(window,background_texture,background_sprite,"MainScreen.png");
+        // Draw the menu after handling events
+        Menu.drawMenu(window);
+
+        // Display the window
+        window.display();
     }
-
     return 0;
 }

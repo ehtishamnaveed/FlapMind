@@ -5,6 +5,14 @@
 #include "PipeManager.h"
 
 namespace Game {
+
+    enum class GameState {
+        None,
+        MainMenu,
+        Playing,
+        GameOver,
+    };
+
     class GameManager {
     public:
         GameManager();
@@ -21,6 +29,7 @@ namespace Game {
         void eventHandler(sf::RenderWindow& i_window, const sf::Event& event);
 
     private:
+        GameState gameState;
         Bird bird;
         PipeManager pipeController;
 
