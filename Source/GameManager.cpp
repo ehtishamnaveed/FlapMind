@@ -4,7 +4,7 @@
 
 namespace Game {
     // Constructor initializes GameManager with default score and font settings
-    GameManager::GameManager(): Score(0), gameState(GameState::None) {
+    GameManager::GameManager(): Score(0) {
         // Load font from file
         ScoreFont.loadFromFile("Resources/Font/4Brain.ttf");
 
@@ -18,34 +18,72 @@ namespace Game {
 
     // Main game loop logic
     void GameManager::runGame(sf::RenderWindow& i_window) {
-        // Render the display including pipes, bird, and score
-        renderDisplay(i_window);
-
         // If the Bird is alive
-        while (bird.isLiving()) {
-            bird.updateBird();
-            pipeController.updatePipes();
+        // while (bird.isLiving()) {
+        //     // Render the display including pipes, bird, and score
+        //     renderGame(i_window);
+        //     i_window.display();
+
+        //     // Check for Collision
+        //     if (collisionOfBirdWithPipes(bird, pipeController.getPipes())) {
+        //         // If collides, The bird Dies
+        //         bird.Dies();
+        //     }
+        // }
+
+        // // If the Bird is dead
+        // // Pause until Enter key is pressed to restart the game
+        // sf::Event event;
+        // while (i_window.waitEvent(event)) {
+        //     if (event.type == sf::Event::Closed)
+        //         i_window.close();
+
+        //     else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+        //         resetGameState();
+        //         runGame(i_window); // Restart the game
+        //         break; // Exit the loop after restarting the game
+        //     }
+        // }
+
+         while (i_window.isOpen() && bird.isLiving()) {
+            // Handle events
+            sf::Event event;
+            while (i_window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed)
+                    i_window.close();
+                else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+                    resetGameState();
+                    break; // Exit the event handling loop to restart the game
+                }
+            }
+
+            // Render the display including pipes, bird, and score
+            renderGame(i_window);
+            i_window.display();
 
             // Check for Collision
             if (collisionOfBirdWithPipes(bird, pipeController.getPipes())) {
+                // If collides, The bird Dies
                 bird.Dies();
             }
         }
 
-        // If the Bird is dead
-        // Pause until Enter key is pressed to restart the game
-        sf::Event event;
-        while (i_window.waitEvent(event)) {
-            eventHandler(i_window,event);
-            break;
-        }
     }
 
     // Draw pipes, bird, and score on the window
-    void GameManager::renderDisplay(sf::RenderWindow& i_window) {
+    void GameManager::renderGame(sf::RenderWindow& i_window) {
+        //Draws the Background
+        drawBackground(i_window);
+        // Displays Pipe
         pipeController.drawPipes(i_window);
+        // Diaplsys Bird
         bird.drawBird(i_window);
+        // Displays Score
         i_window.draw(ScoreText);
+        // Updates Bird Postion
+        bird.updateBird();
+        // Updates Pipes position
+        pipeController.updatePipes();
     }
 
     // Increment the score and update the display
@@ -98,39 +136,11 @@ namespace Game {
         ScoreText.setString(std::to_string(Score));
     }
 
-    // Handle window events
-    void GameManager::eventHandler(sf::RenderWindow& i_window, const sf::Event& event) {
-        switch (event.type) {
-            // Close the window if the close button is pressed
-            case sf::Event::Closed:
-                i_window.close();
-                break;
-
-            // Handle key presses
-            case sf::Event::KeyPressed:
-                KeyPressedHandler(event.key.code);
-                break;
-        }
+    // Draw the Backgound for Play Menu
+    void GameManager::drawBackground(sf::RenderWindow& i_window) {
+        background_texture.loadFromFile("Resources/Images/Background.png");
+        background_sprite.setTexture(background_texture);
+        i_window.draw(background_sprite);
     }
 
-    // Handle specific key presses
-    void GameManager::KeyPressedHandler(const sf::Keyboard::Key& key) {
-        switch (key) {
-            // Start the game when the Enter key is pressed
-            // case sf::Keyboard::Enter:
-            //         std::cerr << "Enter\n";
-            //         // gameController.runGame(window);
-            //         break;
-
-            // case sf::Keyboard::Up:
-            //     std::cerr << "UP\n";
-            //     Menu.moveUp();
-            //     break;
-
-            // case sf::Keyboard::Down:
-            //     std::cerr << "dOWN\n";
-            //     Menu.moveDown();
-            //     break;
-        }
-    }
 }

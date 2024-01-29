@@ -1,35 +1,23 @@
-#ifndef GAMEMANAGER_H
-#define GAMEMANAGER_H
+#ifndef GAME_MANAGER_H
+#define GAME_MANAGER_H
 
 #include "Bird.h"
 #include "PipeManager.h"
 
 namespace Game {
-
-    enum class GameState {
-        None,
-        MainMenu,
-        Playing,
-        GameOver,
-    };
-
     class GameManager {
     public:
         GameManager();
-        void renderDisplay(sf::RenderWindow& i_window);
+        void renderGame(sf::RenderWindow& i_window);
         void runGame(sf::RenderWindow& i_window);
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes) ;
+        void drawBackground(sf::RenderWindow& i_window);
 
         void updateScore();
         void resetGameState();
         void resetScore();
 
-        // Event Handler functions
-        void KeyPressedHandler(const sf::Keyboard::Key&);
-        void eventHandler(sf::RenderWindow& i_window, const sf::Event& event);
-
     private:
-        GameState gameState;
         Bird bird;
         PipeManager pipeController;
 
@@ -37,6 +25,9 @@ namespace Game {
         unsigned short Score;
         sf::Text ScoreText;
         sf::Font ScoreFont;
+
+        sf::Texture background_texture;
+        sf::Sprite background_sprite;
     };
 }
 

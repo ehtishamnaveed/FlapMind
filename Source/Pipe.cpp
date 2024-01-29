@@ -1,13 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include "../Header/Pipe.h"
 #include "../Header/Game.h"
-#include <iostream>
 
 namespace Game {
+	// Constructor initilizes the Pipe's X and Y co-ordinates while loading the Pipe texture
 	Pipe::Pipe(short x_origin, unsigned short y_origin): 
 		X_Position(x_origin), 
 		Y_Position(y_origin) {texture.loadFromFile("Resources/Images/P.png");}
 
+	// Sets the Tecture, while selecting specifc portion for Up-side and Down-side
 	void Pipe::draw(sf::RenderWindow& i_window) {
 		pipe.setTexture(texture);
 
@@ -54,6 +55,7 @@ namespace Game {
 		// }
 	}
 
+	// Checks if the Pipe is beyond the Screen
 	const bool Pipe::isRemoveable() const {
 		return X_Position <= OffScreenLimit;
 	}
