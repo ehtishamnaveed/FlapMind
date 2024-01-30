@@ -10,7 +10,7 @@ namespace Game {
     class EventHandler {
     public:
         // Processes What kind of Event is it
-        void processEvent(sf::RenderWindow& window, const sf::Event& event, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler);
+        // void processEvent(sf::RenderWindow& window, const sf::Event& event, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler);
         // Handles specific Key pressed Events only
         void processKeyPressed(const sf::Keyboard::Key& key, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler);
     };

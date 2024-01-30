@@ -19,42 +19,12 @@ namespace Game {
     // Main game loop logic
     void GameManager::runGame(sf::RenderWindow& i_window) {
         // If the Bird is alive
-        // while (bird.isLiving()) {
-        //     // Render the display including pipes, bird, and score
-        //     renderGame(i_window);
-        //     i_window.display();
-
-        //     // Check for Collision
-        //     if (collisionOfBirdWithPipes(bird, pipeController.getPipes())) {
-        //         // If collides, The bird Dies
-        //         bird.Dies();
-        //     }
-        // }
-
-        // // If the Bird is dead
-        // // Pause until Enter key is pressed to restart the game
-        // sf::Event event;
-        // while (i_window.waitEvent(event)) {
-        //     if (event.type == sf::Event::Closed)
-        //         i_window.close();
-
-        //     else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-        //         resetGameState();
-        //         runGame(i_window); // Restart the game
-        //         break; // Exit the loop after restarting the game
-        //     }
-        // }
-
-         while (i_window.isOpen() && bird.isLiving()) {
+        while (i_window.isOpen() && bird.isLiving()) {
             // Handle events
             sf::Event event;
             while (i_window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     i_window.close();
-                else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-                    resetGameState();
-                    break; // Exit the event handling loop to restart the game
-                }
             }
 
             // Render the display including pipes, bird, and score
@@ -67,7 +37,7 @@ namespace Game {
                 bird.Dies();
             }
         }
-
+        resetGameState();
     }
 
     // Draw pipes, bird, and score on the window

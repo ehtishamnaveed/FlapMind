@@ -150,16 +150,28 @@ namespace UI {
 // Menu Manager class
     // Constructor initilizes the Window and sets its frame-rate limt
     MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds") {
-    	// window.setFramerateLimit(30);
+    	// window.setFramerateLimit(80);
+    	window.setFramerateLimit(100);
+    	// window.setFramerateLimit(60);
     }
 
     // Displays the Menu
 	void MenuManager::displayMenu(UI::Menu*& currentMenu) {
+		bool keyPressed = false;  // Flag to track key press
+
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
-	            // Handles events of Game
-	            EventManager.processEvent(window, event, currentMenu, *this);
+            	if (event.type == sf::Event::Closed){
+                    window.close();
+            	}
+            	else if (event.type == sf::Event::KeyPressed && !keyPressed) {
+                	keyPressed = true;  // Set the flag to true to indicate key press
+	                EventManager.processKeyPressed(event.key.code, currentMenu, *this);
+	            }
+	            else if (event.type == sf::Event::KeyReleased) {
+	                keyPressed = false;  // Reset the flag on key release
+	            }
 	        }
 	        // Clear the window
             window.clear();
@@ -194,7 +206,7 @@ namespace UI {
     	switch (currentMenu->getSelectedState()) {
 			// Easy
 			case 0:
-				currentMenu->drawBackground(window);
+				// currentMenu->drawBackground(window);
 				GameController.runGame(window);
 				break;
 
