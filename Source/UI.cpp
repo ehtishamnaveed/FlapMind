@@ -150,9 +150,9 @@ namespace UI {
 // Menu Manager class
     // Constructor initilizes the Window and sets its frame-rate limt
     MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds") {
-    	// window.setFramerateLimit(80);
-    	window.setFramerateLimit(100);
-    	// window.setFramerateLimit(60);
+    	// window.setFramerateLimit(30);
+    	// window.setFramerateLimit(100);
+    	window.setFramerateLimit(85);
     }
 
     // Displays the Menu

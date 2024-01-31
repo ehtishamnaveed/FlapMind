@@ -14,8 +14,10 @@ namespace Game {
 		void resetPipes();
 
 	private:
+		// Vector or "class Pipe" to store the generated pipes
 		std::vector<Pipe> Pipes;
-		static constexpr unsigned char PipeIndent = 150;
+		// limit of pipes to draw at certain 
+		static constexpr unsigned char PipeIndent = 170;
 		
 		std::mt19937_64 RandomEngine;
 		unsigned short GeneratorTimer;

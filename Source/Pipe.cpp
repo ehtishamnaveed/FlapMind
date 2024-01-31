@@ -12,6 +12,7 @@ namespace Game {
 	void Pipe::draw(sf::RenderWindow& i_window) {
 		pipe.setTexture(texture);
 
+		// Top Side Pipe
 		pipe.setPosition(X_Position, (Y_Position - Game::Screen::screenHeight));
 		// Left, Top, Width, Height
 		pipe.setTextureRect(sf::IntRect(50, 0, 50, Game::Screen::screenHeight));
@@ -19,13 +20,15 @@ namespace Game {
 
 		//Using 1 sprite to draw 2 pipes.
 		//OPTIMIZATION 100
+
+		// Bottom Side Pipe
 		pipe.setPosition(X_Position, (Y_Position + GapSize));
 		pipe.setTextureRect(sf::IntRect(0, 0, 50, Game::Screen::screenHeight));
 		i_window.draw(pipe);
 	}
 
 	void Pipe::update() {
-		X_Position -= 2;
+		X_Position -= PipeSpeed;
 
 		// if (pipeIndent == Y_Position)
 		// {
@@ -70,5 +73,9 @@ namespace Game {
 
 	const unsigned short Pipe::getGapSize() {
 		return GapSize;
+	}
+
+	const unsigned short Pipe::getPipeSpeed() {
+		return PipeSpeed;
 	}
 }

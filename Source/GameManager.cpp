@@ -20,7 +20,7 @@ namespace Game {
     void GameManager::runGame(sf::RenderWindow& i_window) {
         // If the Bird is alive
         while (i_window.isOpen() && bird.isLiving()) {
-            // Handle events
+            // Handle window closing event
             sf::Event event;
             while (i_window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -37,7 +37,14 @@ namespace Game {
                 bird.Dies();
             }
         }
-        resetGameState();
+
+        sf::Event event;
+        while (i_window.waitEvent(event)) {
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
+                resetGameState();
+                break;
+            }
+            }
     }
 
     // Draw pipes, bird, and score on the window
@@ -62,25 +69,27 @@ namespace Game {
         ScoreText.setString(std::to_string(Score));
     }
 
-    bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes)  {
+    bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
+        const unsigned char collisionAnomaly = 10;
         // Extracting relevant information for collision detection
         const short bird_Xpos = bird.getXPosition();
-        const float bird_Ypos = bird.getYPosition();
-        const unsigned char birdSize = bird.getBirdSize();
+        const short bird_Ypos = bird.getYPosition();
+        const char birdSize = bird.getBirdSize();
         // range to not check for collsion for pipes
         const unsigned char birdRearRange =  bird_Xpos - birdSize;
         // range to check for collsion for pipes
         const unsigned char birdFrontRange =  bird_Xpos + birdSize;
         const unsigned char pipeGapSize = Game::Pipe::getGapSize();
+        const unsigned char pipeSpeed = Game::Pipe::getPipeSpeed();
 
         for (const Pipe& curr_pipe : pipes) {
             // Check if the pipe is behind the bird, else move on to next pipe
-            if (curr_pipe.getXPosition() < birdRearRange - 1) 
+            if (curr_pipe.getXPosition() < birdRearRange - pipeSpeed) 
                 continue; 
             // Check if the pipe is range to collide with the bird
-            if (curr_pipe.getXPosition() < birdFrontRange && curr_pipe.getXPosition() > birdRearRange ) {
+            if (curr_pipe.getXPosition() < birdFrontRange && curr_pipe.getXPosition() > birdRearRange) {
                 // Check for collision excluding the gap area
-                if (bird_Ypos <= curr_pipe.getYPosition() || bird_Ypos + birdSize >= curr_pipe.getYPosition() + pipeGapSize)
+                if (bird_Ypos + collisionAnomaly <= curr_pipe.getYPosition() || bird_Ypos + birdSize >= curr_pipe.getYPosition() + pipeGapSize + collisionAnomaly)
                     return true; /* Collision detected */
                 break;
             }

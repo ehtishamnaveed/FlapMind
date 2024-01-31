@@ -32,7 +32,7 @@ namespace Game {
 
 		for (std::vector<Pipe>::iterator curr_pipe = Pipes.begin(); curr_pipe != Pipes.end(); curr_pipe++){
 			// When the pipes go beyond the screen.
-			if (1 == curr_pipe->isRemoveable()){
+			if (curr_pipe->isRemoveable()){
 				// We delete them.
 				Pipes.erase(curr_pipe);
 				break;

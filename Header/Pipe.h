@@ -10,7 +10,8 @@ namespace Game {
 		const bool isRemoveable() const;
 		const short getXPosition() const ;
 		const unsigned short getYPosition() const;
-		static const unsigned short getGapSize() ;
+		static const unsigned short getGapSize();
+		static const unsigned short getPipeSpeed() ;
 
 	private:
 		// bool direction;
@@ -19,6 +20,7 @@ namespace Game {
 		static constexpr short OffScreenLimit = -50;
 		// unsigned char y_MovementTimer;
 		static constexpr unsigned char GapSize = 100;
+		static constexpr unsigned char PipeSpeed = 1;
 
 		sf::Sprite pipe;
 		sf::Texture texture;
