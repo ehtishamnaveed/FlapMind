@@ -32,7 +32,7 @@ namespace Game {
             i_window.display();
 
             // Check for Collision
-            if (collisionOfBirdWithPipes(bird, pipeController.getPipes())) {
+            if (collisionOfBirdWithPipes(bird, PipeController.getPipes())) {
                 // If collides, The bird Dies
                 bird.Dies();
             }
@@ -49,18 +49,18 @@ namespace Game {
 
     // Draw pipes, bird, and score on the window
     void GameManager::renderGame(sf::RenderWindow& i_window) {
+        // Updates Bird Postion
+        bird.updateBird();
+        // Updates Pipes position
+        PipeController.updatePipes();
         //Draws the Background
         drawBackground(i_window);
         // Displays Pipe
-        pipeController.drawPipes(i_window);
+        PipeController.drawPipes(i_window);
         // Diaplsys Bird
         bird.drawBird(i_window);
         // Displays Score
         i_window.draw(ScoreText);
-        // Updates Bird Postion
-        bird.updateBird();
-        // Updates Pipes position
-        pipeController.updatePipes();
     }
 
     // Increment the score and update the display
@@ -70,7 +70,7 @@ namespace Game {
     }
 
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
-        const unsigned char collisionAnomaly = 10;
+        const unsigned char collisionAnomaly = 8;
         // Extracting relevant information for collision detection
         const short bird_Xpos = bird.getXPosition();
         const short bird_Ypos = bird.getYPosition();
@@ -79,17 +79,16 @@ namespace Game {
         const unsigned char birdRearRange =  bird_Xpos - birdSize;
         // range to check for collsion for pipes
         const unsigned char birdFrontRange =  bird_Xpos + birdSize;
-        const unsigned char pipeGapSize = Game::Pipe::getGapSize();
-        const unsigned char pipeSpeed = Game::Pipe::getPipeSpeed();
 
         for (const Pipe& curr_pipe : pipes) {
             // Check if the pipe is behind the bird, else move on to next pipe
-            if (curr_pipe.getXPosition() < birdRearRange - pipeSpeed) 
+            if (curr_pipe.getXPosition() < birdRearRange - curr_pipe.getPipeSpeed()) 
                 continue; 
             // Check if the pipe is range to collide with the bird
-            if (curr_pipe.getXPosition() < birdFrontRange && curr_pipe.getXPosition() > birdRearRange) {
+            if (curr_pipe.getXPosition() < birdFrontRange - collisionAnomaly && curr_pipe.getXPosition() > birdRearRange) {
                 // Check for collision excluding the gap area
-                if (bird_Ypos + collisionAnomaly <= curr_pipe.getYPosition() || bird_Ypos + birdSize >= curr_pipe.getYPosition() + pipeGapSize + collisionAnomaly)
+                // Pipe's Upper Portion ---------- OR ---------- Pipe's Lower Portion
+                if (bird_Ypos <= curr_pipe.getYPosition() - collisionAnomaly || bird_Ypos + birdSize >= curr_pipe.getYPosition() + curr_pipe.getGapSize() + collisionAnomaly)
                     return true; /* Collision detected */
                 break;
             }
@@ -106,7 +105,7 @@ namespace Game {
     void GameManager::resetGameState() {
         resetScore();
         bird.resetState();
-        pipeController.resetPipes();
+        PipeController.resetPipes();
     }
 
     // Reset the score to zero and update the display
@@ -120,6 +119,10 @@ namespace Game {
         background_texture.loadFromFile("Resources/Images/Background.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
+    }
+
+    void GameManager::setGameMode(const GameModes GameType) {
+         PipeController.setSettings(GameType);
     }
 
 }

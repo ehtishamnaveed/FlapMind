@@ -5,11 +5,8 @@
 #include "../Header/Game.h"
 #include <iostream>
 
-namespace Game {
-	PipeManager::PipeManager(): 
-		Y_Distribution(PipeIndent, Game::Screen::screenHeight - PipeIndent), 
-		RandomEngine(std::random_device{}()),
-		GeneratorTimer(150) {}
+namespace Game {	
+	PipeManager::PipeManager(): RandomEngine(std::random_device{}()) {}
 
 	// Draw Pipes on Screen
 	void PipeManager::drawPipes(sf::RenderWindow& i_window) {
@@ -18,11 +15,11 @@ namespace Game {
 		}
 	}
 
-	// Update Pipe positions and generate new location of Pipes
+	// Update Pipe positions and generate new location for Pipes
 	void PipeManager::updatePipes() {
 		if (0 == GeneratorTimer) {
-			GeneratorTimer = 150;
-			Pipes.push_back(Pipe(Game::Screen::screenWidth, Y_Distribution(RandomEngine)));
+			GeneratorTimer = GeneratorDuration;
+			Pipes.push_back(Pipe(Game::Screen::screenWidth, Y_Distribution(RandomEngine), GameType));
 		}
 		--GeneratorTimer;
 
@@ -45,7 +42,32 @@ namespace Game {
 	}
 
 	void PipeManager::resetPipes() {
-		GeneratorTimer = 150;
+		GeneratorTimer = GeneratorDuration;
 		Pipes.clear();
 	}
+
+	void PipeManager::setSettings(GameModes TypeOfMode) {
+		GameType = TypeOfMode;
+
+		switch (GameType) {
+			case GameModes::Easy:
+			 	PipeIndent = EasyPipeIndent;
+			 	GeneratorDuration = EasyGeneratorDuration;
+			 	break;
+
+	        case GameModes::Hard:
+	        	PipeIndent = HardPipeIndent;
+	        	GeneratorDuration = HardGeneratorDuration;
+			 	break;
+
+	        case GameModes::Crazy:
+	        	PipeIndent = CrazyPipeIndent;
+	        	GeneratorDuration = CrazyGeneratorDuration;
+			 	break;
+		}
+		// Y_Distribution(PipeIndent, Game::Screen::screenHeight - PipeIndent);
+		Y_Distribution = std::uniform_int_distribution<unsigned short>(PipeIndent, Game::Screen::screenHeight - PipeIndent);
+		GeneratorTimer = GeneratorDuration;
+	}
+
 }

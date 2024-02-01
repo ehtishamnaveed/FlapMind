@@ -19,7 +19,7 @@ Build/PipeManager.o: Source/PipeManager.cpp Header/PipeManager.h Header/Pipe.h H
 Build/Game.o: Source/Game.cpp Header/Game.h
 	g++ -c Source/Game.cpp -o Build/Game.o -I$(SFML_PATH)/include
 
-Build/GameManager.o: Source/GameManager.cpp Header/GameManager.h Header/Bird.h Header/Game.h Header/PipeManager.h
+Build/GameManager.o: Source/GameManager.cpp Header/GameManager.h Header/Bird.h Header/Game.h Header/PipeManager.h Header/GameMode.h
 	g++ -c Source/GameManager.cpp -o Build/GameManager.o -I$(SFML_PATH)/include
 
 Build/EventHandler.o: Source/EventHandler.cpp Header/EventHandler.h Header/UI.h

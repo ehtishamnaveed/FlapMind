@@ -3,6 +3,7 @@
 
 #include "Bird.h"
 #include "PipeManager.h"
+#include "GameMode.h"
 
 namespace Game {
     class GameManager {
@@ -16,10 +17,11 @@ namespace Game {
         void updateScore();
         void resetGameState();
         void resetScore();
+        void setGameMode(const GameModes GameType);
 
     private:
         Bird bird;
-        PipeManager pipeController;
+        PipeManager PipeController;
 
         // Score Attributes
         unsigned short Score;

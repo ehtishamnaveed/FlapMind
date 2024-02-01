@@ -93,11 +93,11 @@ namespace UI {
 
 		// Medium
 		MenuText[1].setFillColor(sf::Color::Black);
-		MenuText[1].setString("Medium");
+		MenuText[1].setString("Hard");
 
 		// Hard
 		MenuText[2].setFillColor(sf::Color::Black);
-		MenuText[2].setString("Hard");
+		MenuText[2].setString("Crazy");
 	}
 
 	// Draw the Elements of Main Menu
@@ -206,16 +206,20 @@ namespace UI {
     	switch (currentMenu->getSelectedState()) {
 			// Easy
 			case 0:
-				// currentMenu->drawBackground(window);
+				GameController.setGameMode(Game::GameModes::Easy);
 				GameController.runGame(window);
 				break;
 
-			// Medium
+			// Hard
 			case 1:
+				GameController.setGameMode(Game::GameModes::Hard);
+				GameController.runGame(window);
 				break;
 
-			// Hard
+			// Crazy
 			case 2:
+				GameController.setGameMode(Game::GameModes::Crazy);
+				GameController.runGame(window);
 				break;
 		}
     }

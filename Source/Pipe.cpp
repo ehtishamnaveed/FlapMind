@@ -4,9 +4,28 @@
 
 namespace Game {
 	// Constructor initilizes the Pipe's X and Y co-ordinates while loading the Pipe texture
-	Pipe::Pipe(short x_origin, unsigned short y_origin): 
+	Pipe::Pipe(short x_origin, unsigned short y_origin, GameModes GameType): 
 		X_Position(x_origin), 
-		Y_Position(y_origin) {texture.loadFromFile("Resources/Images/P.png");}
+		Y_Position(y_origin) 
+		// Body of Constructor
+		{ texture.loadFromFile("Resources/Images/P.png");
+			switch (GameType) {
+			 case GameModes::Easy:
+			 	GapSize = EasyGapSize;
+			 	PipeSpeed = EasyPipeSpeed;
+			 	break;
+
+            case GameModes::Hard:
+            	GapSize = HardGapSize;
+            	PipeSpeed = HardPipeSpeed;
+			 	break;
+
+            case GameModes::Crazy:
+            	GapSize = CrazyGapSize;
+            	PipeSpeed = CrazyPipeSpeed;
+			 	break;
+			}
+		}
 
 	// Sets the Tecture, while selecting specifc portion for Up-side and Down-side
 	void Pipe::draw(sf::RenderWindow& i_window) {
@@ -71,11 +90,12 @@ namespace Game {
 		return Y_Position;
 	}
 
-	const unsigned short Pipe::getGapSize() {
+	const unsigned char Pipe::getGapSize() const {
 		return GapSize;
 	}
-
-	const unsigned short Pipe::getPipeSpeed() {
+	
+	const unsigned char Pipe::getPipeSpeed() const{
 		return PipeSpeed;
 	}
+
 }
