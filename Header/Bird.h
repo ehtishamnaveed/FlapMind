@@ -23,7 +23,7 @@ namespace Game {
 
 	private:
 		static constexpr char FlapSpeed = -4;
-		static constexpr unsigned char BirdSize = 46;
+		static constexpr unsigned char BirdSize = 42;
 		static constexpr char GroundLimit = 35;
 		bool IsAlive;
 		float Vertical_Speed;

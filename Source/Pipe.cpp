@@ -8,7 +8,7 @@ namespace Game {
 		X_Position(x_origin), 
 		Y_Position(y_origin) 
 		// Body of Constructor
-		{ texture.loadFromFile("Resources/Images/P.png");
+		{ texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Pipe.png");
 			switch (GameType) {
 			 case GameModes::Easy:
 			 	GapSize = EasyGapSize;

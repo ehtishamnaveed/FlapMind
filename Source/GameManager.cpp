@@ -23,8 +23,10 @@ namespace Game {
             // Handle window closing event
             sf::Event event;
             while (i_window.pollEvent(event)) {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed){
+                    Game::saveConfiguration();
                     i_window.close();
+                }
             }
 
             // Render the display including pipes, bird, and score
@@ -70,7 +72,7 @@ namespace Game {
     }
 
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
-        const unsigned char collisionAnomaly = 8;
+        const unsigned char collisionAnomaly = 4;
         // Extracting relevant information for collision detection
         const short bird_Xpos = bird.getXPosition();
         const short bird_Ypos = bird.getYPosition();
@@ -116,7 +118,7 @@ namespace Game {
 
     // Draw the Backgound for Play Menu
     void GameManager::drawBackground(sf::RenderWindow& i_window) {
-        background_texture.loadFromFile("Resources/Images/Background.png");
+        background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Background.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
     }

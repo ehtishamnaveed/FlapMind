@@ -3,15 +3,16 @@
 #include "../Header/Game.h"
 
 namespace Game {
-	Bird::Bird(): Y_Position(20), X_Position(170), IsAlive(1) { texture.loadFromFile("Resources/Images/Birdy.png"); } //(0.5f * (600 - 16)); }
+	Bird::Bird(): Y_Position(20), X_Position(170), IsAlive(1) {} //(0.5f * (600 - 16)); }
 
 	void Bird::drawBird(sf::RenderWindow& i_window) {
+		texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Birdy.png");
 	    if (0 < Vertical_Speed) {
 	    	// Left, Top, Width, Height
-	    	bird.setTextureRect(sf::IntRect(0, 0, 51, BirdSize));
+	    	bird.setTextureRect(sf::IntRect(0, 0, 50, BirdSize));
 	    }
 	    else {
-	    	bird.setTextureRect(sf::IntRect(51, 0, 51, BirdSize));
+	    	bird.setTextureRect(sf::IntRect(50, 0, 50, BirdSize));
 	    }
 
 	    bird.setTexture(texture);

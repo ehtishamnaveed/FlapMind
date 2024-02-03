@@ -34,6 +34,11 @@ namespace Game {
 	        case sf::Keyboard::Down:
 	            currentMenu->moveDown();
 	            break;
+
+	          case sf::Keyboard::Escape:
+	          	delete currentMenu;
+	            currentMenu = new UI::MainMenu();
+	            break;
 	    }
     }
 }

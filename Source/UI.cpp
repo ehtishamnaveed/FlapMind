@@ -24,7 +24,7 @@ namespace UI {
 		MenuText[1].setFillColor(sf::Color::Black);
 
 		// Options
-		MenuText[2].setString("Options");
+		MenuText[2].setString("Theme");
 		MenuText[2].setFillColor(sf::Color::Black);	
 	}
 
@@ -53,10 +53,6 @@ namespace UI {
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
 	}
 
-	// Check the information about the Selected Menu
-	void MainMenu::checkMenuInformation(UI::Menu*& currentMenu) {
-	}
-
 	// Return the index of Selected Menu
 	int MainMenu::getSelectedState() {
 		return SelectedMenu;
@@ -64,7 +60,7 @@ namespace UI {
 
 	// Draw the Backgound for Main Menu
 	void MainMenu::drawBackground(sf::RenderWindow& i_window) {
-        background_texture.loadFromFile("Resources/Images/MainScreen.png");
+        background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/MainScreen.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
     }
@@ -91,11 +87,11 @@ namespace UI {
 		MenuText[0].setFillColor(sf::Color::White);
 		MenuText[0].setString("Easy");
 
-		// Medium
+		// Hard
 		MenuText[1].setFillColor(sf::Color::Black);
 		MenuText[1].setString("Hard");
 
-		// Hard
+		// Crazy
 		MenuText[2].setFillColor(sf::Color::Black);
 		MenuText[2].setString("Crazy");
 	}
@@ -125,10 +121,6 @@ namespace UI {
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
 	}
 
-	// Check the information about the Selected Menu
-	void PlayMenu::checkMenuInformation(UI::Menu*& currentMenu) {
-	}
-
 	// Return the index of Selected Menu
 	int PlayMenu::getSelectedState() {
 		return SelectedMenu;
@@ -136,11 +128,83 @@ namespace UI {
 
 	// Draw the Backgound for Play Menu
 	void PlayMenu::drawBackground(sf::RenderWindow& i_window) {
-        background_texture.loadFromFile("Resources/Images/Background.png");
+        background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Background.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
     }
 
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+// ThemeMenu //
+	// Constructor Initilizes the Font and the Text on the window
+	ThemeMenu::ThemeMenu(): Width(600), Height(600), SelectedMenu(0) {
+		// Initilizeing Themes array
+		Themes[0] = "ClearSky";
+		Themes[1] = "DarkNight";
+		Themes[2] = "SunSet";
+
+		// Load the font
+		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
+
+		for (int iterator = 0; iterator < 3; ++iterator) {
+			MenuText[iterator].setFont(menuFont);
+			MenuText[iterator].setCharacterSize(30);
+		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
+		}
+
+		// ClearSky 
+		MenuText[0].setFillColor(sf::Color::White);
+		MenuText[0].setString("ClearSky");
+
+		// Medium
+		MenuText[1].setFillColor(sf::Color::Black);
+		MenuText[1].setString("DarkNight");
+
+		// Hard
+		MenuText[2].setFillColor(sf::Color::Black);
+		MenuText[2].setString("SunSet");
+	}
+
+	// Draw the Elements of Main Menu
+	void ThemeMenu::drawMenu(sf::RenderWindow& i_window) {
+		drawBackground(i_window);
+		for(int iterator = 0 ; iterator < 3 ; ++iterator)
+			i_window.draw(MenuText[iterator]);
+	}
+
+	// Navigate Up in Menu
+	void ThemeMenu::moveUp() {
+		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
+
+	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
+
+	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+	}
+
+	// Navigate Down in Menu
+	void ThemeMenu::moveDown() {
+		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
+
+	    SelectedMenu = (SelectedMenu + 1) % 3;
+
+	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+	}
+
+	// Return the index of Selected Menu
+	int ThemeMenu::getSelectedState() {
+		return SelectedMenu;
+	}
+
+	// Draw the Backgound for Play Menu
+	void ThemeMenu::drawBackground(sf::RenderWindow& i_window) {
+        background_texture.loadFromFile("Resources/Theme/"+Themes[SelectedMenu]+"/Preview.png");
+        background_sprite.setTexture(background_texture);
+        i_window.draw(background_sprite);
+    }
 
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -157,12 +221,21 @@ namespace UI {
 
     // Displays the Menu
 	void MenuManager::displayMenu(UI::Menu*& currentMenu) {
+		sf::Texture texture;
+    	texture.loadFromFile("Resources/Images/LoadingScreen.png");
+    	sf::Sprite sprite(texture);
+    	window.draw(sprite);
+    	window.display();
+		std::this_thread::sleep_for(std::chrono::seconds(3));
+    	window.clear();
+
 		bool keyPressed = false;  // Flag to track key press
 
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
             	if (event.type == sf::Event::Closed){
+            		Game::saveConfiguration();
                     window.close();
             	}
             	else if (event.type == sf::Event::KeyPressed && !keyPressed) {
@@ -173,15 +246,16 @@ namespace UI {
 	                keyPressed = false;  // Reset the flag on key release
 	            }
 	        }
-	        // Clear the window
-            window.clear();
             // Draws menu on window
             currentMenu->drawMenu(window);
             // Draws The window
             window.display();
+            // Clear the window
+            window.clear();
         }
     }
 
+    // Main Menu Handler
     void MenuManager::handleMainMenu(UI::Menu*& currentMenu) {
     	switch (currentMenu->getSelectedState()) {
 			// Play 
@@ -195,13 +269,17 @@ namespace UI {
 			case 1:
 				break;
 
-			// Options
+			// Theme
 			case 2:
+				// Change the Menu to ThemeMenu type
+				delete currentMenu;
+				currentMenu = new UI::ThemeMenu();
 				break;
 		}
 
     }
 
+    // Play Menu Handler
     void MenuManager::handlePlayMenu(UI::Menu*& currentMenu) {
     	switch (currentMenu->getSelectedState()) {
 			// Easy
@@ -224,6 +302,32 @@ namespace UI {
 		}
     }
 
+    // Theme Menu Handler
+     void MenuManager::handleThemeMenu(UI::Menu*& currentMenu) {
+    	switch (currentMenu->getSelectedState()) {
+			// ClearSky Theme
+			case 0:
+				Game::theme_name = "ClearSky";
+				delete currentMenu;
+	            currentMenu = new UI::MainMenu();
+				break;
+
+			// DarkNight Theme
+			case 1:
+				Game::theme_name = "DarkNight";
+				delete currentMenu;
+	            currentMenu = new UI::MainMenu();
+				break;
+
+			// SunSet Theme
+			case 2:
+				Game::theme_name = "SunSet";
+				delete currentMenu;
+	            currentMenu = new UI::MainMenu();
+				break;
+		}
+    }
+
     void MenuManager::handleMenuStateChange(UI::Menu*& currentMenu) {
     	if (typeid(*currentMenu) == typeid(MainMenu)) {
 	        handleMainMenu(currentMenu);
@@ -231,9 +335,9 @@ namespace UI {
 	    else if (typeid(*currentMenu) == typeid(PlayMenu)) {
 	        handlePlayMenu(currentMenu);
     	}
-
-    	else
-    		std::cerr << "Unknown menu type.";
+    	else if (typeid(*currentMenu) == typeid(ThemeMenu)) {
+	        handleThemeMenu(currentMenu);
+    	}
     }
 
 // END OF NAMESPACE

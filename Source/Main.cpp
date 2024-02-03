@@ -7,6 +7,8 @@ int main() {
     // sf::RenderWindow window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds");
     // window.setFramerateLimit(30);
 
+    Game::loadConfiguration();
+
     UI::Menu* currentMenu = new UI::MainMenu();
 
     UI::MenuManager MenuHandler;

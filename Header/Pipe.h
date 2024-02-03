@@ -33,7 +33,7 @@ namespace Game {
 		static constexpr unsigned char HardPipeSpeed = 4;
 
 		// Variables for Crazy gamemode
-		static  constexpr unsigned char CrazyGapSize = 100;
+		static  constexpr unsigned char CrazyGapSize = 80;
 		static constexpr unsigned char CrazyPipeSpeed = 1;
 
 		sf::Sprite pipe;

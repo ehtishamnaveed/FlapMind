@@ -3,7 +3,8 @@
 #include "../Header/EventHandler.h"
 #include "../Header/GameManager.h"
 #include "../Header/Game.h"
-
+#include <string>
+#include <thread>
 
 namespace UI {
     // Define a shorter name for the menu handler map type
@@ -16,7 +17,6 @@ namespace UI {
         virtual void moveUp() = 0;
         virtual void moveDown() = 0;
         virtual int getSelectedState() = 0;
-        virtual void checkMenuInformation(UI::Menu*& currentMenu) = 0;
         virtual void drawBackground(sf::RenderWindow& i_window) = 0;
     };
 
@@ -30,7 +30,6 @@ namespace UI {
         void moveUp() override;
         void moveDown() override;
         int getSelectedState() override;
-        void checkMenuInformation(UI::Menu*& currentMenu) override;
 
     private:
         const short Width;
@@ -53,12 +52,33 @@ namespace UI {
         void moveUp() override;
         void moveDown() override;
         int getSelectedState() override;
-        void checkMenuInformation(UI::Menu*& currentMenu) override;
 
     private:
         const short Width;
         const short Height;
         int SelectedMenu;
+        sf::Font menuFont;
+        sf::Text MenuText[3];
+
+        sf::Texture background_texture;
+        sf::Sprite background_sprite;
+    };
+
+    // Theme Menu class
+    class ThemeMenu : public Menu {
+    public:
+        ThemeMenu();
+        void drawBackground(sf::RenderWindow& i_window) override;
+        void drawMenu(sf::RenderWindow& window) override;
+        void moveUp() override;
+        void moveDown() override;
+        int getSelectedState() override;
+
+    private:
+        const short Width;
+        const short Height;
+        int SelectedMenu;
+        std::string Themes[3];
         sf::Font menuFont;
         sf::Text MenuText[3];
 
@@ -75,6 +95,7 @@ namespace UI {
         void handleMenuStateChange(UI::Menu*& currentMenu);
         void handleMainMenu(UI::Menu*& currentMenu);
         void handlePlayMenu(UI::Menu*& currentMenu);
+        void handleThemeMenu(UI::Menu*& currentMenu);
     private:
         Game::EventHandler EventManager;
         sf::RenderWindow window;
