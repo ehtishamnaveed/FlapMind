@@ -28,15 +28,15 @@ namespace Game {
 
 		// Variables for Easy gamemode
 		static constexpr unsigned char EasyPipeIndent = 200;
-		static constexpr unsigned char EasyGeneratorDuration = 150;
+		static constexpr unsigned char EasyGeneratorDuration = 100;
 
 		// Variables for Hard gamemode
 		static constexpr unsigned char HardPipeIndent = 250;
-		static constexpr unsigned char HardGeneratorDuration = 80;
+		static constexpr unsigned char HardGeneratorDuration = 40;
 
 		// Variables for Crazy gamemode
 		static constexpr unsigned char CrazyPipeIndent = 230;
-		static constexpr unsigned char CrazyGeneratorDuration = 150;
+		static constexpr unsigned char CrazyGeneratorDuration = 50;
 	};
 }
 

@@ -25,16 +25,16 @@ namespace Game {
 		unsigned char PipeSpeed;
 
 		// Variables for Easy gamemode
-		static  constexpr unsigned char EasyGapSize = 120;
-		static constexpr unsigned char EasyPipeSpeed = 2;
+		static  constexpr unsigned char EasyGapSize = 130;
+		static constexpr unsigned char EasyPipeSpeed = 4;
 
 		// Variables for Hard gamemode
-		static  constexpr unsigned char HardGapSize = 80;
-		static constexpr unsigned char HardPipeSpeed = 4;
+		static  constexpr unsigned char HardGapSize = 90;
+		static constexpr unsigned char HardPipeSpeed = 5;
 
 		// Variables for Crazy gamemode
-		static  constexpr unsigned char CrazyGapSize = 80;
-		static constexpr unsigned char CrazyPipeSpeed = 1;
+		static  constexpr unsigned char CrazyGapSize = 100;
+		static constexpr unsigned char CrazyPipeSpeed = 3;
 
 		sf::Sprite pipe;
 		sf::Texture texture;

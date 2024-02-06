@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp> // Include the Audio header
 #include "../Header/UI.h"
 #include <iostream>
 
@@ -213,10 +214,10 @@ namespace UI {
 
 // Menu Manager class
     // Constructor initilizes the Window and sets its frame-rate limt
-    MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "Flappy Birds") {
-    	// window.setFramerateLimit(30);
+    MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "FlapMind") {
+    	window.setFramerateLimit(60);
     	// window.setFramerateLimit(100);
-    	window.setFramerateLimit(85);
+    	// window.setFramerateLimit(85);
     }
 
     // Displays the Menu
@@ -228,6 +229,18 @@ namespace UI {
     	window.display();
 		std::this_thread::sleep_for(std::chrono::seconds(3));
     	window.clear();
+
+    	// // Load the sound file
+	    // sf::SoundBuffer buffer;
+	    // buffer.loadFromFile("Resources/Edge.mp3");
+
+	    // // Create a sound object and associate it with the sound buffer
+	    // sf::Sound backgroundSound;
+	    // backgroundSound.setBuffer(buffer);
+
+	    // // Play the sound in a loop
+	    // backgroundSound.setLoop(true);
+	    // backgroundSound.play();
 
 		bool keyPressed = false;  // Flag to track key press
 
@@ -281,24 +294,37 @@ namespace UI {
 
     // Play Menu Handler
     void MenuManager::handlePlayMenu(UI::Menu*& currentMenu) {
-    	switch (currentMenu->getSelectedState()) {
-			// Easy
-			case 0:
-				GameController.setGameMode(Game::GameModes::Easy);
-				GameController.runGame(window);
-				break;
+    	bool gameRestartState = true;
+    	unsigned short* bestScore;
 
-			// Hard
-			case 1:
-				GameController.setGameMode(Game::GameModes::Hard);
-				GameController.runGame(window);
-				break;
+    	while (gameRestartState) {
+    		GameController.resetGameState();
+	    	switch (currentMenu->getSelectedState()) {
+				// Easy
+				case 0:
+					bestScore = &Game::easymode_highscore;
+					GameController.setGameMode(Game::GameModes::Easy);
+					GameController.runGame(window);
+					break;
 
-			// Crazy
-			case 2:
-				GameController.setGameMode(Game::GameModes::Crazy);
-				GameController.runGame(window);
-				break;
+				// Hard
+				case 1:
+					bestScore = &Game::hardmode_highscore;
+					GameController.setGameMode(Game::GameModes::Hard);
+					GameController.runGame(window);
+					break;
+
+				// Crazy
+				case 2:
+					bestScore = &Game::crazymode_highscore;
+					GameController.setGameMode(Game::GameModes::Crazy);
+					GameController.runGame(window);
+					break;
+			}
+
+			// Game Over
+			GameController.displayGameOverOverlay(window,bestScore);
+			gameRestartState = EventManager.processGameOverState(window);
 		}
     }
 

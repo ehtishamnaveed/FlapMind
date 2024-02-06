@@ -39,15 +39,8 @@ namespace Game {
                 bird.Dies();
             }
         }
-
-        sf::Event event;
-        while (i_window.waitEvent(event)) {
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
-                resetGameState();
-                break;
-            }
-            }
     }
+
 
     // Draw pipes, bird, and score on the window
     void GameManager::renderGame(sf::RenderWindow& i_window) {
@@ -72,7 +65,7 @@ namespace Game {
     }
 
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
-        const unsigned char collisionAnomaly = 4;
+        const unsigned char collisionAnomaly = 6;
         // Extracting relevant information for collision detection
         const short bird_Xpos = bird.getXPosition();
         const short bird_Ypos = bird.getYPosition();
@@ -113,7 +106,10 @@ namespace Game {
     // Reset the score to zero and update the display
     void GameManager::resetScore() {
         Score = 0;
+        ScoreText.setFillColor(sf::Color::Black);
         ScoreText.setString(std::to_string(Score));
+        ScoreText.setCharacterSize(60);
+        ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
     }
 
     // Draw the Backgound for Play Menu
@@ -125,6 +121,43 @@ namespace Game {
 
     void GameManager::setGameMode(const GameModes GameType) {
          PipeController.setSettings(GameType);
+    }
+
+    void GameManager::displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore) {
+        sf::Texture texture;
+        sf::Sprite sprite;
+        texture.loadFromFile("Resources/Images/Scoreboard.png");
+
+        // Calculate texture rect size only once
+        sf::IntRect rect;
+            if (Score > *bestScore) {
+                *bestScore = Score;
+                rect = sf::IntRect(300, 0, 300, 150);
+            }
+            else {
+                rect = sf::IntRect(0, 0, 300, 150);
+
+                // Gamplay Score
+                ScoreText.setCharacterSize(40);
+                ScoreText.setPosition(350 , 205);
+            }
+
+        // Set texture rect, texture, and position for the sprite
+        sprite.setTextureRect(rect);
+            sprite.setTexture(texture);
+            sprite.setPosition(Game::Screen::screenWidth/2-160, Game::Screen::screenHeight/2-100);
+        // Draw the sprite
+        window.draw(sprite);
+        // Draw Gamplay Score
+        window.draw(ScoreText);
+
+        // Draw High Score
+        ScoreText.setString(std::to_string(*bestScore));
+            ScoreText.setCharacterSize(40);
+            ScoreText.setPosition(350 , 255);
+            window.draw(ScoreText);
+
+        window.display();
     }
 
 }

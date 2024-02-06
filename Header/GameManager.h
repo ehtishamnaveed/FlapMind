@@ -6,6 +6,12 @@
 #include "GameMode.h"
 
 namespace Game {
+    enum class GameState {
+        InGame,
+        GameOver,
+        Exit
+    };
+
     class GameManager {
     public:
         GameManager();
@@ -18,6 +24,7 @@ namespace Game {
         void resetGameState();
         void resetScore();
         void setGameMode(const GameModes GameType);
+        void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore);
 
     private:
         Bird bird;

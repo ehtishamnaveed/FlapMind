@@ -8,6 +8,9 @@ namespace Game {
     extern const float gravity;
 
     extern std::string theme_name;
+    extern unsigned short easymode_highscore;
+    extern unsigned short hardmode_highscore;
+    extern unsigned short crazymode_highscore;
 
     void loadConfiguration();
     void saveConfiguration();
