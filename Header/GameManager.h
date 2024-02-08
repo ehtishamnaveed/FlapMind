@@ -6,15 +6,14 @@
 #include "GameMode.h"
 
 namespace Game {
-    enum class GameState {
-        InGame,
-        GameOver,
-        Exit
-    };
-
     class GameManager {
     public:
         GameManager();
+        // Sound FX
+        void playScoreFX();
+        void playLowScoreFX();
+        void playHighScoreFX();
+
         void renderGame(sf::RenderWindow& i_window);
         void runGame(sf::RenderWindow& i_window);
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes) ;
@@ -37,6 +36,10 @@ namespace Game {
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;
+
+        // Sound FX
+        sf::SoundBuffer FXsound;
+        sf::Sound FX;
     };
 }
 

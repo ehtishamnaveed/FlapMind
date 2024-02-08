@@ -4,7 +4,7 @@ SFML_PATH := ./SFML/
 FlapMind: Build/Main.o Build/Bird.o Build/Pipe.o Build/PipeManager.o Build/Game.o Build/GameManager.o Build/UI.o Build/EventHandler.o
 	g++ Build/*.o -o FlapMind -L$(SFML_PATH)/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
-Build/Main.o: Source/Main.cpp Header/Game.h Header/GameManager.h Header/UI.h
+Build/Main.o: Source/Main.cpp Header/Game.h Header/UI.h
 	g++ -c Source/Main.cpp -o Build/Main.o -I$(SFML_PATH)/include
 
 Build/Bird.o: Source/Bird.cpp Header/Bird.h Header/Game.h
@@ -22,7 +22,7 @@ Build/Game.o: Source/Game.cpp Header/Game.h
 Build/GameManager.o: Source/GameManager.cpp Header/GameManager.h Header/Bird.h Header/Game.h Header/PipeManager.h Header/GameMode.h
 	g++ -c Source/GameManager.cpp -o Build/GameManager.o -I$(SFML_PATH)/include
 
-Build/EventHandler.o: Source/EventHandler.cpp Header/EventHandler.h Header/UI.h
+Build/EventHandler.o: Source/EventHandler.cpp Header/EventHandler.h Header/UI.h Header/Game.h
 	g++ -c Source/EventHandler.cpp -o Build/EventHandler.o -I$(SFML_PATH)/include
 
 Build/UI.o: Source/UI.cpp Header/UI.h Header/EventHandler.h Header/GameManager.h Header/Game.h

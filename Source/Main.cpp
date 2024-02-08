@@ -3,6 +3,7 @@
 #include "../Header/UI.h"
 
 int main() {
+    // Load the Game Settings
     Game::loadConfiguration();
 
     UI::Menu* currentMenu = new UI::MainMenu();

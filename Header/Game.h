@@ -6,6 +6,7 @@
 
 namespace Game {
     extern const float gravity;
+    extern bool mute;
 
     extern std::string theme_name;
     extern unsigned short easymode_highscore;

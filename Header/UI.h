@@ -7,9 +7,6 @@
 #include <thread>
 
 namespace UI {
-    // Define a shorter name for the menu handler map type
-    // using MenuHandlerMap = std::unordered_map<std::type_index, std::function<void(Menu*)>>;
-
     class Menu {
     public:
         virtual ~Menu() {}
@@ -20,6 +17,8 @@ namespace UI {
         virtual void drawBackground(sf::RenderWindow& i_window) = 0;
     };
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Main Menu class
     class MainMenu : public Menu {
@@ -42,6 +41,8 @@ namespace UI {
         sf::Sprite background_sprite;
     };
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Play Menu class
     class PlayMenu : public Menu {
@@ -63,6 +64,9 @@ namespace UI {
         sf::Texture background_texture;
         sf::Sprite background_sprite;
     };
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Theme Menu class
     class ThemeMenu : public Menu {
@@ -86,20 +90,34 @@ namespace UI {
         sf::Sprite background_sprite;
     };
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Manager for Menus
     class MenuManager {
     public:
         MenuManager();
+        // Music and FX
+        void playLoadingFX();
+        void playMainMenuMusic();
+        void stopMainMenuMusic();
+
         void displayMenu(UI::Menu*& currentMenu);
+        
+        // Handles Menu States
         void handleMenuStateChange(UI::Menu*& currentMenu);
         void handleMainMenu(UI::Menu*& currentMenu);
         void handlePlayMenu(UI::Menu*& currentMenu);
         void handleThemeMenu(UI::Menu*& currentMenu);
+
     private:
         Game::EventHandler EventManager;
         sf::RenderWindow window;
         Game::GameManager GameController;
+
+        // Loading Screen Sound
+        sf::SoundBuffer FXsound;
+        sf::Sound LoadingFX;
     };
 }
 

@@ -65,7 +65,6 @@ namespace Game {
 	        	GeneratorDuration = CrazyGeneratorDuration;
 			 	break;
 		}
-		// Y_Distribution(PipeIndent, Game::Screen::screenHeight - PipeIndent);
 		Y_Distribution = std::uniform_int_distribution<unsigned short>(PipeIndent, Game::Screen::screenHeight - PipeIndent);
 		GeneratorTimer = GeneratorDuration;
 	}

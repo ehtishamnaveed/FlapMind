@@ -2,13 +2,17 @@
 #define BIRD_H
 
 #include <SFML/Graphics.hpp>
-#include "PipeManager.h"
+#include "../Header/PipeManager.h"
+#include <SFML/Audio.hpp>
 #include <vector>
 
 namespace Game {
 	class Bird {
 	public:
 		Bird();
+		// Plays Flap Sound
+		void playFlapSound();
+
 		void drawBird(sf::RenderWindow& i_window);
 		void updateBird();
 
@@ -23,7 +27,7 @@ namespace Game {
 
 	private:
 		static constexpr char FlapSpeed = -9;
-		static constexpr unsigned char BirdSize = 40;
+		static constexpr unsigned char BirdSize = 42;
 		static constexpr char GroundLimit = 35;
 		bool IsAlive;
 		float Vertical_Speed;
@@ -32,6 +36,10 @@ namespace Game {
 
 		sf::Sprite bird;
 	    sf::Texture texture;
+
+	    // Flap Sound
+        sf::SoundBuffer FXsound;
+        sf::Sound FlapFX;
 	};
 }
 

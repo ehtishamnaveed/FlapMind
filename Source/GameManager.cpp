@@ -14,6 +14,43 @@ namespace Game {
         ScoreText.setFillColor(sf::Color::Black);
         ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
         ScoreText.setString(std::to_string(Score));
+
+    }
+
+    // Play Score FX
+    void GameManager::playScoreFX() {
+        if (!Game::mute) {
+            // Load sound files into sound buffers
+            FXsound.loadFromFile("Resources/SoundFX/ScoreFX.mp3");
+
+            // Associate sound buffers with sound objects
+            FX.setBuffer(FXsound);
+            FX.play();
+        }
+    }
+
+    // Play LowScore FX
+    void GameManager::playLowScoreFX() {
+        if (!Game::mute) {
+            // Load sound files into sound buffers
+            FXsound.loadFromFile("Resources/SoundFX/LowScoreFX.mp3");
+
+            // Associate sound buffers with sound objects
+            FX.setBuffer(FXsound);
+            FX.play();
+        }
+    }
+
+    // Play HighScore FX
+    void GameManager::playHighScoreFX() {
+        if (!Game::mute) {
+            // Load sound files into sound buffers
+            FXsound.loadFromFile("Resources/SoundFX/HighScoreFX.mp3");
+
+            // Associate sound buffers with sound objects
+            FX.setBuffer(FXsound);
+            FX.play();
+        }
     }
 
     // Main game loop logic
@@ -31,7 +68,6 @@ namespace Game {
 
             // Render the display including pipes, bird, and score
             renderGame(i_window);
-            i_window.display();
 
             // Check for Collision
             if (collisionOfBirdWithPipes(bird, PipeController.getPipes())) {
@@ -44,19 +80,23 @@ namespace Game {
 
     // Draw pipes, bird, and score on the window
     void GameManager::renderGame(sf::RenderWindow& i_window) {
-        // Updates Bird Postion
-        bird.updateBird();
+        i_window.clear();
+        // Draw the Background
+        drawBackground(i_window);
         // Updates Pipes position
         PipeController.updatePipes();
-        //Draws the Background
-        drawBackground(i_window);
         // Displays Pipe
         PipeController.drawPipes(i_window);
-        // Diaplsys Bird
+        // Updates Bird Position
+        bird.updateBird();
+        // Displays Bird
         bird.drawBird(i_window);
         // Displays Score
         i_window.draw(ScoreText);
+        // Display everything on the window
+        i_window.display();
     }
+
 
     // Increment the score and update the display
     void GameManager::updateScore() {
@@ -64,32 +104,41 @@ namespace Game {
         ScoreText.setString(std::to_string(Score));
     }
 
+    // Collision Detection
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
+        // Constants
         const unsigned char collisionAnomaly = 6;
-        // Extracting relevant information for collision detection
-        const short bird_Xpos = bird.getXPosition();
-        const short bird_Ypos = bird.getYPosition();
-        const char birdSize = bird.getBirdSize();
-        // range to not check for collsion for pipes
-        const unsigned char birdRearRange =  bird_Xpos - birdSize;
-        // range to check for collsion for pipes
-        const unsigned char birdFrontRange =  bird_Xpos + birdSize;
+        const short birdSize = bird.getBirdSize();
 
-        for (const Pipe& curr_pipe : pipes) {
-            // Check if the pipe is behind the bird, else move on to next pipe
-            if (curr_pipe.getXPosition() < birdRearRange - curr_pipe.getPipeSpeed()) 
-                continue; 
-            // Check if the pipe is range to collide with the bird
-            if (curr_pipe.getXPosition() < birdFrontRange - collisionAnomaly && curr_pipe.getXPosition() > birdRearRange) {
+        // Bird boundaries
+        const short birdXPos = bird.getXPosition();
+        const short birdYPos = bird.getYPosition();
+        const unsigned char birdLeftBoundary = birdXPos - birdSize;
+        const unsigned char birdRightBoundary = birdXPos + birdSize;
+
+        // Loop through pipes
+        for (const Pipe& pipe : pipes) {
+            // Pipe information
+            const short pipeXPos = pipe.getXPosition();
+            const short pipeYPos = pipe.getYPosition();
+            const unsigned char pipeGapSize = pipe.getGapSize();
+            const char pipeSpeed = pipe.getPipeSpeed();
+
+            // Check if the pipe is behind the bird
+            if (pipeXPos < birdLeftBoundary - pipeSpeed)
+                continue; // Continue to the next pipe then
+
+            // Check if the pipe is in range to collide with the bird
+            if (pipeXPos < birdRightBoundary - collisionAnomaly && pipeXPos > birdLeftBoundary) {
                 // Check for collision excluding the gap area
-                // Pipe's Upper Portion ---------- OR ---------- Pipe's Lower Portion
-                if (bird_Ypos <= curr_pipe.getYPosition() - collisionAnomaly || bird_Ypos + birdSize >= curr_pipe.getYPosition() + curr_pipe.getGapSize() + collisionAnomaly)
-                    return true; /* Collision detected */
+                if (birdYPos <= pipeYPos - collisionAnomaly || birdYPos + birdSize >= pipeYPos + pipeGapSize + collisionAnomaly)
+                    return true; // Collision detected
                 break;
             }
             // Check for scoring (bird passed the pipe)
-            else if (bird_Xpos > curr_pipe.getXPosition() + birdSize) {
-                updateScore();
+            else if (birdXPos > pipeXPos + birdSize) {
+                updateScore(); // Bird passed the pipe
+                playScoreFX();
                 break;
             }
         }
@@ -131,10 +180,12 @@ namespace Game {
         // Calculate texture rect size only once
         sf::IntRect rect;
             if (Score > *bestScore) {
+                playHighScoreFX();
                 *bestScore = Score;
                 rect = sf::IntRect(300, 0, 300, 150);
             }
             else {
+                playLowScoreFX();
                 rect = sf::IntRect(0, 0, 300, 150);
 
                 // Gamplay Score

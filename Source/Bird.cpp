@@ -3,7 +3,13 @@
 #include "../Header/Game.h"
 
 namespace Game {
-	Bird::Bird(): Y_Position(20), X_Position(170), IsAlive(1) {} //(0.5f * (600 - 16)); }
+	Bird::Bird(): Y_Position(20), X_Position(170), IsAlive(1) {
+		// Load sound files into sound buffers
+        FXsound.loadFromFile("Resources/SoundFX/FlapFX.mp3");
+
+         // Associate sound buffers with sound objects
+        FlapFX.setBuffer(FXsound);
+	}
 
 	void Bird::drawBird(sf::RenderWindow& i_window) {
 		texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Birdy.png");
@@ -29,10 +35,13 @@ namespace Game {
 
 		// If the Bird is Alive
 		if (IsAlive) {
-			// And the Vertical speed is greater OR equal to 0, and the User presses the 'Up Arrow key'
+			// And the Vertical speed is greater OR equal to 0
+			// and the User presses the 'Up Arrow key'
 			if (0 <= Vertical_Speed && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				// Then make the Bird Falp
+				// and Make the bird Falp
 	        	Vertical_Speed = FlapSpeed;
+				// Play the flap Sound
+				playFlapSound();
 	    	}
 		}
 
@@ -74,4 +83,10 @@ namespace Game {
 	 	X_Position = 170;
 	  	IsAlive = 1;
 	}
+
+	// Plays Flap Sound
+    void Bird::playFlapSound() {
+    	if (!Game::mute)
+	   		FlapFX.play();
+    }
 }
