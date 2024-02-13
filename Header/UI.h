@@ -36,6 +36,7 @@ namespace UI {
         int SelectedMenu;
         sf::Font menuFont;
         sf::Text MenuText[3];
+        sf::RectangleShape MenuBox[3];
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;
@@ -60,6 +61,7 @@ namespace UI {
         int SelectedMenu;
         sf::Font menuFont;
         sf::Text MenuText[3];
+        sf::RectangleShape MenuBox[3];
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;
@@ -85,6 +87,7 @@ namespace UI {
         std::string Themes[3];
         sf::Font menuFont;
         sf::Text MenuText[3];
+        sf::RectangleShape MenuBox[3];
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;
@@ -104,7 +107,7 @@ namespace UI {
 
         void displayMenu(UI::Menu*& currentMenu);
         
-        // Handles Menu States
+        // Handles Specific Menu State
         void handleMenuStateChange(UI::Menu*& currentMenu);
         void handleMainMenu(UI::Menu*& currentMenu);
         void handlePlayMenu(UI::Menu*& currentMenu);

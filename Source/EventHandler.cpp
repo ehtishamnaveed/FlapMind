@@ -6,16 +6,16 @@
 
 namespace Game {
 	EventHandler::EventHandler() {
-		// Load sound files into sound buffers
+		// Load sound file into sound buffer
         FXsound.loadFromFile("Resources/SoundFX/MenuFX.mp3");
 
-         // Associate sound buffers with sound objects
+         // Associate sound buffer with sound object
         MenuFX.setBuffer(FXsound);
 
-        // Load sound files into sound buffers
+        // Load sound file into sound buffer
         EnterFXsound.loadFromFile("Resources/SoundFX/EnterFX.mp3");
 
-         // Associate sound buffers with sound objects
+         // Associate sound buffer with sound object
         Enter.setBuffer(EnterFXsound);
 	}
 
@@ -34,44 +34,54 @@ namespace Game {
     // Handles specific Key pressed Events only
     void EventHandler::processKeyPressed(const sf::Keyboard::Key& key, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler) {
      	switch (key) {
-	        // Start the game when the Enter key is pressed
+	        // To go into the 'Next Menu'
 	        case sf::Keyboard::Enter:
 	        	EnterFX();
 	        	MenuHandler.handleMenuStateChange(currentMenu);
 	            break;
 
+	        // To go 'Up' in the Menu
 	        case sf::Keyboard::Up:
 	            playFX();
 	            currentMenu->moveUp();
 	            break;
 
+	        // To go 'Down' in the Menu
 	        case sf::Keyboard::Down:
 	            playFX();
 	            currentMenu->moveDown();
 	            break;
 
+	        // To go the 'Main Menu'
 	        case sf::Keyboard::Escape:
 	          	delete currentMenu;
 	            currentMenu = new UI::MainMenu();
 	            break;
 
+	        // To 'Mute' the Sound fx
 	        case sf::Keyboard::M:
+	        	// If the Game is not already mute
 	        	if (!Game::mute)
+	        		// Then Mute the game
 	          		Game::mute = true;
 	          	else
+	          		// Else Unmute the Game
 	          		Game::mute = false;
 	            break;
 
+	        // To 'Play' the Menu Music
 	        case sf::Keyboard::P:
 	        	MenuHandler.playMainMenuMusic();
 	         	break;
 
+	        // To 'Stop' the Menu Music
 	        case sf::Keyboard::S:
 	        	MenuHandler.stopMainMenuMusic();
 	         	break;
 	    }
     }
 
+    // Handles Game Over state
     bool EventHandler::processGameOverState(sf::RenderWindow& i_window) {
     	bool state;
     	sf::Event event;

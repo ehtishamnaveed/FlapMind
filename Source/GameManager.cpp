@@ -63,6 +63,7 @@ namespace Game {
                 if (event.type == sf::Event::Closed){
                     Game::saveConfiguration();
                     i_window.close();
+                    break;
                 }
             }
 
@@ -98,7 +99,7 @@ namespace Game {
     }
 
 
-    // Increment the score and update the display
+    // Increment the score
     void GameManager::updateScore() {
         Score++;
         ScoreText.setString(std::to_string(Score));
@@ -168,10 +169,12 @@ namespace Game {
         i_window.draw(background_sprite);
     }
 
+    // It sets the Game Mode type
     void GameManager::setGameMode(const GameModes GameType) {
          PipeController.setSettings(GameType);
     }
 
+    // End Game Overlay
     void GameManager::displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore) {
         sf::Texture texture;
         sf::Sprite sprite;

@@ -21,14 +21,15 @@ namespace Game {
 		const unsigned char getBirdSize() const;
 		const char getFlapSpeed() const;
 
-		void Dies();
-		bool isLiving();
-		void resetState();
+		void Dies(); // Makes the Bird die
+		bool isLiving(); // Return the Bird living state
+		void resetState(); // Resets the Bird state
 
 	private:
 		static constexpr char FlapSpeed = -9;
 		static constexpr unsigned char BirdSize = 42;
 		static constexpr char GroundLimit = 35;
+
 		bool IsAlive;
 		float Vertical_Speed;
 		float Y_Position;

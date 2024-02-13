@@ -1,1 +1,1 @@
-DarkNight 16 6 3 0
+ClearSky 4 9 8 1

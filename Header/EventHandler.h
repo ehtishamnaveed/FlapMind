@@ -19,11 +19,15 @@ namespace Game {
 
     public:
         EventHandler();
+        
         // Function to play a sound
         void playFX();
         void EnterFX();
+
         // Handles specific Key pressed Events only
         void processKeyPressed(const sf::Keyboard::Key& key, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler);
+
+        // Handles Game Over state
         bool processGameOverState(sf::RenderWindow& i_window);
     };
 }

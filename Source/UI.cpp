@@ -13,14 +13,22 @@ namespace UI {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, Height/2 + iterator * 50);
+
+		    // Add box behind the text
+	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
+	        MenuBox[iterator].setPosition(Width / 2 - 125, Height / 2 + iterator * 50 - 5);
 		}
+
+		// Set the initial box to be selected
+    	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 
 		// Play
 		MenuText[0].setString("Play");
 		MenuText[0].setFillColor(sf::Color::White);
 
 		// AI Playthrough
-		MenuText[1].setString("AI Playthrough");
+		MenuText[1].setString("AI Play");
 		MenuText[1].setFillColor(sf::Color::Black);
 
 		// Theme
@@ -31,26 +39,36 @@ namespace UI {
 	// Draw the Elements of Main Menu
 	void MainMenu::drawMenu(sf::RenderWindow& i_window) {
 		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator)
+		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
+			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
 			i_window.draw(MenuText[iterator]);
+		}
 	}
 
 	// Navigate Up in Menu
 	void MainMenu::moveUp() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Navigate Down in Menu
 	void MainMenu::moveDown() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu + 1) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Return the index of Selected Menu
@@ -83,7 +101,15 @@ namespace UI {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
+
+		    // Add box behind the text
+	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
+	        MenuBox[iterator].setPosition(Width / 2 - 120, 180 + iterator * 80);
 		}
+
+		// Set the initial box to be selected
+    	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 
 		// Easy 
 		MenuText[0].setFillColor(sf::Color::White);
@@ -101,26 +127,36 @@ namespace UI {
 	// Draw the Elements of Main Menu
 	void PlayMenu::drawMenu(sf::RenderWindow& i_window) {
 		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator)
+		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
+			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
 			i_window.draw(MenuText[iterator]);
+		}
 	}
 
 	// Navigate Up in Menu
 	void PlayMenu::moveUp() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Navigate Down in Menu
 	void PlayMenu::moveDown() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu + 1) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Return the index of Selected Menu
@@ -158,7 +194,15 @@ namespace UI {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
+
+		    // Add box behind the text
+	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
+	        MenuBox[iterator].setPosition(Width / 2 - 120, 180 + iterator * 80);
 		}
+
+		// Set the initial box to be selected
+    	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 
 		// ClearSky 
 		MenuText[0].setFillColor(sf::Color::White);
@@ -176,26 +220,36 @@ namespace UI {
 	// Draw the Elements of Main Menu
 	void ThemeMenu::drawMenu(sf::RenderWindow& i_window) {
 		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator)
+		for(int iterator = 0 ; iterator < 3 ; ++iterator){
+			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
 			i_window.draw(MenuText[iterator]);
+		}
 	}
 
 	// Navigate Up in Menu
 	void ThemeMenu::moveUp() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Navigate Down in Menu
 	void ThemeMenu::moveDown() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
 	    SelectedMenu = (SelectedMenu + 1) % 3;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Return the index of Selected Menu
@@ -390,6 +444,7 @@ namespace UI {
     	}
     }
 
+    // Stops the Music
     void MenuManager::stopMainMenuMusic() {
     	LoadingFX.stop();
     }

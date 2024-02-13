@@ -10,7 +10,10 @@ namespace Game {
 		void drawPipes(sf::RenderWindow& i_window);
 		void updatePipes();
 		const std::vector<Pipe>& getPipes() const;
-		void resetPipes();
+		void resetPipes(); // Removes the Pipes from Vector
+
+		// Sets 'PipeIndent' and  'GeneratorDuration'
+		// for the specific GameMode type
 		void setSettings(GameModes GameType);
 
 
