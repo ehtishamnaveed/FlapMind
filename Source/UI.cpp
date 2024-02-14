@@ -3,9 +3,58 @@
 #include "../Header/UI.h"
 
 namespace UI {
+// Menu //
+	// Draw the Elements of Main Menu
+	void Menu::drawMenu(sf::RenderWindow& i_window) {
+		drawBackground(i_window);
+		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
+			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
+			i_window.draw(MenuText[iterator]);
+		}
+	}
+
+	// Navigate Up in Menu
+	void Menu::moveUp() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
+		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
+
+	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
+
+	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
+	}
+
+	// Navigate Down in Menu
+	void Menu::moveDown() {
+		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
+
+		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
+
+	    SelectedMenu = (SelectedMenu + 1) % 3;
+
+	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
+
+	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
+	}
+
+	// Return the index of Selected Menu
+	int Menu::getSelectedState() {
+		return SelectedMenu;
+	}
+
+
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 // MainMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	MainMenu::MainMenu(): Width(600), Height(600), SelectedMenu(0) {
+	MainMenu::MainMenu() {
 		// Load the font
 		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
 
@@ -36,46 +85,6 @@ namespace UI {
 		MenuText[2].setFillColor(sf::Color::Black);
 	}
 
-	// Draw the Elements of Main Menu
-	void MainMenu::drawMenu(sf::RenderWindow& i_window) {
-		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
-			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
-			i_window.draw(MenuText[iterator]);
-		}
-	}
-
-	// Navigate Up in Menu
-	void MainMenu::moveUp() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Navigate Down in Menu
-	void MainMenu::moveDown() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu + 1) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Return the index of Selected Menu
-	int MainMenu::getSelectedState() {
-		return SelectedMenu;
-	}
-
 	// Draw the Backgound for Main Menu
 	void MainMenu::drawBackground(sf::RenderWindow& i_window) {
         background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/MainScreen.png");
@@ -93,7 +102,7 @@ namespace UI {
 
 // PlayMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	PlayMenu::PlayMenu(): Width(600), Height(600), SelectedMenu(0) {
+	PlayMenu::PlayMenu() {
 		// Load the font
 		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
 
@@ -124,46 +133,6 @@ namespace UI {
 		MenuText[2].setString("Crazy");
 	}
 
-	// Draw the Elements of Main Menu
-	void PlayMenu::drawMenu(sf::RenderWindow& i_window) {
-		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
-			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
-			i_window.draw(MenuText[iterator]);
-		}
-	}
-
-	// Navigate Up in Menu
-	void PlayMenu::moveUp() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Navigate Down in Menu
-	void PlayMenu::moveDown() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu + 1) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Return the index of Selected Menu
-	int PlayMenu::getSelectedState() {
-		return SelectedMenu;
-	}
-
 	// Draw the Backgound for Play Menu
 	void PlayMenu::drawBackground(sf::RenderWindow& i_window) {
         background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Background.png");
@@ -181,7 +150,7 @@ namespace UI {
 
 // ThemeMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	ThemeMenu::ThemeMenu(): Width(600), Height(600), SelectedMenu(0) {
+	ThemeMenu::ThemeMenu() {
 		// Initilizeing Themes array
 		Themes[0] = "ClearSky";
 		Themes[1] = "DarkNight";
@@ -215,46 +184,6 @@ namespace UI {
 		// SunSet
 		MenuText[2].setFillColor(sf::Color::Black);
 		MenuText[2].setString("SunSet");
-	}
-
-	// Draw the Elements of Main Menu
-	void ThemeMenu::drawMenu(sf::RenderWindow& i_window) {
-		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator){
-			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
-			i_window.draw(MenuText[iterator]);
-		}
-	}
-
-	// Navigate Up in Menu
-	void ThemeMenu::moveUp() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Navigate Down in Menu
-	void ThemeMenu::moveDown() {
-		MenuBox[SelectedMenu].setFillColor(sf::Color::Transparent);
-
-		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
-
-	    SelectedMenu = (SelectedMenu + 1) % 3;
-
-	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
-
-	    MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-	}
-
-	// Return the index of Selected Menu
-	int ThemeMenu::getSelectedState() {
-		return SelectedMenu;
 	}
 
 	// Draw the Backgound for Play Menu

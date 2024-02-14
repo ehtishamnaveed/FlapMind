@@ -9,12 +9,24 @@
 namespace UI {
     class Menu {
     public:
-        virtual ~Menu() {}
-        virtual void drawMenu(sf::RenderWindow& window) = 0;
-        virtual void moveUp() = 0;
-        virtual void moveDown() = 0;
-        virtual int getSelectedState() = 0;
+        Menu(): Width(600), Height(600), SelectedMenu(0) {};
+        void drawMenu(sf::RenderWindow& window);
+        void moveUp();
+        void moveDown();
+        int getSelectedState();
         virtual void drawBackground(sf::RenderWindow& i_window) = 0;
+
+    protected:
+        const short Width;
+        const short Height;
+        int SelectedMenu;
+
+        sf::Font menuFont;
+        sf::Text MenuText[3];
+        sf::RectangleShape MenuBox[3];
+
+        sf::Texture background_texture;
+        sf::Sprite background_sprite;
     };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -25,21 +37,6 @@ namespace UI {
     public:
         MainMenu();
         void drawBackground(sf::RenderWindow& i_window) override;
-        void drawMenu(sf::RenderWindow& window) override;
-        void moveUp() override;
-        void moveDown() override;
-        int getSelectedState() override;
-
-    private:
-        const short Width;
-        const short Height;
-        int SelectedMenu;
-        sf::Font menuFont;
-        sf::Text MenuText[3];
-        sf::RectangleShape MenuBox[3];
-
-        sf::Texture background_texture;
-        sf::Sprite background_sprite;
     };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,21 +47,6 @@ namespace UI {
     public:
         PlayMenu();
         void drawBackground(sf::RenderWindow& i_window) override;
-        void drawMenu(sf::RenderWindow& window) override;
-        void moveUp() override;
-        void moveDown() override;
-        int getSelectedState() override;
-
-    private:
-        const short Width;
-        const short Height;
-        int SelectedMenu;
-        sf::Font menuFont;
-        sf::Text MenuText[3];
-        sf::RectangleShape MenuBox[3];
-
-        sf::Texture background_texture;
-        sf::Sprite background_sprite;
     };
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -75,24 +57,12 @@ namespace UI {
     public:
         ThemeMenu();
         void drawBackground(sf::RenderWindow& i_window) override;
-        void drawMenu(sf::RenderWindow& window) override;
-        void moveUp() override;
-        void moveDown() override;
-        int getSelectedState() override;
 
     private:
-        const short Width;
-        const short Height;
-        int SelectedMenu;
         std::string Themes[3];
-        sf::Font menuFont;
-        sf::Text MenuText[3];
-        sf::RectangleShape MenuBox[3];
-
-        sf::Texture background_texture;
-        sf::Sprite background_sprite;
     };
 
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
