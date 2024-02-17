@@ -1,36 +1,34 @@
-
+# SFML_PATH: Path to the SFML library directory.
 SFML_PATH := ./SFML/
 
-FlapMind: Build/Main.o Build/Bird.o Build/Pipe.o Build/PipeManager.o Build/Game.o Build/GameManager.o Build/UI.o Build/EventHandler.o
-	g++ Build/*.o -o FlapMind -L$(SFML_PATH)/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
+# LIBS: Libraries to link against during the linking phase.
+LIBS := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
-Build/Main.o: Source/Main.cpp Header/Game.h Header/UI.h
-	g++ -c Source/Main.cpp -o Build/Main.o -I$(SFML_PATH)/include
+# CPPFLAGS: Compiler flags for C and C++ files.
+CPPFLAGS := -I$(SFML_PATH)/include
 
-Build/Bird.o: Source/Bird.cpp Header/Bird.h Header/Game.h
-	g++ -c Source/Bird.cpp -o Build/Bird.o -I$(SFML_PATH)/include
+# LDFLAGS: Additional flags to pass to the linker.
+LDFLAGS := -L$(SFML_PATH)/lib
 
-Build/Pipe.o: Source/Pipe.cpp Header/Pipe.h Header/Game.h
-	g++ -c Source/Pipe.cpp -o Build/Pipe.o -I$(SFML_PATH)/include
+# SRCS: List of source files to compile
+SRCS := $(wildcard Source/*.cpp)
 
-Build/PipeManager.o: Source/PipeManager.cpp Header/PipeManager.h Header/Pipe.h Header/Game.h
-	g++ -c Source/PipeManager.cpp -o Build/PipeManager.o -I$(SFML_PATH)/include
+# OBJS: List of object files to build from source files.
+OBJS := $(patsubst Source/%.cpp, Build/%.o, $(SRCS))
 
-Build/Game.o: Source/Game.cpp Header/Game.h
-	g++ -c Source/Game.cpp -o Build/Game.o -I$(SFML_PATH)/include
 
-Build/GameManager.o: Source/GameManager.cpp Header/GameManager.h Header/Bird.h Header/Game.h Header/PipeManager.h Header/GameMode.h
-	g++ -c Source/GameManager.cpp -o Build/GameManager.o -I$(SFML_PATH)/include
+# Target to build the FlapMind executable.
+FlapMind: $(OBJS)
+	g++ $(LDFLAGS) $(OBJS) -o $@ $(LIBS)
 
-Build/EventHandler.o: Source/EventHandler.cpp Header/EventHandler.h Header/UI.h Header/Game.h
-	g++ -c Source/EventHandler.cpp -o Build/EventHandler.o -I$(SFML_PATH)/include
+# Rule to compile each source file into an object file.
+Build/%.o: Source/%.cpp
+	g++ -c $(CPPFLAGS) $< -o $@
 
-Build/UI.o: Source/UI.cpp Header/UI.h Header/EventHandler.h Header/GameManager.h Header/Game.h
-	g++ -c Source/UI.cpp -o Build/UI.o -I$(SFML_PATH)/include
-
+# Target to run the FlapMind executable.
 run: FlapMind
 	./FlapMind
 
+# Target to clean up object files and the executable.
 clean: 
 	rm -f Build/*.o FlapMind
-

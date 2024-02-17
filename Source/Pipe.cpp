@@ -5,8 +5,8 @@
 namespace Game {
 	// Constructor initilizes the Pipe's X and Y co-ordinates while loading the Pipe texture
 	Pipe::Pipe(short x_origin, unsigned short y_origin, GameModes GameType): 
-		X_Position(x_origin), 
-		Y_Position(y_origin) 
+		PipeXPosition(x_origin), 
+		PipeYPosition(y_origin) 
 		// Body of Constructor
 		{ texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Pipe.png");
 			switch (GameType) {
@@ -32,7 +32,7 @@ namespace Game {
 		pipe.setTexture(texture);
 
 		// Top Side Pipe
-		pipe.setPosition(X_Position, (Y_Position - Game::Screen::screenHeight));
+		pipe.setPosition(PipeXPosition, (PipeYPosition - Game::Screen::screenHeight));
 		// Left, Top, Width, Height
 		pipe.setTextureRect(sf::IntRect(50, 0, 50, Game::Screen::screenHeight));
 		i_window.draw(pipe);
@@ -41,19 +41,19 @@ namespace Game {
 		//OPTIMIZATION 100
 
 		// Bottom Side Pipe
-		pipe.setPosition(X_Position, (Y_Position + GapSize));
+		pipe.setPosition(PipeXPosition, (PipeYPosition + GapSize));
 		pipe.setTextureRect(sf::IntRect(0, 0, 50, Game::Screen::screenHeight));
 		i_window.draw(pipe);
 	}
 
 	void Pipe::update() {
-		X_Position -= PipeSpeed;
+		PipeXPosition -= PipeSpeed;
 
-		// if (pipeIndent == Y_Position)
+		// if (pipeIndent == PipeYPosition)
 		// {
 		// 	direction = 1;
 		// }
-		// else if (Y_Position == 288 - 64 - pipeIndent)
+		// else if (PipeYPosition == 288 - 64 - pipeIndent)
 		// {
 		// 	direction = 0;
 		// }
@@ -64,11 +64,11 @@ namespace Game {
 
 		// 	if (0 == direction)
 		// 	{
-		// 		Y_Position--;
+		// 		PipeYPosition--;
 		// 	}
 		// 	else
 		// 	{
-		// 		Y_Position++;
+		// 		PipeYPosition++;
 		// 	}
 		// }
 		// else
@@ -79,15 +79,15 @@ namespace Game {
 
 	// Checks if the Pipe is beyond the Screen
 	const bool Pipe::isRemoveable() const {
-		return X_Position <= OffScreenLimit;
+		return PipeXPosition <= OffScreenLimit;
 	}
 
 	const short Pipe::getXPosition() const {
-		return X_Position;
+		return PipeXPosition;
 	}
 
 	const unsigned short Pipe::getYPosition() const {
-		return Y_Position;
+		return PipeYPosition;
 	}
 
 	const unsigned char Pipe::getGapSize() const {

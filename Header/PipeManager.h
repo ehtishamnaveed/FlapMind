@@ -1,6 +1,6 @@
 #ifndef PIPEMANAGER_H
 #define PIPEMANAGER_H
-#include "Pipe.h"
+#include "../Header/Pipe.h"
 #include <random>
 
 namespace Game {
@@ -15,11 +15,17 @@ namespace Game {
 		// Sets 'PipeIndent' and  'GeneratorDuration'
 		// for the specific GameMode type
 		void setSettings(GameModes GameType);
+		// Sets pipe settings for AI
+		void setAISettings();
+		
+		// Getters
+		const std::uniform_int_distribution<unsigned short>& getYDistribution() const;
+		const unsigned char& getPipeIndent() const;
 
 
 	private:
 		GameModes GameType;
-		// Vector or "class Pipe" to store the generated pipes
+		// Vector of "class Pipe" to store the generated pipes
 		std::vector<Pipe> Pipes;
 
 		std::mt19937_64 RandomEngine;

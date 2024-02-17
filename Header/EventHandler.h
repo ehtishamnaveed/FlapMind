@@ -1,5 +1,5 @@
-#ifndef EVENT_HANDLER_H
-#define EVENT_HANDLER_H
+#ifndef EVENTHANDLER_H
+#define EVENTHANDLER_H
 #include <SFML/Audio.hpp>
 
 namespace UI {
@@ -9,14 +9,6 @@ namespace UI {
 
 namespace Game {
     class EventHandler {
-    private:
-        // Hover Sound
-        sf::SoundBuffer FXsound;
-        sf::Sound MenuFX;
-
-        sf::SoundBuffer EnterFXsound;
-        sf::Sound Enter;
-
     public:
         EventHandler();
         
@@ -29,6 +21,14 @@ namespace Game {
 
         // Handles Game Over state
         bool processGameOverState(sf::RenderWindow& i_window);
+
+    private:
+        // Hover Sound
+        sf::SoundBuffer FXsound;
+        sf::Sound MenuFX;
+
+        sf::SoundBuffer EnterFXsound;
+        sf::Sound Enter;
     };
 }
 

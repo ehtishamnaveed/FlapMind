@@ -1,5 +1,5 @@
-#ifndef GAME_MODE_H
-#define GAME_MODE_H
+#ifndef GAMEMODE_H
+#define GAMEMODE_H
 
 namespace Game {
     enum class GameModes {

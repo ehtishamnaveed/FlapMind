@@ -11,15 +11,15 @@ namespace Game {
 		void update(); // Updates the Pipe's X_position
 
 		const bool isRemoveable() const; // Checks If the Pipe is removeable
-		const short getXPosition() const; // Returns the Y Position
-		const unsigned short getYPosition() const; // Returns the X Position
+		const short getXPosition() const; // Returns the X Position
+		const unsigned short getYPosition() const; // Returns the Y Position
 		const unsigned char getGapSize() const; // Returns the 'GapSize' for the Respective GameMode
 		const unsigned char getPipeSpeed() const; // Returns the 'PipeSpeed' for the Respective GameMode
 
 	private:
 		// bool direction;
-		short X_Position;
-		unsigned short Y_Position;
+		short PipeXPosition;
+		unsigned short PipeYPosition;
 		static constexpr short OffScreenLimit = -50; // Range of Pipe's to get removed
 		// unsigned char y_MovementTimer;
 

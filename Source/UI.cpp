@@ -202,7 +202,7 @@ namespace UI {
 
 // Menu Manager class
     // Constructor initilizes the Window and sets its frame-rate limt
-    MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "FlapMind") {
+    MenuManager::MenuManager(): window(sf::VideoMode(Game::Screen::screenWidth, Game::Screen::screenHeight), "FlapMind", sf::Style::Close) {
     	// Window FrameRateLimit
     	window.setFramerateLimit(60);
 
@@ -267,6 +267,8 @@ namespace UI {
 
 			// AI PlayThrough
 			case 1:
+				GameController.setGameMode(Game::GameModes::Hard);
+				GameController.aiGameplay(window);
 				break;
 
 			// Theme
@@ -276,7 +278,6 @@ namespace UI {
 				currentMenu = new UI::ThemeMenu();
 				break;
 		}
-
     }
 
     // Play Menu Handler

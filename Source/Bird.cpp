@@ -3,7 +3,7 @@
 #include "../Header/Game.h"
 
 namespace Game {
-	Bird::Bird(): Y_Position(20), X_Position(170), IsAlive(1) {
+	Bird::Bird(): BirdYPosition(20), BirdXPosition(170), IsAlive(1) {
 		// Load sound files into sound buffers
         FXsound.loadFromFile("Resources/SoundFX/FlapFX.mp3");
 
@@ -22,7 +22,7 @@ namespace Game {
 	    }
 
 	    bird.setTexture(texture);
-	    bird.setPosition(X_Position, Y_Position);
+	    bird.setPosition(BirdXPosition, BirdYPosition);
 
 	    i_window.draw(bird);
 	}
@@ -31,7 +31,7 @@ namespace Game {
 		// Apply the Gravity to the Bird
 		Vertical_Speed += Game::gravity;
 		// And update its Y-axis Position
-		Y_Position += Vertical_Speed;
+		BirdYPosition += Vertical_Speed;
 
 		// If the Bird is Alive
 		if (IsAlive) {
@@ -46,11 +46,11 @@ namespace Game {
 		}
 
 		// Check if the Bird reaches the Ground limit
-		if (Y_Position >= Screen::screenHeight - GroundLimit) {
+		if (BirdYPosition >= Screen::screenHeight - BirdGroundLimit) {
 			// The Bird Dies
 			IsAlive = 0;
 			Vertical_Speed = 0;
-			Y_Position = Screen::screenHeight - GroundLimit;
+			BirdYPosition = Screen::screenHeight - BirdGroundLimit;
 		}
 	}
 
@@ -59,11 +59,11 @@ namespace Game {
 	}
 
 	const short Bird::getXPosition() const {
-		return X_Position;
+		return BirdXPosition;
 	}
 
 	const float Bird::getYPosition() const {
-		return Y_Position;
+		return BirdYPosition;
 	}
 
 	const char Bird::getFlapSpeed() const {
@@ -79,8 +79,8 @@ namespace Game {
 	}
 
 	void Bird::resetState() {
-		Y_Position = 20;
-	 	X_Position = 170;
+		BirdYPosition = 20;
+	 	BirdXPosition = 170;
 	  	IsAlive = 1;
 	}
 

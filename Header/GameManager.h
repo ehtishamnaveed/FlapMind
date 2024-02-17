@@ -1,14 +1,16 @@
-#ifndef GAME_MANAGER_H
-#define GAME_MANAGER_H
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
-#include "Bird.h"
-#include "PipeManager.h"
+#include "../Header/Bird.h"
+#include "../Header/PipeManager.h"
 #include "GameMode.h"
+#include "../Header/NeuralNetwork.h"
 
 namespace Game {
     class GameManager {
     public:
         GameManager();
+        void aiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
         // Sound FX
         void playScoreFX(); // FX when user scores
         void playLowScoreFX(); // FX for when user scores lower than the High score
@@ -20,12 +22,13 @@ namespace Game {
         void drawBackground(sf::RenderWindow& i_window); // Draw the backgound for Game
 
         void updateScore(); // Updates the score of the user
-        void resetGameState(); // Reset the Game settings
-        void resetScore(); // Reset the game score to '0'
+        void resetGameState(); // Resets the Game settings
+        void resetScore(); // Resets the game score to '0'
         void setGameMode(const GameModes GameType); // It sets the Game Mode type
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
     private:
+        NeuralNetwork::AI BirdAI; // THE AI
         Bird bird;
         PipeManager PipeController;
 

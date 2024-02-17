@@ -69,4 +69,18 @@ namespace Game {
 		GeneratorTimer = GeneratorDuration;
 	}
 
+	void PipeManager::setAISettings() {
+		GameType = GameModes::Hard;
+		PipeIndent = HardPipeIndent;
+    	GeneratorDuration = HardGeneratorDuration;
+	}
+
+	const std::uniform_int_distribution<unsigned short>& PipeManager::getYDistribution() const {
+		return Y_Distribution;
+	}
+
+	const unsigned char& PipeManager::getPipeIndent() const {
+		return PipeIndent;
+	}
+
 }

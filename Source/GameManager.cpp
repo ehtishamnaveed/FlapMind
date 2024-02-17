@@ -17,6 +17,60 @@ namespace Game {
 
     }
 
+    void GameManager::aiGameplay(sf::RenderWindow& i_window) {
+        bool keyPressed = false;
+        while (i_window.isOpen()) {
+            i_window.clear();
+            // Handle window closing event
+            sf::Event event;
+            while (i_window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed){
+                    Game::saveConfiguration();
+                    i_window.close();
+                    break;
+                }
+                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::E) {
+                    keyPressed = true;  // Set the flag to true to indicate key press
+                    this->setGameMode(GameModes::Easy);
+                }
+                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::H) {
+                    keyPressed = true;  // Set the flag to true to indicate key press
+                    this->setGameMode(GameModes::Hard);
+                }
+                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::C) {
+                    keyPressed = true;  // Set the flag to true to indicate key press
+                    this->setGameMode(GameModes::Crazy);
+                }
+                else if (event.type == sf::Event::KeyReleased) {
+                    keyPressed = false;  // Reset the flag on key release
+                }
+
+            }
+            // Draws Backgound
+            drawBackground(i_window);
+
+            // Updates and Draws Pipes
+            PipeController.updatePipes();
+            PipeController.drawPipes(i_window);
+
+            // AI (Updates and Draws itself)
+            BirdAI.playGame(i_window,PipeController.getPipes());
+
+            // Displays Score
+            i_window.draw(ScoreText);
+
+            // Displays Window
+            i_window.display();
+
+             // Check for Collision
+            if (collisionOfBirdWithPipes(BirdAI, PipeController.getPipes())) {
+                // If collides, The bird Dies
+                BirdAI.resetState();
+                resetGameState();
+            }
+        }
+    }
+
     // Play Score FX
     void GameManager::playScoreFX() {
         if (!Game::mute) {
@@ -111,9 +165,11 @@ namespace Game {
         const unsigned char collisionAnomaly = 6;
         const short birdSize = bird.getBirdSize();
 
-        // Bird boundaries
+        // Bird Position Information
         const short birdXPos = bird.getXPosition();
         const short birdYPos = bird.getYPosition();
+
+        // Bird Collision Boundaries Information
         const unsigned char birdLeftBoundary = birdXPos - birdSize;
         const unsigned char birdRightBoundary = birdXPos + birdSize;
 
@@ -125,20 +181,23 @@ namespace Game {
             const unsigned char pipeGapSize = pipe.getGapSize();
             const char pipeSpeed = pipe.getPipeSpeed();
 
-            // Check if the pipe is behind the bird
-            if (pipeXPos < birdLeftBoundary - pipeSpeed)
+            // Collision Range information
+            const bool pipeInCollisionRange = pipeXPos < birdRightBoundary - collisionAnomaly && pipeXPos > birdLeftBoundary;
+            const bool pipeIsBehindTheBird = pipeXPos < birdLeftBoundary - pipeSpeed;
+            const bool birdPassedThePipe = birdXPos > pipeXPos + birdSize;
+
+            if (pipeIsBehindTheBird)
                 continue; // Continue to the next pipe then
 
-            // Check if the pipe is in range to collide with the bird
-            if (pipeXPos < birdRightBoundary - collisionAnomaly && pipeXPos > birdLeftBoundary) {
+            if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
                 if (birdYPos <= pipeYPos - collisionAnomaly || birdYPos + birdSize >= pipeYPos + pipeGapSize + collisionAnomaly)
                     return true; // Collision detected
                 break;
             }
-            // Check for scoring (bird passed the pipe)
-            else if (birdXPos > pipeXPos + birdSize) {
-                updateScore(); // Bird passed the pipe
+
+            else if (birdPassedThePipe) {
+                updateScore();
                 playScoreFX();
                 break;
             }

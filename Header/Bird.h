@@ -14,7 +14,7 @@ namespace Game {
 		void playFlapSound();
 
 		void drawBird(sf::RenderWindow& i_window);
-		void updateBird();
+		virtual void updateBird();
 
 		const short getXPosition() const;
 		const float getYPosition() const;
@@ -25,15 +25,15 @@ namespace Game {
 		bool isLiving(); // Return the Bird living state
 		void resetState(); // Resets the Bird state
 
-	private:
+	protected:
 		static constexpr char FlapSpeed = -9;
 		static constexpr unsigned char BirdSize = 42;
-		static constexpr char GroundLimit = 35;
+		static constexpr char BirdGroundLimit = 35;
 
 		bool IsAlive;
 		float Vertical_Speed;
-		float Y_Position;
-		short X_Position;
+		float BirdXPosition;
+		short BirdYPosition;
 
 		sf::Sprite bird;
 	    sf::Texture texture;
