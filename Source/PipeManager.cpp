@@ -1,9 +1,6 @@
 #include <SFML/Graphics.hpp>
-// #include <random>
-#include <chrono>
 #include "../Header/PipeManager.h"
 #include "../Header/Game.h"
-#include <iostream>
 
 namespace Game {	
 	PipeManager::PipeManager(): RandomEngine(std::random_device{}()) {}

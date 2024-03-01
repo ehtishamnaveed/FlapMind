@@ -1,6 +1,7 @@
 #ifndef PIPEMANAGER_H
 #define PIPEMANAGER_H
 #include "../Header/Pipe.h"
+#include <chrono>
 #include <random>
 
 namespace Game {
