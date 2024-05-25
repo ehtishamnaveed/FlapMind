@@ -22,7 +22,7 @@ namespace Game {
 		const char getFlapSpeed() const;
 
 		void Dies(); // Makes the Bird die
-		bool isLiving(); // Return the Bird living state
+		bool isAlive(); // Return the Bird living state
 		void resetState(); // Resets the Bird state
 
 	protected:
@@ -31,9 +31,9 @@ namespace Game {
 		static constexpr char BirdGroundLimit = 35;
 
 		bool IsAlive;
-		float Vertical_Speed;
-		float BirdXPosition;
-		short BirdYPosition;
+		float BirdVerticalSpeed;
+		short BirdXPosition;
+		float BirdYPosition;
 
 		sf::Sprite bird;
 	    sf::Texture texture;

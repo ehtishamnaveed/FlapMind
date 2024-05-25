@@ -18,6 +18,11 @@ namespace Game {
     }
 
     void GameManager::aiGameplay(sf::RenderWindow& i_window) {
+        // Generating Weights for each bird
+        for (NeuralNetwork::AI& aibirds : BirdAI) {
+            aibirds.generateWeights();
+        }
+
         bool keyPressed = false;
         while (i_window.isOpen()) {
             i_window.clear();
@@ -53,21 +58,53 @@ namespace Game {
             PipeController.updatePipes();
             PipeController.drawPipes(i_window);
 
-            // AI (Updates and Draws itself)
-            BirdAI.playGame(i_window,PipeController.getPipes());
+            // Ai controler
+            controlAIBehaviour(i_window);
 
             // Displays Score
             i_window.draw(ScoreText);
 
             // Displays Window
             i_window.display();
+        }
+    }
 
-             // Check for Collision
-            if (collisionOfBirdWithPipes(BirdAI, PipeController.getPipes())) {
-                // If collides, The bird Dies
-                BirdAI.resetState();
-                resetGameState();
+    void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
+        bool needrestart = true;
+        for (NeuralNetwork::AI& aibird : BirdAI) {
+            if (aibird.isAlive()) {
+                needrestart = false;
+                break;
             }
+        }
+
+        if (!needrestart) {
+            for (NeuralNetwork::AI& aibirds : BirdAI) {
+                // AI (Updates and Draws itself)
+                aibirds.playGame(i_window,PipeController.getPipes());
+            }
+
+            for (NeuralNetwork::AI& aibird : BirdAI) {
+                // Check for Collision
+                if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
+                    // If collides, The bird Dies
+                    aibird.Dies();
+                }
+            }
+        }
+        else {
+            //std::sort will use the operator functions in the AI class.
+            std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
+
+            // We won't change the weights of the first 2 birds since they're the BEST!
+            for (size_t i = 2 ; i < PopulationSize ; ++i) {
+                BirdAI[i].uniformCrossoverWithMutation(BirdAI[0].getWeights(), BirdAI[1].getWeights());
+            }
+
+            for (NeuralNetwork::AI& aibirds : BirdAI) {
+                aibirds.resetState();
+            }
+            PipeController.resetPipes();
         }
     }
 
@@ -110,7 +147,7 @@ namespace Game {
     // Main game loop logic
     void GameManager::runGame(sf::RenderWindow& i_window) {
         // If the Bird is alive
-        while (i_window.isOpen() && bird.isLiving()) {
+        while (i_window.isOpen() && bird.isAlive()) {
             // Handle window closing event
             sf::Event event;
             while (i_window.pollEvent(event)) {

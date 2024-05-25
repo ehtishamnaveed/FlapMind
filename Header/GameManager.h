@@ -3,7 +3,7 @@
 
 #include "../Header/Bird.h"
 #include "../Header/PipeManager.h"
-#include "GameMode.h"
+#include "../Header/GameMode.h"
 #include "../Header/NeuralNetwork.h"
 
 namespace Game {
@@ -11,6 +11,7 @@ namespace Game {
     public:
         GameManager();
         void aiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
+        void controlAIBehaviour(sf::RenderWindow& i_window);
         // Sound FX
         void playScoreFX(); // FX when user scores
         void playLowScoreFX(); // FX for when user scores lower than the High score
@@ -28,7 +29,8 @@ namespace Game {
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
     private:
-        NeuralNetwork::AI BirdAI; // THE AI
+        static constexpr unsigned char PopulationSize = 8;
+        NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI // THE AI
         Bird bird;
         PipeManager PipeController;
 

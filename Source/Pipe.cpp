@@ -97,5 +97,4 @@ namespace Game {
 	const unsigned char Pipe::getPipeSpeed() const{
 		return PipeSpeed;
 	}
-
 }

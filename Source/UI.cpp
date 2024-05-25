@@ -293,23 +293,22 @@ namespace UI {
 				case 0:
 					bestScore = &Game::easymode_highscore;
 					GameController.setGameMode(Game::GameModes::Easy);
-					GameController.runGame(window);
 					break;
 
 				// Hard
 				case 1:
 					bestScore = &Game::hardmode_highscore;
 					GameController.setGameMode(Game::GameModes::Hard);
-					GameController.runGame(window);
 					break;
 
 				// Crazy
 				case 2:
 					bestScore = &Game::crazymode_highscore;
 					GameController.setGameMode(Game::GameModes::Crazy);
-					GameController.runGame(window);
 					break;
 			}
+			// Get into the Playthrough
+			GameController.runGame(window);
 
 			// Game Over
 			GameController.displayGameOverOverlay(window,bestScore);
@@ -318,29 +317,25 @@ namespace UI {
     }
 
     // Theme Menu Handler
-     void MenuManager::handleThemeMenu(UI::Menu*& currentMenu) {
+    void MenuManager::handleThemeMenu(UI::Menu*& currentMenu) {
     	switch (currentMenu->getSelectedState()) {
 			// ClearSky Theme
 			case 0:
 				Game::theme_name = "ClearSky";
-				delete currentMenu;
-	            currentMenu = new UI::MainMenu();
 				break;
 
 			// DarkNight Theme
 			case 1:
 				Game::theme_name = "DarkNight";
-				delete currentMenu;
-	            currentMenu = new UI::MainMenu();
 				break;
 
 			// SunSet Theme
 			case 2:
 				Game::theme_name = "SunSet";
-				delete currentMenu;
-	            currentMenu = new UI::MainMenu();
 				break;
 		}
+		delete currentMenu;
+        currentMenu = new UI::MainMenu();
     }
 
     void MenuManager::handleMenuStateChange(UI::Menu*& currentMenu) {

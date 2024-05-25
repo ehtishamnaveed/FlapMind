@@ -13,7 +13,7 @@ namespace Game {
 
 	void Bird::drawBird(sf::RenderWindow& i_window) {
 		texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Birdy.png");
-	    if (0 < Vertical_Speed) {
+	    if (0 < BirdVerticalSpeed) {
 	    	// Left, Top, Width, Height
 	    	bird.setTextureRect(sf::IntRect(0, 0, 50, BirdSize));
 	    }
@@ -29,17 +29,17 @@ namespace Game {
 
 	void Bird::updateBird() {
 		// Apply the Gravity to the Bird
-		Vertical_Speed += Game::gravity;
+		BirdVerticalSpeed += Game::gravity;
 		// And update its Y-axis Position
-		BirdYPosition += Vertical_Speed;
+		BirdYPosition += BirdVerticalSpeed;
 
 		// If the Bird is Alive
 		if (IsAlive) {
 			// And the Vertical speed is greater OR equal to 0
 			// and the User presses the 'Up Arrow key'
-			if (0 <= Vertical_Speed && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			if (0 <= BirdVerticalSpeed && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 				// and Make the bird Falp
-	        	Vertical_Speed = FlapSpeed;
+	        	BirdVerticalSpeed = FlapSpeed;
 				// Play the flap Sound
 				playFlapSound();
 	    	}
@@ -49,7 +49,7 @@ namespace Game {
 		if (BirdYPosition >= Screen::screenHeight - BirdGroundLimit) {
 			// The Bird Dies
 			IsAlive = 0;
-			Vertical_Speed = 0;
+			BirdVerticalSpeed = 0;
 			BirdYPosition = Screen::screenHeight - BirdGroundLimit;
 		}
 	}
@@ -74,7 +74,7 @@ namespace Game {
 		IsAlive = 0;
 	}
 
-	bool Bird::isLiving() {
+	bool Bird::isAlive() {
 		return IsAlive;
 	}
 

@@ -3,36 +3,92 @@
 
 namespace NeuralNetwork {
 	// Constrcutor
-	AI::AI(): Game::Bird(), RandomEngine(std::random_device{}()), NodeDistribution(-1, std::nextafter(1, 2)) {}
+	AI::AI(): Game::Bird(), Fitness(0), RandomEngine(std::random_device{}()), 
+			  NodeDistribution(-1, std::nextafter(1, 2)), MutationDistribution(0, MutationProbability - 1) {}
 
-	// Generate weights for edges
+	// Generates random weights for edges
 	void AI::generateWeights() {
-	    // Set weights of edges from 'Input to Hidden' nodes
+	    // Generate weights from 'Input to Hidden' nodes
+		// Loop through each 'Input Layer node'
 		for (size_t inputNode = 0; inputNode < input_nodes; ++inputNode) {
-	        for (size_t hiddenNode = 0; hiddenNode < hidden_nodes; ++hiddenNode) {
-	            // Generate a weight for each edge
+	        // Connect each 'Input Layer node' to every 'Hidden layer Node'
+			for (size_t hiddenNode = 0; hiddenNode < hidden_nodes; ++hiddenNode) {
+	            // Generate a random weight for each edge
 				Weights.InputToHiddenWeights[inputNode][hiddenNode] = NodeDistribution(RandomEngine);
-	            std::cerr << Weights.InputToHiddenWeights[inputNode][hiddenNode] << " ";
-	        }
+				// std::cerr << Weights.InputToHiddenWeights[inputNode][hiddenNode] << " ";
+	        }	
 	    }
 
-	    // Set weights of edges from 'Hidden to Output' nodes
+	    // Generate weights from 'Hidden to Output' nodes
+		// Loop through each 'Hidden Layer node'
 		for (size_t hiddenNode = 0; hiddenNode < hidden_nodes; ++hiddenNode) {
-	        for (size_t outputNode = 0; outputNode < output_nodes; ++outputNode) {
-	            // Generate a weight for each edge
+	        // Connect each 'Hidden Layer node' to the 'Output layer Node'
+			for (size_t outputNode = 0; outputNode < output_nodes; ++outputNode) {
+	            // Generate a random weight for each edge
 				Weights.HiddenToOutputWeights[hiddenNode][outputNode] = NodeDistribution(RandomEngine);
-	            std::cerr << Weights.HiddenToOutputWeights[hiddenNode][outputNode] << " ";
-	        }
+				// std::cerr << Weights.HiddenToOutputWeights[hiddenNode][outputNode] << " ";
+ 	        }
 	    }
 	}
 
 
+	bool AI::activationFunction() {
+		Layers.InputLayer[0] = BirdVerticalSpeed;
+		Layers.InputLayer[1] = BirdNPipeDifference;
+
+		feedforwardToHiddenLayer();
+		feedforwardToOutputLayer();
+		
+		return 0 <= Layers.OutputLayer[0];
+	}
+
+
+	void AI::feedforwardToHiddenLayer() {
+		// hiddenIdx: Index of the current hidden layer node being computed.
+		// inputIdx: Index of the current input layer node being used in the weighted sum calculation.
+
+		// Compute the dot product of input nodes and input-to-hidden weights and add with the respective Hidden Node
+	    for (size_t hiddenIdx = 0; hiddenIdx < hidden_nodes; ++hiddenIdx) {
+	        Layers.HiddenLayer[hiddenIdx ] = 0.0f; // Initialize hidden node to 0.0f
+
+	        for (size_t inputIdx = 0; inputIdx < input_nodes; ++inputIdx) {
+	            Layers.HiddenLayer[hiddenIdx] += Layers.InputLayer[inputIdx] * Weights.InputToHiddenWeights[inputIdx][hiddenIdx];
+	        }
+	    // +++++ Hyberbolic Tangent 
+	        if (0 >= Layers.HiddenLayer[hiddenIdx]) {
+	        	Layers.HiddenLayer[hiddenIdx] = std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx])) - 1.0f;
+	        }
+	        else {
+	        	Layers.HiddenLayer[hiddenIdx] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx]));
+	        }
+        }
+	}
+
+
+	void AI::feedforwardToOutputLayer() {
+		// hiddenIdx: Index of the current hidden layer node being computed.
+
+		// Initialize output layer node to 0
+	    Layers.OutputLayer[0] = 0.0f;
+
+	    // Compute the dot product of hidden nodes and hidden-to-output weights and add with Output Node
+	    for (size_t hiddenIdx = 0; hiddenIdx < hidden_nodes; ++hiddenIdx) {
+	        Layers.OutputLayer[0] += Layers.HiddenLayer[hiddenIdx] * Weights.HiddenToOutputWeights[hiddenIdx][0];
+	    }
+	    // +++++ Hyberbolic Tangent
+	    if (0 >= Layers.HiddenLayer[0]) {
+        	Layers.OutputLayer[0] = std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0])) - 1.0f;
+        }
+        else {
+        	Layers.OutputLayer[0] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0]));
+        }
+	}
+
+
 	void AI::calculateDifference(const std::vector<Game::Pipe>& Pipes) {
-		unsigned char PipeGap = 0;
 		for (const Game::Pipe& curr_pipe : Pipes) {
 			if (BirdXPosition < curr_pipe.getXPosition() + BirdSize) {
-				PipeGap = curr_pipe.getGapSize();
-				PipeYPos = curr_pipe.getYPosition() + PipeGap - PipeGap / 2;
+				BirdNPipeDifference = curr_pipe.getYPosition() + curr_pipe.getGapSize() - BirdSize - BirdYPosition;
 				break;
 			}
 		}
@@ -40,36 +96,67 @@ namespace NeuralNetwork {
 
 	// ++++++++++++++
 	bool AI::shouldFlap() {
-		return (BirdYPosition > PipeYPos || BirdYPosition == PipeYPos);
+		return activationFunction();
 	}
 
 	// ++++++++++++++
 	void AI::updateBird() {
 		// Apply the Gravity to the Bird
-		Vertical_Speed += Game::gravity;
+		BirdVerticalSpeed += Game::gravity;
 		// And update its Y-axis Position
-		BirdYPosition += Vertical_Speed;
+		BirdYPosition += BirdVerticalSpeed;
 
 		// If the Bird is Alive
 		if (IsAlive) {
-			if (0 <= Vertical_Speed && shouldFlap()) {
+			// Check if the Bird reaches the Ground limit
+			if (BirdYPosition >= Game::Screen::screenHeight - BirdGroundLimit) {
+				BirdVerticalSpeed = FlapSpeed;
+			}
+
+			if (0 <= BirdVerticalSpeed && shouldFlap()) {
 				// and Make the bird Falp
-	        	Vertical_Speed = FlapSpeed;
+	        	BirdVerticalSpeed = FlapSpeed;
 				// Play the flap Sound
 				// playFlapSound();
 	    	}
 		}
-		// Check if the Bird reaches the Ground limit
-		if (BirdYPosition >= Game::Screen::screenHeight - BirdGroundLimit) {
-			Vertical_Speed = FlapSpeed;
-		}
+	}
+
+	void AI::updateFitness() {
+		Fitness++;
 	}
 
 	// ++++++++++++++
 	void AI::playGame(sf::RenderWindow& i_window,const std::vector<Game::Pipe>& Pipes) {
-		generateWeights();
-		// calculateDifference(Pipes);
-		// updateBird();
-		// drawBird(i_window);
+		calculateDifference(Pipes);
+		updateBird();
+		updateFitness();
+		drawBird(i_window);
 	}
+
+	void AI::uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2) {
+	    // Iterate over the input to hidden weights
+	    for (size_t inputIndex = 0; inputIndex < input_nodes; ++inputIndex) {
+	        for (size_t hiddenIndex = 0; hiddenIndex < hidden_nodes; ++hiddenIndex) {
+	            // Randomly select the weight source from either parent
+	            if (rand() % 2 == 0) {
+	                // If the random number is even, select weights from parentWeight1
+	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight1.InputToHiddenWeights[inputIndex][hiddenIndex];
+	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight1.HiddenToOutputWeights[hiddenIndex][0];
+	            } else {
+	                // If the random number is odd, select weights from parentWeight2
+	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight2.InputToHiddenWeights[inputIndex][hiddenIndex];
+	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight2.HiddenToOutputWeights[hiddenIndex][0];
+	            }
+
+	            // Apply mutation if necessary for both weights
+	            if (MutationDistribution(RandomEngine) == 0) {
+	                // If the mutation probability is met, mutate the weights
+	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = NodeDistribution(RandomEngine);
+	                Weights.HiddenToOutputWeights[hiddenIndex][0] = NodeDistribution(RandomEngine);
+	            }
+	        }
+	    }
+	}
+
 }

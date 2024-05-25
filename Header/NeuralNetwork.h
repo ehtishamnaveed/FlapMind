@@ -8,7 +8,7 @@
 
 namespace NeuralNetwork {
 	// Nodes meaning 'Neurons'
-	constexpr unsigned char input_nodes = 3;
+	constexpr unsigned char input_nodes = 2;
 	constexpr unsigned char hidden_nodes = 4;
 	constexpr unsigned char output_nodes = 1;
 
@@ -20,14 +20,36 @@ namespace NeuralNetwork {
 	};
 
 	struct NodeEdgeWeights {
-		// Each Input Node is connected to every Hidden Node
+		// Input to Hidden Nodes Weights
 		float InputToHiddenWeights[input_nodes][hidden_nodes];
-		// Each Hidden Node is Connect to Output Node
+		// Hidden to Output Nodes Weights
 		float HiddenToOutputWeights[hidden_nodes][output_nodes];
 	};
 
 	// AI Class
-	class AI : public Game::Bird {
+	class AI : public Game::Bird {	
+	public:
+		AI();
+		void generateWeights();
+		// This function does what the below 2 functions name suggest
+		bool activationFunction();
+		void feedforwardToHiddenLayer();
+		void feedforwardToOutputLayer();
+
+		void calculateDifference(const std::vector<Game::Pipe>& Pipes);
+		void playGame(sf::RenderWindow& i_window,const std::vector<Game::Pipe>& Pipes);
+		bool shouldFlap();
+		void updateBird() override;
+		
+		void updateFitness();
+		unsigned getFitness() { return Fitness; }
+		bool operator<(AI& i_bird) { return Fitness < i_bird.getFitness(); }
+		bool operator>(AI& i_bird) { return Fitness > i_bird.getFitness(); }
+
+		NodeEdgeWeights& getWeights() { return Weights; }
+
+		void uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2);
+
 	private:
 		NeuralLayers Layers;
 		NodeEdgeWeights Weights;
@@ -36,18 +58,13 @@ namespace NeuralNetwork {
 
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> NodeDistribution;
-		
-	public:
-		AI();
-		void generateWeights();
-		void calculateDifference(const std::vector<Game::Pipe>& Pipes);
-		void playGame(sf::RenderWindow& i_window,const std::vector<Game::Pipe>& Pipes);
-		bool shouldFlap();
-		void updateBird() override;
 
-	private:
-		// unsigned char PipeGap;
-		unsigned short PipeYPos;
+		static constexpr unsigned char MutationProbability = 64;
+		std::uniform_int_distribution<unsigned short> MutationDistribution;
+
+		float BirdNPipeDifference;
+
+		unsigned Fitness;
 	};
 }
 
