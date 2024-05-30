@@ -9,7 +9,7 @@
 namespace NeuralNetwork {
 	// Nodes meaning 'Neurons'
 	constexpr unsigned char input_nodes = 2;
-	constexpr unsigned char hidden_nodes = 4;
+	constexpr unsigned char hidden_nodes = 3;
 	constexpr unsigned char output_nodes = 1;
 
 	struct NeuralLayers {
@@ -40,6 +40,7 @@ namespace NeuralNetwork {
 		void playGame(sf::RenderWindow& i_window,const std::vector<Game::Pipe>& Pipes);
 		bool shouldFlap();
 		void updateBird() override;
+		void resetState() override;
 		
 		void updateFitness();
 		unsigned getFitness() { return Fitness; }

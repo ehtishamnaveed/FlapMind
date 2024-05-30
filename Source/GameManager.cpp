@@ -17,7 +17,7 @@ namespace Game {
 
     }
 
-    void GameManager::aiGameplay(sf::RenderWindow& i_window) {
+    bool GameManager::aiGameplay(sf::RenderWindow& i_window) {
         // Generating Weights for each bird
         for (NeuralNetwork::AI& aibirds : BirdAI) {
             aibirds.generateWeights();
@@ -46,6 +46,14 @@ namespace Game {
                     keyPressed = true;  // Set the flag to true to indicate key press
                     this->setGameMode(GameModes::Crazy);
                 }
+                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::Escape) {
+                    for (NeuralNetwork::AI& aibirds : BirdAI) {
+                        aibirds.resetState();
+                    }
+                    PipeController.resetPipes();
+                    resetScore();
+                    return true;
+                }
                 else if (event.type == sf::Event::KeyReleased) {
                     keyPressed = false;  // Reset the flag on key release
                 }
@@ -67,6 +75,7 @@ namespace Game {
             // Displays Window
             i_window.display();
         }
+        return true;
     }
 
     void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
@@ -79,12 +88,10 @@ namespace Game {
         }
 
         if (!needrestart) {
-            for (NeuralNetwork::AI& aibirds : BirdAI) {
-                // AI (Updates and Draws itself)
-                aibirds.playGame(i_window,PipeController.getPipes());
-            }
-
             for (NeuralNetwork::AI& aibird : BirdAI) {
+                // AI (Updates position and Learns to Flap)
+                aibird.playGame(i_window,PipeController.getPipes());
+
                 // Check for Collision
                 if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
                     // If collides, The bird Dies
@@ -97,14 +104,15 @@ namespace Game {
             std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
 
             // We won't change the weights of the first 2 birds since they're the BEST!
-            for (size_t i = 2 ; i < PopulationSize ; ++i) {
-                BirdAI[i].uniformCrossoverWithMutation(BirdAI[0].getWeights(), BirdAI[1].getWeights());
+            for (size_t curr_bird = 2 ; curr_bird < PopulationSize ; ++curr_bird) {
+                BirdAI[curr_bird].uniformCrossoverWithMutation(BirdAI[0].getWeights(), BirdAI[1].getWeights());
             }
 
             for (NeuralNetwork::AI& aibirds : BirdAI) {
                 aibirds.resetState();
             }
             PipeController.resetPipes();
+            resetScore();
         }
     }
 

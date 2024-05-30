@@ -10,7 +10,7 @@ namespace Game {
     class GameManager {
     public:
         GameManager();
-        void aiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
+        bool aiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
         void controlAIBehaviour(sf::RenderWindow& i_window);
         // Sound FX
         void playScoreFX(); // FX when user scores
@@ -29,7 +29,7 @@ namespace Game {
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
     private:
-        static constexpr unsigned char PopulationSize = 8;
+        static constexpr unsigned char PopulationSize = 15;
         NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI // THE AI
         Bird bird;
         PipeManager PipeController;

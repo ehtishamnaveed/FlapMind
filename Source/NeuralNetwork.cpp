@@ -4,7 +4,8 @@
 namespace NeuralNetwork {
 	// Constrcutor
 	AI::AI(): Game::Bird(), Fitness(0), RandomEngine(std::random_device{}()), 
-			  NodeDistribution(-1, std::nextafter(1, 2)), MutationDistribution(0, MutationProbability - 1) {}
+			  NodeDistribution(-1, std::nextafter(1, 2)), MutationDistribution(0, MutationProbability - 1)
+			  { BirdYPosition = 300; }
 
 	// Generates random weights for edges
 	void AI::generateWeights() {
@@ -88,7 +89,7 @@ namespace NeuralNetwork {
 	void AI::calculateDifference(const std::vector<Game::Pipe>& Pipes) {
 		for (const Game::Pipe& curr_pipe : Pipes) {
 			if (BirdXPosition < curr_pipe.getXPosition() + BirdSize) {
-				BirdNPipeDifference = curr_pipe.getYPosition() + curr_pipe.getGapSize() - BirdSize - BirdYPosition;
+				BirdNPipeDifference = curr_pipe.getYPosition() + curr_pipe.getGapSize()  - BirdSize - BirdYPosition;
 				break;
 			}
 		}
@@ -119,6 +120,14 @@ namespace NeuralNetwork {
 				// Play the flap Sound
 				// playFlapSound();
 	    	}
+	    	updateFitness();
+		}
+		else {
+			if (BirdYPosition >= Game::Screen::screenHeight - BirdGroundLimit) {
+				BirdYPosition = Game::Screen::screenHeight - BirdGroundLimit;
+				BirdVerticalSpeed = 0;
+				BirdXPosition--;
+			}
 		}
 	}
 
@@ -130,7 +139,6 @@ namespace NeuralNetwork {
 	void AI::playGame(sf::RenderWindow& i_window,const std::vector<Game::Pipe>& Pipes) {
 		calculateDifference(Pipes);
 		updateBird();
-		updateFitness();
 		drawBird(i_window);
 	}
 
@@ -157,6 +165,14 @@ namespace NeuralNetwork {
 	            }
 	        }
 	    }
+	}
+
+	void AI::resetState() {
+		BirdVerticalSpeed = 0;
+		BirdYPosition = 300;
+	 	BirdXPosition = 170;
+	  	IsAlive = true;
+	  	Fitness = 0;
 	}
 
 }

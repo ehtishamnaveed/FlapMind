@@ -268,7 +268,10 @@ namespace UI {
 			// AI PlayThrough
 			case 1:
 				GameController.setGameMode(Game::GameModes::Hard);
-				GameController.aiGameplay(window);
+				if (GameController.aiGameplay(window)) {
+					delete currentMenu;
+					currentMenu = new UI::MainMenu();
+				}
 				break;
 
 			// Theme

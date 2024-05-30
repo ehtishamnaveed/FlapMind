@@ -22,7 +22,7 @@ namespace Game {
 	    }
 
 	    bird.setTexture(texture);
-	    bird.setPosition(BirdXPosition, BirdYPosition);
+	    bird.setPosition(BirdXPosition, round(BirdYPosition));
 
 	    i_window.draw(bird);
 	}
@@ -71,7 +71,7 @@ namespace Game {
 	}
 
 	void Bird::Dies() {
-		IsAlive = 0;
+		IsAlive = false;
 	}
 
 	bool Bird::isAlive() {
@@ -79,9 +79,10 @@ namespace Game {
 	}
 
 	void Bird::resetState() {
+		BirdVerticalSpeed = 0;
 		BirdYPosition = 20;
 	 	BirdXPosition = 170;
-	  	IsAlive = 1;
+	  	IsAlive = true;
 	}
 
 	// Plays Flap Sound

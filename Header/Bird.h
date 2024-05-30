@@ -23,7 +23,7 @@ namespace Game {
 
 		void Dies(); // Makes the Bird die
 		bool isAlive(); // Return the Bird living state
-		void resetState(); // Resets the Bird state
+		virtual void resetState(); // Resets the Bird state
 
 	protected:
 		static constexpr char FlapSpeed = -9;
