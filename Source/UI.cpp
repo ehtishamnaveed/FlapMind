@@ -267,7 +267,8 @@ namespace UI {
 
 			// AI PlayThrough
 			case 1:
-				GameController.setGameMode(Game::GameModes::Hard);
+				GameController.resetGameState();
+				GameController.setGameMode(Game::GameModes::Easy);
 				if (GameController.aiGameplay(window)) {
 					delete currentMenu;
 					currentMenu = new UI::MainMenu();
@@ -287,7 +288,7 @@ namespace UI {
     void MenuManager::handlePlayMenu(UI::Menu*& currentMenu) {
     	bool gameRestartState = true;
     	unsigned short* bestScore;
-    	this->stopMainMenuMusic();
+    	stopMainMenuMusic();
 
     	while (gameRestartState) {
     		GameController.resetGameState();

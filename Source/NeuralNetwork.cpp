@@ -1,5 +1,4 @@
 #include "../Header/NeuralNetwork.h"
-#include <iostream> // Removeable
 
 namespace NeuralNetwork {
 	// Constrcutor
@@ -16,7 +15,6 @@ namespace NeuralNetwork {
 			for (size_t hiddenNode = 0; hiddenNode < hidden_nodes; ++hiddenNode) {
 	            // Generate a random weight for each edge
 				Weights.InputToHiddenWeights[inputNode][hiddenNode] = NodeDistribution(RandomEngine);
-				// std::cerr << Weights.InputToHiddenWeights[inputNode][hiddenNode] << " ";
 	        }	
 	    }
 
@@ -27,7 +25,6 @@ namespace NeuralNetwork {
 			for (size_t outputNode = 0; outputNode < output_nodes; ++outputNode) {
 	            // Generate a random weight for each edge
 				Weights.HiddenToOutputWeights[hiddenNode][outputNode] = NodeDistribution(RandomEngine);
-				// std::cerr << Weights.HiddenToOutputWeights[hiddenNode][outputNode] << " ";
  	        }
 	    }
 	}
@@ -56,6 +53,7 @@ namespace NeuralNetwork {
 	            Layers.HiddenLayer[hiddenIdx] += Layers.InputLayer[inputIdx] * Weights.InputToHiddenWeights[inputIdx][hiddenIdx];
 	        }
 	    // +++++ Hyberbolic Tangent 
+	        // Layers.HiddenLayer[hiddenIdx] = std::tanh(Layers.HiddenLayer[hiddenIdx]);
 	        if (0 >= Layers.HiddenLayer[hiddenIdx]) {
 	        	Layers.HiddenLayer[hiddenIdx] = std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx])) - 1.0f;
 	        }
@@ -77,6 +75,7 @@ namespace NeuralNetwork {
 	        Layers.OutputLayer[0] += Layers.HiddenLayer[hiddenIdx] * Weights.HiddenToOutputWeights[hiddenIdx][0];
 	    }
 	    // +++++ Hyberbolic Tangent
+	    // Layers.OutputLayer[0] = std::tanh(Layers.OutputLayer[0]);
 	    if (0 >= Layers.HiddenLayer[0]) {
         	Layers.OutputLayer[0] = std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0])) - 1.0f;
         }

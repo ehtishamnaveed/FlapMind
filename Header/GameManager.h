@@ -20,7 +20,7 @@ namespace Game {
         void renderGame(sf::RenderWindow& i_window); // Displays the Bird,Pipes, and Backgound
         void runGame(sf::RenderWindow& i_window); // It is the main game loop logic
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes); // Checks collision of Bird with Pipes
-        void drawBackground(sf::RenderWindow& i_window); // Draw the backgound for Game
+        void drawBackground(sf::RenderWindow& i_window); // Draws the backgound for Game
 
         void updateScore(); // Updates the score of the user
         void resetGameState(); // Resets the Game settings
@@ -29,8 +29,10 @@ namespace Game {
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
     private:
+        bool ItsAIMode;
+
         static constexpr unsigned char PopulationSize = 15;
-        NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI // THE AI
+        NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI
         Bird bird;
         PipeManager PipeController;
 
@@ -38,6 +40,7 @@ namespace Game {
         unsigned short Score;
         sf::Text ScoreText;
         sf::Font ScoreFont;
+        bool RecentScoreUpdate; // Flag to indicate if the score has been updated for any AI birds
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;

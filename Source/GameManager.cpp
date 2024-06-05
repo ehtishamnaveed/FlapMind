@@ -4,7 +4,7 @@
 
 namespace Game {
     // Constructor initializes GameManager with default score and font settings
-    GameManager::GameManager(): Score(0) {
+    GameManager::GameManager(): Score(0), RecentScoreUpdate(false), ItsAIMode(false) {
         // Load font from file
         ScoreFont.loadFromFile("Resources/Font/4Brain.ttf");
 
@@ -14,10 +14,10 @@ namespace Game {
         ScoreText.setFillColor(sf::Color::Black);
         ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
         ScoreText.setString(std::to_string(Score));
-
     }
 
     bool GameManager::aiGameplay(sf::RenderWindow& i_window) {
+        ItsAIMode = true;
         // Generating Weights for each bird
         for (NeuralNetwork::AI& aibirds : BirdAI) {
             aibirds.generateWeights();
@@ -47,11 +47,14 @@ namespace Game {
                     this->setGameMode(GameModes::Crazy);
                 }
                 else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::Escape) {
+                    // Resetting the Birds and GameState
                     for (NeuralNetwork::AI& aibirds : BirdAI) {
                         aibirds.resetState();
                     }
                     PipeController.resetPipes();
                     resetScore();
+                    // Turning off the 'AI Mode'
+                    ItsAIMode = false;
                     return true;
                 }
                 else if (event.type == sf::Event::KeyReleased) {
@@ -79,6 +82,7 @@ namespace Game {
     }
 
     void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
+        RecentScoreUpdate = false;
         bool needrestart = true;
         for (NeuralNetwork::AI& aibird : BirdAI) {
             if (aibird.isAlive()) {
@@ -92,14 +96,19 @@ namespace Game {
                 // AI (Updates position and Learns to Flap)
                 aibird.playGame(i_window,PipeController.getPipes());
 
-                // Check for Collision
-                if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
-                    // If collides, The bird Dies
-                    aibird.Dies();
+                // only if the bird is alive
+                if (aibird.isAlive()) {
+                    // Check for Collision
+                    if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
+                        // If collides, The bird Dies
+                        aibird.Dies();
+                    }
                 }
+                else continue;
             }
         }
         else {
+            // Sorting the Fitness of birds ( greater to smaller ) 
             //std::sort will use the operator functions in the AI class.
             std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
 
@@ -200,8 +209,19 @@ namespace Game {
 
     // Increment the score
     void GameManager::updateScore() {
-        Score++;
-        ScoreText.setString(std::to_string(Score));
+        // This check is made to differentiate 
+        // between AI and User Mode
+        if (ItsAIMode) {
+            if (!RecentScoreUpdate) {
+                RecentScoreUpdate = true;
+                Score++;
+                ScoreText.setString(std::to_string(Score));
+            }
+        }
+        else {
+            Score++;
+            ScoreText.setString(std::to_string(Score));
+        }
     }
 
     // Collision Detection
@@ -233,6 +253,7 @@ namespace Game {
 
             if (pipeIsBehindTheBird)
                 continue; // Continue to the next pipe then
+            // And skip the below statemnts
 
             if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
@@ -284,7 +305,6 @@ namespace Game {
         sf::Sprite sprite;
         texture.loadFromFile("Resources/Images/Scoreboard.png");
 
-        // Calculate texture rect size only once
         sf::IntRect rect;
             if (Score > *bestScore) {
                 playHighScoreFX();
