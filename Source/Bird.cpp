@@ -12,7 +12,7 @@ namespace Game {
 	}
 
 	void Bird::drawBird(sf::RenderWindow& i_window) {
-		texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Birdy.png");
+		texture.loadFromFile("Resources/Theme/" + Game::theme_name + "/Birdy.png");
 	    if (0 < BirdVerticalSpeed) {
 	    	// Left, Top, Width, Height
 	    	bird.setTextureRect(sf::IntRect(0, 0, 50, BirdSize));

@@ -32,7 +32,7 @@ namespace Game {
     }
 
     // Handles specific Key pressed Events only
-    void EventHandler::processKeyPressed(const sf::Keyboard::Key& key, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler) {
+    void EventHandler::processMenuKeyPressed(const sf::Keyboard::Key& key, UI::Menu*& currentMenu, UI::MenuManager& MenuHandler) {
      	switch (key) {
 	        // To go into the 'Next Menu'
 	        case sf::Keyboard::Enter:
@@ -102,4 +102,34 @@ namespace Game {
 	        }
         return state;
     }
+
+    // Handles specific Key pressed Events for AI Gameplay only
+    void EventHandler::processAiGameplayKeyPressed(const sf::Keyboard::Key& key, PipeManager& PipeController, GameManager& GameController) {
+     	switch (key) {
+	        // Change Game Mode to 'easy'
+	        case sf::Keyboard::E:
+	        	GameController.setGameMode(GameModes::Easy);
+	            break;
+
+	        // Change Game Mode to 'hard'
+	        case sf::Keyboard::H:
+	            GameController.setGameMode(GameModes::Hard);
+	            break;
+
+	        // Change Game Mode to 'crazy'
+	        case sf::Keyboard::C:
+	            GameController.setGameMode(GameModes::Crazy);
+	            break;
+
+	        // To go the 'Main Menu'
+	        case sf::Keyboard::Escape:
+	        	GameController.turnOffAiMode();
+	            break;
+
+	        // Move pipes vertically
+	        case sf::Keyboard::M:
+	        	PipeController.allowPipesVerticalMovement();
+	         	break;
+	    }
+	}
 }

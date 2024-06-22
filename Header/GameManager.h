@@ -10,8 +10,9 @@ namespace Game {
     class GameManager {
     public:
         GameManager();
-        bool aiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
+        void runAiGameplay(sf::RenderWindow& i_window); // AIGAMEPLAY
         void controlAIBehaviour(sf::RenderWindow& i_window);
+
         // Sound FX
         void playScoreFX(); // FX when user scores
         void playLowScoreFX(); // FX for when user scores lower than the High score
@@ -28,10 +29,13 @@ namespace Game {
         void setGameMode(const GameModes GameType); // It sets the Game Mode type
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
+        void turnOffAiMode() { ItsAIMode = false; }
+
     private:
+        // Differentiates between 'User' and 'AI'
         bool ItsAIMode;
 
-        static constexpr unsigned char PopulationSize = 15;
+        static constexpr unsigned char PopulationSize = 12;
         NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI
         Bird bird;
         PipeManager PipeController;
@@ -40,6 +44,9 @@ namespace Game {
         unsigned short Score;
         sf::Text ScoreText;
         sf::Font ScoreFont;
+        
+        // I am using this variable to update the score
+        // For AI birds to count it as singular for the entire Population of birds
         bool RecentScoreUpdate; // Flag to indicate if the score has been updated for any AI birds
 
         sf::Texture background_texture;

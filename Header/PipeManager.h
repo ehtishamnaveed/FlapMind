@@ -16,18 +16,22 @@ namespace Game {
 		// Sets 'PipeIndent' and  'GeneratorDuration'
 		// for the specific GameMode type
 		void setSettings(GameModes GameType);
-		// Sets pipe settings for AI
-		void setAISettings();
 		
 		// Getters
 		const std::uniform_int_distribution<unsigned short>& getYDistribution() const;
 		const unsigned char& getPipeIndent() const;
 
+		// Allows the Pipes to move vertically
+		void allowPipesVerticalMovement() { PipesCanMoveVertically = true;}
+		// Stop the Pipes vertical movement
+		void stopPipesVerticalMovement() { PipesCanMoveVertically = false;}
 
 	private:
 		GameModes GameType;
+
 		// Vector of "class Pipe" to store the generated pipes
 		std::vector<Pipe> Pipes;
+		bool PipesCanMoveVertically; // Flag to check if pipes can move vertically
 
 		std::mt19937_64 RandomEngine;
 		unsigned short GeneratorTimer;

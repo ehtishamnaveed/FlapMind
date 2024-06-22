@@ -30,7 +30,7 @@ namespace NeuralNetwork {
 	class AI : public Game::Bird {	
 	public:
 		AI();
-		void generateWeights();
+		void generateEdgeWeights(); // Generates Weight for the Edges for each Node for every layers
 		// This function does what the below 2 functions name suggest
 		bool activationFunction();
 		void feedforwardToHiddenLayer();
@@ -56,11 +56,12 @@ namespace NeuralNetwork {
 		NodeEdgeWeights Weights;
 
 		std::mt19937_64 RandomEngine;
+		// std::minstd_rand RandomEngine;
 
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> NodeDistribution;
 
-		static constexpr unsigned char MutationProbability = 64;
+		static constexpr unsigned char MutationProbability = 63;
 		std::uniform_int_distribution<unsigned short> MutationDistribution;
 
 		float BirdNPipeDifference;

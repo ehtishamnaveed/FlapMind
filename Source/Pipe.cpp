@@ -4,9 +4,10 @@
 
 namespace Game {
 	// Constructor initilizes the Pipe's X and Y co-ordinates while loading the Pipe texture
+	// And setting up the Setting of Pipes respect to GameMode type
 	Pipe::Pipe(short x_origin, unsigned short y_origin, GameModes GameType): 
 		PipeXPosition(x_origin), 
-		PipeYPosition(y_origin) 
+		PipeYPosition(y_origin), IsPipeMoving(false)
 		// Body of Constructor
 		{ texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Pipe.png");
 			switch (GameType) {
@@ -25,6 +26,7 @@ namespace Game {
             	PipeSpeed = CrazyPipeSpeed;
 			 	break;
 			}
+			// PipeYPosition -= GapSize;
 		}
 
 	// Sets the Tecture, while selecting specifc portion for Up-side and Down-side
@@ -46,35 +48,45 @@ namespace Game {
 		i_window.draw(pipe);
 	}
 
+	void Pipe::generateVerticalMovementDirection() {
+		PipeMovementDirection = std::rand() % 2 == 0 ? VerticalMovement::UP : VerticalMovement::DOWN;
+	}
+
+	// Updates the Pipe X_position
 	void Pipe::update() {
 		PipeXPosition -= PipeSpeed;
+	}
 
-		// if (pipeIndent == PipeYPosition)
-		// {
-		// 	direction = 1;
-		// }
-		// else if (PipeYPosition == 288 - 64 - pipeIndent)
-		// {
-		// 	direction = 0;
-		// }
-		
-		// if (0 == y_MovementTimer)
-		// {
-		// 	y_MovementTimer = 1;
+	// Make the Pipe Move Vertically Up and Down
+	void Pipe::moveVertically() {
+		// If the Pipe Movement Direction is Vertically Upwards
+		if (PipeMovementDirection == VerticalMovement::UP) {
+			// We move the pipes upwards
+			--PipeYPosition;
+			// PipeYPosition -= PipeSpeed;
+		}
+		// If the Pipe Movement Direction is Vertically Downwards
+		else if (PipeMovementDirection == VerticalMovement::DOWN) {
+			// We move the pipe downwards
+			++PipeYPosition;
+			// PipeYPosition += PipeSpeed;
+		}
 
-		// 	if (0 == direction)
-		// 	{
-		// 		PipeYPosition--;
-		// 	}
-		// 	else
-		// 	{
-		// 		PipeYPosition++;
-		// 	}
-		// }
-		// else
-		// {
-		// 	y_MovementTimer--;
-		// }
+		// If pipe Y_Position has exceded TopScreenLimit
+		if (PipeYPosition <= TopScreenLimit) {
+			// Change the pipe movement direction to 'downwards'
+			PipeMovementDirection = VerticalMovement::DOWN;
+		}
+		// If pipe Y_Position has exceded BottomScreenLimit
+		else if (PipeYPosition >= BottomScreenLimit) {
+			// Change the pipe movement direction to 'upwards'
+			PipeMovementDirection = VerticalMovement::UP;
+		}
+	}
+
+	void Pipe::setVerticalMovementLimits(unsigned char& PipeIndent) {
+		TopScreenLimit = PipeIndent - GapSize + 100;
+		BottomScreenLimit = Game::Screen::screenHeight - PipeIndent;
 	}
 
 	// Checks if the Pipe is beyond the Screen

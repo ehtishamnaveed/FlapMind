@@ -4,6 +4,7 @@
 #include "../Header/GameManager.h"
 #include "../Header/Game.h"
 #include <string>
+#include <chrono>
 #include <thread>
 
 namespace UI {
@@ -84,7 +85,7 @@ namespace UI {
         void handleThemeMenu(UI::Menu*& currentMenu);
 
     private:
-        Game::EventHandler EventManager;
+        Game::EventHandler* EventManager;
         sf::RenderWindow window;
         Game::GameManager GameController;
 

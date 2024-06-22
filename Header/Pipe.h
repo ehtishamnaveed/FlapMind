@@ -3,12 +3,20 @@
 #include "../Header/GameMode.h"
 
 namespace Game {
+
+	enum class VerticalMovement {
+		UP,
+		DOWN
+	};
+
 	class Pipe {
 	public:
 		// Constructor Initilizes the PipeGap and Speed Respective to The GameMode
 		Pipe(short x, unsigned short y, GameModes GameType);
-		void draw(sf::RenderWindow& i_window); // Draws The Pipe on Screen
-		void update(); // Updates the Pipe's X_position
+		// Draws The Pipe on Screen
+		void draw(sf::RenderWindow& i_window);
+		// Updates the Pipe's X_position
+		void update();
 
 		const bool isRemoveable() const; // Checks If the Pipe is removeable
 		const short getXPosition() const; // Returns the X Position
@@ -16,12 +24,26 @@ namespace Game {
 		const unsigned char getGapSize() const; // Returns the 'GapSize' for the Respective GameMode
 		const unsigned char getPipeSpeed() const; // Returns the 'PipeSpeed' for the Respective GameMode
 
+		// Generates the Movement Direction for the Pipe 
+		void generateVerticalMovementDirection();
+		// Sets the Movement Limit
+		void setVerticalMovementLimits(unsigned char& PipeIndent);
+		// Moves the Pipe Vertically Up and Down
+		void moveVertically();
+
+		bool haveMovement() { return IsPipeMoving; }
+		void moveable() { IsPipeMoving = true; }
+
 	private:
-		// bool direction;
+		bool IsPipeMoving;
+		VerticalMovement PipeMovementDirection; // '0' means Up direction, '1' means Down direction
+
+		unsigned short TopScreenLimit;
+		unsigned short BottomScreenLimit;
+
 		short PipeXPosition;
 		unsigned short PipeYPosition;
-		static constexpr short OffScreenLimit = -50; // Range of Pipe's to get removed
-		// unsigned char y_MovementTimer;
+		static constexpr short OffScreenLimit = -50; // Range of Pipe's X_positon to get removed
 
 		unsigned char GapSize;
 		unsigned char PipeSpeed;

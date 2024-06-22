@@ -2,12 +2,14 @@
 
 namespace NeuralNetwork {
 	// Constrcutor
-	AI::AI(): Game::Bird(), Fitness(0), RandomEngine(std::random_device{}()), 
-			  NodeDistribution(-1, std::nextafter(1, 2)), MutationDistribution(0, MutationProbability - 1)
+	AI::AI(): Game::Bird(), Fitness(0),
+			  RandomEngine(std::random_device{}()), 
+			  NodeDistribution(-1, 1),
+			  MutationDistribution(0, MutationProbability)
 			  { BirdYPosition = 300; }
 
 	// Generates random weights for edges
-	void AI::generateWeights() {
+	void AI::generateEdgeWeights() {
 	    // Generate weights from 'Input to Hidden' nodes
 		// Loop through each 'Input Layer node'
 		for (size_t inputNode = 0; inputNode < input_nodes; ++inputNode) {
@@ -31,6 +33,7 @@ namespace NeuralNetwork {
 
 
 	bool AI::activationFunction() {
+		// First input node value is the birdVee
 		Layers.InputLayer[0] = BirdVerticalSpeed;
 		Layers.InputLayer[1] = BirdNPipeDifference;
 
@@ -53,13 +56,13 @@ namespace NeuralNetwork {
 	            Layers.HiddenLayer[hiddenIdx] += Layers.InputLayer[inputIdx] * Weights.InputToHiddenWeights[inputIdx][hiddenIdx];
 	        }
 	    // +++++ Hyberbolic Tangent 
-	        // Layers.HiddenLayer[hiddenIdx] = std::tanh(Layers.HiddenLayer[hiddenIdx]);
-	        if (0 >= Layers.HiddenLayer[hiddenIdx]) {
-	        	Layers.HiddenLayer[hiddenIdx] = std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx])) - 1.0f;
-	        }
-	        else {
-	        	Layers.HiddenLayer[hiddenIdx] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx]));
-	        }
+	        Layers.HiddenLayer[hiddenIdx] = std::tanh(Layers.HiddenLayer[hiddenIdx]);
+	        // if (0 >= Layers.HiddenLayer[hiddenIdx]) {
+	        // 	Layers.HiddenLayer[hiddenIdx] = std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx])) - 1.0f;
+	        // }
+	        // else {
+	        // 	Layers.HiddenLayer[hiddenIdx] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx]));
+	        // }
         }
 	}
 
@@ -75,13 +78,13 @@ namespace NeuralNetwork {
 	        Layers.OutputLayer[0] += Layers.HiddenLayer[hiddenIdx] * Weights.HiddenToOutputWeights[hiddenIdx][0];
 	    }
 	    // +++++ Hyberbolic Tangent
-	    // Layers.OutputLayer[0] = std::tanh(Layers.OutputLayer[0]);
-	    if (0 >= Layers.HiddenLayer[0]) {
-        	Layers.OutputLayer[0] = std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0])) - 1.0f;
-        }
-        else {
-        	Layers.OutputLayer[0] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0]));
-        }
+	    Layers.OutputLayer[0] = std::tanh(Layers.OutputLayer[0]);
+	    // if (0 >= Layers.HiddenLayer[0]) {
+        // 	Layers.OutputLayer[0] = std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0])) - 1.0f;
+        // }
+        // else {
+        // 	Layers.OutputLayer[0] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0]));
+        // }
 	}
 
 
@@ -173,5 +176,4 @@ namespace NeuralNetwork {
 	  	IsAlive = true;
 	  	Fitness = 0;
 	}
-
 }

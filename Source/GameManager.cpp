@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Header/Game.h"
 #include "../Header/GameManager.h"
+#include "../Header/EventHandler.h"
 
 namespace Game {
     // Constructor initializes GameManager with default score and font settings
@@ -16,11 +17,12 @@ namespace Game {
         ScoreText.setString(std::to_string(Score));
     }
 
-    bool GameManager::aiGameplay(sf::RenderWindow& i_window) {
+    void GameManager::runAiGameplay(sf::RenderWindow& i_window) {
+        Game::EventHandler* EventManager;
         ItsAIMode = true;
         // Generating Weights for each bird
         for (NeuralNetwork::AI& aibirds : BirdAI) {
-            aibirds.generateWeights();
+            aibirds.generateEdgeWeights();
         }
 
         bool keyPressed = false;
@@ -34,33 +36,50 @@ namespace Game {
                     i_window.close();
                     break;
                 }
-                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::E) {
+                else if (event.type == sf::Event::KeyPressed && !keyPressed) {
                     keyPressed = true;  // Set the flag to true to indicate key press
-                    this->setGameMode(GameModes::Easy);
-                }
-                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::H) {
-                    keyPressed = true;  // Set the flag to true to indicate key press
-                    this->setGameMode(GameModes::Hard);
-                }
-                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::C) {
-                    keyPressed = true;  // Set the flag to true to indicate key press
-                    this->setGameMode(GameModes::Crazy);
-                }
-                else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::Escape) {
-                    // Resetting the Birds and GameState
-                    for (NeuralNetwork::AI& aibirds : BirdAI) {
-                        aibirds.resetState();
+                    EventManager->processAiGameplayKeyPressed(event.key.code, PipeController, *this);
+                    if (!ItsAIMode) {
+                        for (NeuralNetwork::AI& aibirds : BirdAI) {
+                            aibirds.resetState();
+                        }
+                        PipeController.resetPipes();
+                        resetScore();
+                        return;
                     }
-                    PipeController.resetPipes();
-                    resetScore();
-                    // Turning off the 'AI Mode'
-                    ItsAIMode = false;
-                    return true;
                 }
-                else if (event.type == sf::Event::KeyReleased) {
+                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::E) {
+                //     keyPressed = true;  // Set the flag to true to indicate key press
+                //     this->setGameMode(GameModes::Easy);
+                // }
+                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::H) {
+                //     keyPressed = true;  // Set the flag to true to indicate key press
+                //     this->setGameMode(GameModes::Hard);
+                // }
+                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::C) {
+                //     keyPressed = true;  // Set the flag to true to indicate key press
+                //     this->setGameMode(GameModes::Crazy);
+                // }
+                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::M) {
+                //     keyPressed = true;  // Set the flag to true to indicate key press
+                //     PipeController.allowPipesVerticalMovement();
+                // }
+                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::Escape) {
+                //     keyPressed = true;
+                //     // Resetting the Birds and GameState
+                //     for (NeuralNetwork::AI& aibirds : BirdAI) {
+                //         aibirds.resetState();
+                //     }
+                //     PipeController.resetPipes();
+                //     resetScore();
+                //     // Turning off the 'AI Mode'
+                //     ItsAIMode = false;
+                //     // We break the Loop and AI Gameplay
+                //     return;
+                // }
+                else if(event.type == sf::Event::KeyReleased) {
                     keyPressed = false;  // Reset the flag on key release
                 }
-
             }
             // Draws Backgound
             drawBackground(i_window);
@@ -77,8 +96,7 @@ namespace Game {
 
             // Displays Window
             i_window.display();
-        }
-        return true;
+        } 
     }
 
     void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
@@ -109,7 +127,7 @@ namespace Game {
         }
         else {
             // Sorting the Fitness of birds ( greater to smaller ) 
-            //std::sort will use the operator functions in the AI class.
+            // std::sort will use the operator functions in the AI class.
             std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
 
             // We won't change the weights of the first 2 birds since they're the BEST!
@@ -224,6 +242,7 @@ namespace Game {
         }
     }
 
+
     // Collision Detection
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
         // Constants
@@ -246,18 +265,22 @@ namespace Game {
             const unsigned char pipeGapSize = pipe.getGapSize();
             const char pipeSpeed = pipe.getPipeSpeed();
 
+            // Collision boundaries for the pipe
+            const short pipeTop = pipeYPos - collisionAnomaly;
+            const short pipeBottom = pipeYPos + pipeGapSize + collisionAnomaly;
+
             // Collision Range information
-            const bool pipeInCollisionRange = pipeXPos < birdRightBoundary - collisionAnomaly && pipeXPos > birdLeftBoundary;
+            const bool pipeInCollisionRange = pipeXPos <= birdRightBoundary - collisionAnomaly && pipeXPos >= birdLeftBoundary;
             const bool pipeIsBehindTheBird = pipeXPos < birdLeftBoundary - pipeSpeed;
             const bool birdPassedThePipe = birdXPos > pipeXPos + birdSize;
 
-            if (pipeIsBehindTheBird)
+            if ( pipeIsBehindTheBird )
                 continue; // Continue to the next pipe then
             // And skip the below statemnts
 
-            if (pipeInCollisionRange) {
+            if ( pipeInCollisionRange ) {
                 // Check for collision excluding the gap area
-                if (birdYPos <= pipeYPos - collisionAnomaly || birdYPos + birdSize >= pipeYPos + pipeGapSize + collisionAnomaly)
+                if ( birdYPos <= pipeTop || round(birdYPos + birdSize - collisionAnomaly) >= pipeBottom )
                     return true; // Collision detected
                 break;
             }
@@ -271,12 +294,14 @@ namespace Game {
         return false; // No collision
     }
 
+
     // Reset the game state to start a new game
     void GameManager::resetGameState() {
         resetScore();
         bird.resetState();
         PipeController.resetPipes();
     }
+
 
     // Reset the score to zero and update the display
     void GameManager::resetScore() {
@@ -287,6 +312,7 @@ namespace Game {
         ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
     }
 
+
     // Draw the Backgound for Play Menu
     void GameManager::drawBackground(sf::RenderWindow& i_window) {
         background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Background.png");
@@ -294,10 +320,12 @@ namespace Game {
         i_window.draw(background_sprite);
     }
 
+
     // It sets the Game Mode type
     void GameManager::setGameMode(const GameModes GameType) {
          PipeController.setSettings(GameType);
     }
+
 
     // End Game Overlay
     void GameManager::displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore) {
@@ -337,5 +365,4 @@ namespace Game {
 
         window.display();
     }
-
 }

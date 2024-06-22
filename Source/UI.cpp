@@ -228,6 +228,8 @@ namespace UI {
     	window.clear();
 
     	playMainMenuMusic();
+    	
+    	srand(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
 
 		bool keyPressed = false;  // Flag to track key press
 
@@ -240,7 +242,7 @@ namespace UI {
             	}
             	else if (event.type == sf::Event::KeyPressed && !keyPressed) {
                 	keyPressed = true;  // Set the flag to true to indicate key press
-	                EventManager.processKeyPressed(event.key.code, currentMenu, *this);
+	                EventManager->processMenuKeyPressed(event.key.code, currentMenu, *this);
 	            }
 	            else if (event.type == sf::Event::KeyReleased) {
 	                keyPressed = false;  // Reset the flag on key release
@@ -269,10 +271,11 @@ namespace UI {
 			case 1:
 				GameController.resetGameState();
 				GameController.setGameMode(Game::GameModes::Easy);
-				if (GameController.aiGameplay(window)) {
-					delete currentMenu;
-					currentMenu = new UI::MainMenu();
-				}
+				GameController.runAiGameplay(window);
+				// After the AIGameplay, we return to Main Menu
+				delete currentMenu;
+				currentMenu = new UI::MainMenu();
+				
 				break;
 
 			// Theme
@@ -316,7 +319,7 @@ namespace UI {
 
 			// Game Over
 			GameController.displayGameOverOverlay(window,bestScore);
-			gameRestartState = EventManager.processGameOverState(window);
+			gameRestartState = EventManager->processGameOverState(window);
 		}
     }
 
