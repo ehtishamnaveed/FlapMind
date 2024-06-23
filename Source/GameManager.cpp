@@ -18,67 +18,56 @@ namespace Game {
     }
 
     void GameManager::runAiGameplay(sf::RenderWindow& i_window) {
-        Game::EventHandler* EventManager;
+        // Temporary instance to handle AI Gameplay Events
+        Game::EventHandler* EventManager = new EventHandler();
+
+        // Enable Ai Mode, cuz its AI Gameplay
         ItsAIMode = true;
-        // Generating Weights for each bird
+
+        // Generating Edge Weights for each bird population
         for (NeuralNetwork::AI& aibirds : BirdAI) {
             aibirds.generateEdgeWeights();
         }
 
-        bool keyPressed = false;
+        // Main AI Gameplay loop
         while (i_window.isOpen()) {
             i_window.clear();
-            // Handle window closing event
+            
+            // Handle events
             sf::Event event;
             while (i_window.pollEvent(event)) {
+                // Handle window closing event
                 if (event.type == sf::Event::Closed){
-                    Game::saveConfiguration();
+                    // Clean up temporary memory first
+                    delete EventManager;
+                    // then close the window
                     i_window.close();
                     break;
                 }
-                else if (event.type == sf::Event::KeyPressed && !keyPressed) {
-                    keyPressed = true;  // Set the flag to true to indicate key press
+
+                // Handle Gameplay key press event
+                else if (event.type == sf::Event::KeyPressed) {
                     EventManager->processAiGameplayKeyPressed(event.key.code, PipeController, *this);
+
+                    // Check if AI mode is disabled
                     if (!ItsAIMode) {
+                        // Reset AI state
                         for (NeuralNetwork::AI& aibirds : BirdAI) {
                             aibirds.resetState();
                         }
+
+                        // Reset Pipes
                         PipeController.resetPipes();
+
+                        // Reset Score
                         resetScore();
+
+                        // Clean up temporary memory 
+                        delete EventManager;
+
+                        // Gameplay is Over 
                         return;
                     }
-                }
-                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::E) {
-                //     keyPressed = true;  // Set the flag to true to indicate key press
-                //     this->setGameMode(GameModes::Easy);
-                // }
-                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::H) {
-                //     keyPressed = true;  // Set the flag to true to indicate key press
-                //     this->setGameMode(GameModes::Hard);
-                // }
-                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::C) {
-                //     keyPressed = true;  // Set the flag to true to indicate key press
-                //     this->setGameMode(GameModes::Crazy);
-                // }
-                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::M) {
-                //     keyPressed = true;  // Set the flag to true to indicate key press
-                //     PipeController.allowPipesVerticalMovement();
-                // }
-                // else if (event.type == sf::Event::KeyPressed && !keyPressed && event.key.code == sf::Keyboard::Escape) {
-                //     keyPressed = true;
-                //     // Resetting the Birds and GameState
-                //     for (NeuralNetwork::AI& aibirds : BirdAI) {
-                //         aibirds.resetState();
-                //     }
-                //     PipeController.resetPipes();
-                //     resetScore();
-                //     // Turning off the 'AI Mode'
-                //     ItsAIMode = false;
-                //     // We break the Loop and AI Gameplay
-                //     return;
-                // }
-                else if(event.type == sf::Event::KeyReleased) {
-                    keyPressed = false;  // Reset the flag on key release
                 }
             }
             // Draws Backgound
@@ -102,19 +91,26 @@ namespace Game {
     void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
         RecentScoreUpdate = false;
         bool needrestart = true;
+
+        // Check if any bird is alive from population
         for (NeuralNetwork::AI& aibird : BirdAI) {
+            // If even one bird is found alive
             if (aibird.isAlive()) {
+                // we wont restart the simulation
                 needrestart = false;
                 break;
             }
         }
 
+        // If don't need to restart the simulation
         if (!needrestart) {
+            // Keep the AI play the game
             for (NeuralNetwork::AI& aibird : BirdAI) {
-                // AI (Updates position and Learns to Flap)
+                // AI updates position and learns to flap
                 aibird.playGame(i_window,PipeController.getPipes());
 
-                // only if the bird is alive
+                // After updating the position of the bird
+                // Check if the bird is alive
                 if (aibird.isAlive()) {
                     // Check for Collision
                     if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
@@ -122,6 +118,7 @@ namespace Game {
                         aibird.Dies();
                     }
                 }
+                // Else continue to the next bird
                 else continue;
             }
         }
@@ -135,6 +132,7 @@ namespace Game {
                 BirdAI[curr_bird].uniformCrossoverWithMutation(BirdAI[0].getWeights(), BirdAI[1].getWeights());
             }
 
+            // We reset the AI, Pipes and Score
             for (NeuralNetwork::AI& aibirds : BirdAI) {
                 aibirds.resetState();
             }
@@ -183,11 +181,10 @@ namespace Game {
     void GameManager::runGame(sf::RenderWindow& i_window) {
         // If the Bird is alive
         while (i_window.isOpen() && bird.isAlive()) {
-            // Handle window closing event
             sf::Event event;
             while (i_window.pollEvent(event)) {
+                // Handle window closing event
                 if (event.type == sf::Event::Closed){
-                    Game::saveConfiguration();
                     i_window.close();
                     break;
                 }
@@ -274,11 +271,11 @@ namespace Game {
             const bool pipeIsBehindTheBird = pipeXPos < birdLeftBoundary - pipeSpeed;
             const bool birdPassedThePipe = birdXPos > pipeXPos + birdSize;
 
-            if ( pipeIsBehindTheBird )
+            if (pipeIsBehindTheBird)
                 continue; // Continue to the next pipe then
             // And skip the below statemnts
 
-            if ( pipeInCollisionRange ) {
+            if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
                 if ( birdYPos <= pipeTop || round(birdYPos + birdSize - collisionAnomaly) >= pipeBottom )
                     return true; // Collision detected
@@ -310,6 +307,7 @@ namespace Game {
         ScoreText.setString(std::to_string(Score));
         ScoreText.setCharacterSize(60);
         ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
+        ScoreText.setString(std::to_string(Score));
     }
 
 

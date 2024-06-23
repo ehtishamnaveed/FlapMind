@@ -10,7 +10,10 @@
 namespace UI {
     class Menu {
     public:
-        Menu(): Width(600), Height(600), SelectedMenu(0) {};
+        Menu(): Width(600), Height(600), SelectedMenu(0) {}
+        // Virtual destructor
+        // To ensure destructor of the derived class is called correctly
+        virtual ~Menu() {}
         void drawMenu(sf::RenderWindow& window);
         void moveUp();
         void moveDown();
@@ -85,7 +88,7 @@ namespace UI {
         void handleThemeMenu(UI::Menu*& currentMenu);
 
     private:
-        Game::EventHandler* EventManager;
+        Game::EventHandler EventManager;
         sf::RenderWindow window;
         Game::GameManager GameController;
 

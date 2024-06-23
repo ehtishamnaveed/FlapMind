@@ -221,31 +221,32 @@ namespace UI {
     	sf::Sprite sprite(texture);
     	window.draw(sprite);
     	window.display();
+
     	// Play the Loading Screen Sound
 		playLoadingFX();
-		// Hold the Screen for 3 second
+
+		// Hold the Screen for 3 second for the Logo to stay
 		std::this_thread::sleep_for(std::chrono::seconds(3));
     	window.clear();
 
+    	// Plays Main Menu Music, if sounf is not muted
     	playMainMenuMusic();
     	
+    	// Seed for rand()
     	srand(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
-
-		bool keyPressed = false;  // Flag to track key press
 
         while (window.isOpen()) {
             sf::Event event;
             while (window.pollEvent(event)) {
             	if (event.type == sf::Event::Closed){
-            		Game::saveConfiguration();
-                    window.close();
+            		window.close();
+                    break;
             	}
-            	else if (event.type == sf::Event::KeyPressed && !keyPressed) {
-                	keyPressed = true;  // Set the flag to true to indicate key press
-	                EventManager->processMenuKeyPressed(event.key.code, currentMenu, *this);
-	            }
-	            else if (event.type == sf::Event::KeyReleased) {
-	                keyPressed = false;  // Reset the flag on key release
+
+            	// Process Menu Events
+            	else if (event.type == sf::Event::KeyPressed) {
+            		// Process menu key events
+	                EventManager.processMenuKeyPressed(event.key.code, currentMenu, *this);
 	            }
 	        }
             // Draws menu on window
@@ -269,13 +270,12 @@ namespace UI {
 
 			// AI PlayThrough
 			case 1:
-				GameController.resetGameState();
+				// GameController.resetGameState();
 				GameController.setGameMode(Game::GameModes::Easy);
 				GameController.runAiGameplay(window);
 				// After the AIGameplay, we return to Main Menu
 				delete currentMenu;
 				currentMenu = new UI::MainMenu();
-				
 				break;
 
 			// Theme
@@ -289,12 +289,13 @@ namespace UI {
 
     // Play Menu Handler
     void MenuManager::handlePlayMenu(UI::Menu*& currentMenu) {
-    	bool gameRestartState = true;
+    	bool game_restart_state = true;
     	unsigned short* bestScore;
     	stopMainMenuMusic();
 
-    	while (gameRestartState) {
-    		GameController.resetGameState();
+    	// While game restart is true
+    	while (game_restart_state) {
+    		// Keep the last selected game mode
 	    	switch (currentMenu->getSelectedState()) {
 				// Easy
 				case 0:
@@ -317,9 +318,13 @@ namespace UI {
 			// Get into the Playthrough
 			GameController.runGame(window);
 
-			// Game Over
+			// Display Game Over overlay with highscore info
 			GameController.displayGameOverOverlay(window,bestScore);
-			gameRestartState = EventManager->processGameOverState(window);
+			// Check if user wants to restart 
+			game_restart_state = EventManager.processGameOverState(window);
+
+			// reset the game state
+			GameController.resetGameState();
 		}
     }
 

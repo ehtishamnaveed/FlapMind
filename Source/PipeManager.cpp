@@ -28,7 +28,7 @@ namespace Game {
 				// If the current pipe doesn't have momenet
 				if ( !curr_pipe.haveMovement() ) {
 					// make it Moveable 
-					curr_pipe.moveable();
+					curr_pipe.becomeMoveable();
 
 					// Set the Top and Bottom movement limit for te pipe
 					curr_pipe.setVerticalMovementLimits(PipeIndent);

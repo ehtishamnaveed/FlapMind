@@ -87,8 +87,8 @@ namespace Game {
     	sf::Event event;
 	        while (i_window.waitEvent(event)) {
 	            if (event.type == sf::Event::Closed){
-	                Game::saveConfiguration();
 	                i_window.close();
+	                state = false;
 	                break;
 	            }
 	            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
@@ -128,7 +128,10 @@ namespace Game {
 
 	        // Move pipes vertically
 	        case sf::Keyboard::M:
-	        	PipeController.allowPipesVerticalMovement();
+	        	if (!PipeController.movementIsEnabled())
+	        		PipeController.allowPipesVerticalMovement();
+	        	else
+	        		PipeController.stopPipesVerticalMovement();
 	         	break;
 	    }
 	}

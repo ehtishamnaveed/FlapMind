@@ -32,7 +32,7 @@ namespace Game {
 		void moveVertically();
 
 		bool haveMovement() { return IsPipeMoving; }
-		void moveable() { IsPipeMoving = true; }
+		void becomeMoveable() { IsPipeMoving = true; }
 
 	private:
 		bool IsPipeMoving;

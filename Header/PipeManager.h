@@ -22,9 +22,11 @@ namespace Game {
 		const unsigned char& getPipeIndent() const;
 
 		// Allows the Pipes to move vertically
-		void allowPipesVerticalMovement() { PipesCanMoveVertically = true;}
+		void allowPipesVerticalMovement() { PipesCanMoveVertically = true; }
 		// Stop the Pipes vertical movement
-		void stopPipesVerticalMovement() { PipesCanMoveVertically = false;}
+		void stopPipesVerticalMovement() { PipesCanMoveVertically = false; }
+
+		bool movementIsEnabled() { return PipesCanMoveVertically; } 
 
 	private:
 		GameModes GameType;
