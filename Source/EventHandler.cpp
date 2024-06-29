@@ -54,6 +54,7 @@ namespace Game {
 
 	        // To go the 'Main Menu'
 	        case sf::Keyboard::Escape:
+	        case sf::Keyboard::Backspace:
 	          	delete currentMenu;
 	            currentMenu = new UI::MainMenu();
 	            break;
@@ -95,7 +96,8 @@ namespace Game {
 	            	state = true;
 	            	break;
 	            }
-	            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+	            else if (event.type == sf::Event::KeyPressed
+	            	&& event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Backspace) {
 	            	state = false;
 	            	break;
 	            }
@@ -123,6 +125,7 @@ namespace Game {
 
 	        // To go the 'Main Menu'
 	        case sf::Keyboard::Escape:
+	        case sf::Keyboard::Backspace:
 	        	GameController.turnOffAiMode();
 	            break;
 

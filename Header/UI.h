@@ -10,7 +10,13 @@
 namespace UI {
     class Menu {
     public:
-        Menu(): Width(600), Height(600), SelectedMenu(0) {}
+        Menu(int size): Width(600), Height(600), SelectedMenu(0), MenuSize(size) {
+            // Load the font
+            menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
+            
+            MenuText.resize(MenuSize);
+            MenuBox.resize(MenuSize);
+        }
         // Virtual destructor
         // To ensure destructor of the derived class is called correctly
         virtual ~Menu() {}
@@ -24,10 +30,11 @@ namespace UI {
         const short Width;
         const short Height;
         int SelectedMenu;
+        int MenuSize;
 
         sf::Font menuFont;
-        sf::Text MenuText[3];
-        sf::RectangleShape MenuBox[3];
+        std::vector<sf::Text> MenuText;
+        std::vector<sf::RectangleShape> MenuBox;
 
         sf::Texture background_texture;
         sf::Sprite background_sprite;
@@ -68,12 +75,26 @@ namespace UI {
 
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    // Controls Menu class
+    class ControlsMenu : public Menu {
+    public:
+        ControlsMenu();
+        void drawBackground(sf::RenderWindow& i_window) override;
+        void showControls(sf::RenderWindow& i_window,std::string control_type,float x_pos,float y_pos);
+    };
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     // Manager for Menus
     class MenuManager {
     public:
         MenuManager();
+        // Display the Project Group Logo for 3 seconds
+        void displayLogo();
+
         // Music and FX
         void playLoadingFX();
         void playMainMenuMusic();
@@ -86,6 +107,7 @@ namespace UI {
         void handleMainMenu(UI::Menu*& currentMenu);
         void handlePlayMenu(UI::Menu*& currentMenu);
         void handleThemeMenu(UI::Menu*& currentMenu);
+        void handleControlsMenu(UI::Menu*& currentMenu);
 
     private:
         Game::EventHandler EventManager;

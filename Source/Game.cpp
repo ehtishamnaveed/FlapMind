@@ -20,26 +20,49 @@ namespace Game {
 
     // Loads Game settings from file
     void loadConfiguration() {
-        // Open the configuration file to read
         std::ifstream inputFile("config.txt");
+        if (!inputFile) {
+            // File doesn't exist, initialize with default values
+            theme_name = "clearsky";
+            easymode_highscore = 0;
+            hardmode_highscore = 0;
+            crazymode_highscore = 0;
+            mute = true;
+            return;
+        }
+        
+        // File exists, read data
         std::string info;
-        while (std::getline(inputFile,info)) {
+        bool anyDataRead = false;
+        while (std::getline(inputFile, info)) {
             std::istringstream data(info);
-            data  >> theme_name >> easymode_highscore >> hardmode_highscore >> crazymode_highscore >> mute;
+            if (data >> theme_name >> easymode_highscore >> hardmode_highscore >> crazymode_highscore >> mute) {
+                anyDataRead = true;
+            }
+        }
+        
+        if (!anyDataRead) {
+            // File was empty, initialize with default values
+            theme_name = "clearsky";
+            easymode_highscore = 0;
+            hardmode_highscore = 0;
+            crazymode_highscore = 0;
+            mute = true;
         }
         inputFile.close();
     }
 
-    // Stores Game setting from file
+    // Stores Game setting to file
     void saveConfiguration() {
-        // Open the Configuration to write
         std::ofstream outputFile("config.txt");
-        outputFile << theme_name
-                   << " " << easymode_highscore
-                   << " " << hardmode_highscore
-                   << " " << crazymode_highscore
-                   << " " << mute;
-        outputFile.close();
+        if (outputFile) {
+            outputFile << theme_name << " "
+                       << easymode_highscore << " "
+                       << hardmode_highscore << " "
+                       << crazymode_highscore << " "
+                       << mute;
+            outputFile.close();
+        }
     }
 
     namespace Screen {

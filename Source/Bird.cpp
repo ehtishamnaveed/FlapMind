@@ -36,8 +36,9 @@ namespace Game {
 		// If the Bird is Alive
 		if (IsAlive) {
 			// And the Vertical speed is greater OR equal to 0
-			// and the User presses the 'Up Arrow key'
-			if (0 <= BirdVerticalSpeed && sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			// and the User presses the 'Up Arrow key' or 'Spacebar'
+			if (0 <= BirdVerticalSpeed &&
+				(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
 				// and Make the bird Falp
 	        	BirdVerticalSpeed = FlapSpeed;
 				// Play the flap Sound

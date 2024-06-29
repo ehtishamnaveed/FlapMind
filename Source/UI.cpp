@@ -7,7 +7,7 @@ namespace UI {
 	// Draw the Elements of Main Menu
 	void Menu::drawMenu(sf::RenderWindow& i_window) {
 		drawBackground(i_window);
-		for(int iterator = 0 ; iterator < 3 ; ++iterator) {
+		for(int iterator = 0 ; iterator < MenuSize ; ++iterator) {
 			i_window.draw(MenuBox[iterator]); // Draw the box behind the text
 			i_window.draw(MenuText[iterator]);
 		}
@@ -19,7 +19,7 @@ namespace UI {
 
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
-	    SelectedMenu = (SelectedMenu - 1 + 3) % 3;
+	    SelectedMenu = (SelectedMenu - 1 + MenuSize) % MenuSize;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
 
@@ -32,7 +32,7 @@ namespace UI {
 
 		MenuText[SelectedMenu].setFillColor(sf::Color::Black);
 
-	    SelectedMenu = (SelectedMenu + 1) % 3;
+	    SelectedMenu = (SelectedMenu + 1) % MenuSize;
 
 	    MenuText[SelectedMenu].setFillColor(sf::Color::White);
 
@@ -54,11 +54,9 @@ namespace UI {
 
 // MainMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	MainMenu::MainMenu() {
-		// Load the font
-		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
+	MainMenu::MainMenu(): Menu(4) {
 
-		for (int iterator = 0; iterator < 3; ++iterator) {
+		for (int iterator = 0; iterator < MenuSize; ++iterator) {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, Height/2 + iterator * 50);
@@ -83,6 +81,10 @@ namespace UI {
 		// Theme
 		MenuText[2].setString("Theme");
 		MenuText[2].setFillColor(sf::Color::Black);
+
+		// Controls
+		MenuText[3].setString("Controls");
+		MenuText[3].setFillColor(sf::Color::Black);
 	}
 
 	// Draw the Backgound for Main Menu
@@ -102,11 +104,9 @@ namespace UI {
 
 // PlayMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	PlayMenu::PlayMenu() {
-		// Load the font
-		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
+	PlayMenu::PlayMenu(): Menu(3) {
 
-		for (int iterator = 0; iterator < 3; ++iterator) {
+		for (int iterator = 0; iterator < MenuSize; ++iterator) {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
@@ -150,16 +150,14 @@ namespace UI {
 
 // ThemeMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	ThemeMenu::ThemeMenu() {
+	ThemeMenu::ThemeMenu(): Menu(3) {
 		// Initilizeing Themes array
 		Themes[0] = "ClearSky";
 		Themes[1] = "DarkNight";
 		Themes[2] = "SunSet";
 
-		// Load the font
-		menuFont.loadFromFile("Resources/Font/MenuFont.ttf");
 
-		for (int iterator = 0; iterator < 3; ++iterator) {
+		for (int iterator = 0; iterator < MenuSize; ++iterator) {
 			MenuText[iterator].setFont(menuFont);
 			MenuText[iterator].setCharacterSize(30);
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
@@ -194,6 +192,93 @@ namespace UI {
     }
 
 
+
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+// ControlsMenu //
+	// Constructor Initilizes the Font and the Text on the window
+	ControlsMenu::ControlsMenu(): Menu(3) {
+
+		for (int iterator = 0; iterator < MenuSize; ++iterator) {
+			MenuText[iterator].setFont(menuFont);
+			MenuText[iterator].setCharacterSize(30);
+		    MenuText[iterator].setPosition(Width/2 - 190, 180 + iterator * 80);
+
+		    // Add box behind the text
+	        MenuBox[iterator].setSize(sf::Vector2f(360, 40));
+	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
+	        MenuBox[iterator].setPosition(Width/2 - 195, 180 + iterator * 80);
+		}
+
+		// Set the initial box to be selected
+    	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
+
+		// Easy 
+		MenuText[0].setFillColor(sf::Color::White);
+		MenuText[0].setString("Navigation Controls");
+
+		// Hard
+		MenuText[1].setFillColor(sf::Color::Black);
+		MenuText[1].setString("Gameplay Controls");
+
+		// Crazy
+		MenuText[2].setFillColor(sf::Color::Black);
+		MenuText[2].setString("Audio Controls");
+	}
+
+	// Draw the Backgound for Play Menu
+	void ControlsMenu::drawBackground(sf::RenderWindow& i_window) {
+        background_texture.loadFromFile("Resources/Theme/"+Game::theme_name+"/Background.png");
+        background_sprite.setTexture(background_texture);
+        i_window.draw(background_sprite);
+    }
+
+    // Shows Navigation Controls
+    void ControlsMenu::showControls(sf::RenderWindow& i_window, std::string control_type, float x_pos, float y_pos) {
+    	sf::Texture controls_texture;
+        sf::Sprite controls;
+
+        controls_texture.loadFromFile("Resources/Controls/"+control_type+".png");
+        controls.setTexture(controls_texture);
+
+        controls.setPosition(x_pos,y_pos);
+
+        i_window.draw(controls);
+        i_window.display();
+
+        while (i_window.isOpen()) {
+        	// Check for events
+			sf::Event event;
+	        while (i_window.waitEvent(event)) {
+	        	// Check Event Type
+	        	switch (event.type) {
+	        		// Window closing event
+	                case sf::Event::Closed:
+	                    i_window.close();
+	                    break;
+
+	                // Key Pressed Events
+	                case sf::Event::KeyPressed:
+	                	// Check for the Keys
+	                	switch(event.key.code) {
+	                		case sf::Keyboard::Escape:
+                            case sf::Keyboard::Backspace:
+                            case sf::Keyboard::Enter:
+                            	return;
+                            	break;
+	                	}
+	                	break;
+                }
+			}
+		}
+    }
+
+
+
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -213,10 +298,9 @@ namespace UI {
         LoadingFX.setBuffer(FXsound);
     }
 
-    // Displays the Menu
-	void MenuManager::displayMenu(UI::Menu*& currentMenu) {
-		// Display the Project Group Logo
-		sf::Texture texture;
+    // Display the Project Group Logo
+    void MenuManager::displayLogo() {
+    	sf::Texture texture;
     	texture.loadFromFile("Resources/Images/LoadingScreen.png");
     	sf::Sprite sprite(texture);
     	window.draw(sprite);
@@ -225,22 +309,34 @@ namespace UI {
     	// Play the Loading Screen Sound
 		playLoadingFX();
 
-		// Hold the Screen for 3 second for the Logo to stay
-		std::this_thread::sleep_for(std::chrono::seconds(3));
-    	window.clear();
+		// Hold the Screen for 3 seconds for the Logo to stay
+	    sf::Clock clock;
+	    while (clock.getElapsedTime().asSeconds() < 3.f) {
+	        // Keep the main thread responsive by processing events
+	        sf::Event event;
+	        while (window.pollEvent(event)) {
+	            if (event.type == sf::Event::Closed)
+	                window.close();
+	        }
+	    }
+    }
 
-    	// Plays Main Menu Music, if sounf is not muted
+    // Displays the Menu
+	void MenuManager::displayMenu(UI::Menu*& currentMenu) {
+		displayLogo();
+
     	playMainMenuMusic();
     	
     	// Seed for rand()
     	srand(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
 
         while (window.isOpen()) {
+
             sf::Event event;
             while (window.pollEvent(event)) {
+
             	if (event.type == sf::Event::Closed){
             		window.close();
-                    break;
             	}
 
             	// Process Menu Events
@@ -249,12 +345,12 @@ namespace UI {
 	                EventManager.processMenuKeyPressed(event.key.code, currentMenu, *this);
 	            }
 	        }
+	        // Clear the window
+            window.clear();
             // Draws menu on window
             currentMenu->drawMenu(window);
             // Draws The window
             window.display();
-            // Clear the window
-            window.clear();
         }
     }
 
@@ -283,6 +379,12 @@ namespace UI {
 				// Change the Menu to ThemeMenu type
 				delete currentMenu;
 				currentMenu = new UI::ThemeMenu();
+				break;
+
+			// Controls
+			case 3:
+				delete currentMenu;
+				currentMenu = new UI::ControlsMenu();
 				break;
 		}
     }
@@ -350,6 +452,30 @@ namespace UI {
         currentMenu = new UI::MainMenu();
     }
 
+    // Controls Menu Handler
+    void MenuManager::handleControlsMenu(UI::Menu*& currentMenu) {
+    	currentMenu->drawBackground(window);
+    	UI::ControlsMenu* controls;
+    	controls = dynamic_cast<ControlsMenu*>(currentMenu);
+
+    	switch (currentMenu->getSelectedState()) {
+    		// Menu Navigation Controls
+    		case 0:
+    			controls->showControls(window,"MenuControls",50.0f,150.0f);
+    			break;
+
+    		// Gameplay Controls
+    		case 1:
+    			controls->showControls(window,"GameplayControls",50.0f,120.0f);
+    			break;
+
+    		// Audio Controls
+    		case 2:
+    			controls->showControls(window,"AudioControls",50.0f,180.0f);
+    			break;
+		}
+    }
+
     void MenuManager::handleMenuStateChange(UI::Menu*& currentMenu) {
     	if (typeid(*currentMenu) == typeid(MainMenu)) {
 	        handleMainMenu(currentMenu);
@@ -359,6 +485,9 @@ namespace UI {
     	}
     	else if (typeid(*currentMenu) == typeid(ThemeMenu)) {
 	        handleThemeMenu(currentMenu);
+    	}
+    	else if (typeid(*currentMenu) == typeid(ControlsMenu)) {
+	        handleControlsMenu(currentMenu);
     	}
     }
 

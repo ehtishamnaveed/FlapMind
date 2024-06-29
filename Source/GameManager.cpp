@@ -248,7 +248,7 @@ namespace Game {
 
         // Bird Position Information
         const short birdXPos = bird.getXPosition();
-        const short birdYPos = bird.getYPosition();
+        const short birdYPos = round(bird.getYPosition());
 
         // Bird Collision Boundaries Information
         const unsigned char birdLeftBoundary = birdXPos - birdSize;
@@ -264,7 +264,7 @@ namespace Game {
 
             // Collision boundaries for the pipe
             const short pipeTop = pipeYPos - collisionAnomaly;
-            const short pipeBottom = pipeYPos + pipeGapSize + collisionAnomaly;
+            const short pipeBottom = pipeYPos + pipeGapSize + collisionAnomaly-3;
 
             // Collision Range information
             const bool pipeInCollisionRange = pipeXPos <= birdRightBoundary - collisionAnomaly && pipeXPos >= birdLeftBoundary;
@@ -277,7 +277,7 @@ namespace Game {
 
             if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
-                if ( birdYPos <= pipeTop || round(birdYPos + birdSize - collisionAnomaly) >= pipeBottom )
+                if ( birdYPos <= pipeTop || birdYPos + birdSize - collisionAnomaly >= pipeBottom )
                     return true; // Collision detected
                 break;
             }
@@ -358,7 +358,7 @@ namespace Game {
         // Draw High Score
         ScoreText.setString(std::to_string(*bestScore));
             ScoreText.setCharacterSize(40);
-            ScoreText.setPosition(350 , 255);
+            ScoreText.setPosition(350 , 253);
             window.draw(ScoreText);
 
         window.display();
