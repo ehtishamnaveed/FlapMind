@@ -300,6 +300,43 @@ namespace Game {
     }
 
 
+    void GameManager::waitForStart(sf::RenderWindow& i_window) {
+        drawBackground(i_window);
+
+        ScoreText.setCharacterSize(40);
+        ScoreText.setString("Press Up / Space to play");
+        ScoreText.setPosition(50,250);
+        i_window.draw(ScoreText);
+
+        i_window.display();
+
+        while (i_window.isOpen()) {
+            // Check for events
+            sf::Event event;
+            while (i_window.waitEvent(event)) {
+                // Check Event Type
+                switch (event.type) {
+                    // Window closing event
+                    case sf::Event::Closed:
+                        i_window.close();
+                        return;
+
+                    // Key Pressed Events
+                    case sf::Event::KeyPressed:
+                        // Check for the Keys
+                        switch(event.key.code) {
+                            case sf::Keyboard::Up:
+                            case sf::Keyboard::Space:
+                                resetScore();
+                                return;
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+
     // Reset the score to zero and update the display
     void GameManager::resetScore() {
         Score = 0;

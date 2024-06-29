@@ -18,6 +18,7 @@ namespace Game {
         void playLowScoreFX(); // FX for when user scores lower than the High score
         void playHighScoreFX(); // FX for when user scores higher than the High score
 
+        void waitForStart(sf::RenderWindow& i_window);
         void renderGame(sf::RenderWindow& i_window); // Displays the Bird,Pipes, and Backgound
         void runGame(sf::RenderWindow& i_window); // It is the main game loop logic
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes); // Checks collision of Bird with Pipes

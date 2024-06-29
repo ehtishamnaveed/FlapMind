@@ -114,7 +114,7 @@ namespace UI {
 		    // Add box behind the text
 	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width / 2 - 120, 180 + iterator * 80);
+	        MenuBox[iterator].setPosition(Width / 2 - 125, 180 + iterator * 80);
 		}
 
 		// Set the initial box to be selected
@@ -165,7 +165,7 @@ namespace UI {
 		    // Add box behind the text
 	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width / 2 - 120, 180 + iterator * 80);
+	        MenuBox[iterator].setPosition(Width / 2 - 125, 180 + iterator * 80);
 		}
 
 		// Set the initial box to be selected
@@ -259,7 +259,7 @@ namespace UI {
 	        		// Window closing event
 	                case sf::Event::Closed:
 	                    i_window.close();
-	                    break;
+	                    return;
 
 	                // Key Pressed Events
 	                case sf::Event::KeyPressed:
@@ -269,7 +269,6 @@ namespace UI {
                             case sf::Keyboard::Backspace:
                             case sf::Keyboard::Enter:
                             	return;
-                            	break;
 	                	}
 	                	break;
                 }
@@ -366,7 +365,6 @@ namespace UI {
 
 			// AI PlayThrough
 			case 1:
-				// GameController.resetGameState();
 				GameController.setGameMode(Game::GameModes::Easy);
 				GameController.runAiGameplay(window);
 				// After the AIGameplay, we return to Main Menu
@@ -397,6 +395,7 @@ namespace UI {
 
     	// While game restart is true
     	while (game_restart_state) {
+    		GameController.waitForStart(window);
     		// Keep the last selected game mode
 	    	switch (currentMenu->getSelectedState()) {
 				// Easy

@@ -61,7 +61,7 @@ namespace NeuralNetwork {
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> NodeDistribution;
 
-		static constexpr unsigned char MutationProbability = 63;
+		static constexpr unsigned char MutationProbability = 24;
 		std::uniform_int_distribution<unsigned short> MutationDistribution;
 
 		float BirdNPipeDifference;
