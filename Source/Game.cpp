@@ -3,7 +3,7 @@
 
 namespace Game {
     // Game's Gravity
-    const float gravity = 0.90f;
+    constexpr float gravity = 0.90f;
 
     // Variable for Game Sound FX
     bool mute = false;
@@ -66,7 +66,7 @@ namespace Game {
     }
 
     namespace Screen {
-        const short screenWidth = 600;
-        const short screenHeight = 600;
+        constexpr short screenWidth = 600;
+        constexpr short screenHeight = 600;
     }
 }

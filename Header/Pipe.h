@@ -23,6 +23,7 @@ namespace Game {
 		const unsigned short getYPosition() const; // Returns the Y Position
 		const unsigned char getGapSize() const; // Returns the 'GapSize' for the Respective GameMode
 		const unsigned char getPipeSpeed() const; // Returns the 'PipeSpeed' for the Respective GameMode
+		const unsigned char getPipeWidth() const; // Returns PipeWidth
 
 		// Generates the Movement Direction for the Pipe 
 		void generateVerticalMovementDirection();
@@ -44,6 +45,7 @@ namespace Game {
 		short PipeXPosition;
 		unsigned short PipeYPosition;
 		static constexpr short OffScreenLimit = -50; // Range of Pipe's X_positon to get removed
+		static constexpr unsigned char PipeWidth = 50;
 
 		unsigned char GapSize;
 		unsigned char PipeSpeed;

@@ -1,1 +1,1 @@
-SunSet 25 8 4 1
+ClearSky 3 0 0 1

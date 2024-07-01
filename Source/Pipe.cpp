@@ -26,7 +26,6 @@ namespace Game {
             	PipeSpeed = CrazyPipeSpeed;
 			 	break;
 			}
-			// PipeYPosition -= GapSize;
 		}
 
 	// Sets the Tecture, while selecting specifc portion for Up-side and Down-side
@@ -36,7 +35,7 @@ namespace Game {
 		// Top Side Pipe
 		pipe.setPosition(PipeXPosition, (PipeYPosition - Game::Screen::screenHeight));
 		// Left, Top, Width, Height
-		pipe.setTextureRect(sf::IntRect(50, 0, 50, Game::Screen::screenHeight));
+		pipe.setTextureRect(sf::IntRect(PipeWidth, 0, PipeWidth, Game::Screen::screenHeight));
 		i_window.draw(pipe);
 
 		//Using 1 sprite to draw 2 pipes.
@@ -44,7 +43,7 @@ namespace Game {
 
 		// Bottom Side Pipe
 		pipe.setPosition(PipeXPosition, (PipeYPosition + GapSize));
-		pipe.setTextureRect(sf::IntRect(0, 0, 50, Game::Screen::screenHeight));
+		pipe.setTextureRect(sf::IntRect(0, 0, PipeWidth, Game::Screen::screenHeight));
 		i_window.draw(pipe);
 	}
 
@@ -108,5 +107,9 @@ namespace Game {
 	
 	const unsigned char Pipe::getPipeSpeed() const{
 		return PipeSpeed;
+	}
+
+	const unsigned char Pipe::getPipeWidth() const{
+		return PipeWidth;
 	}
 }

@@ -242,34 +242,35 @@ namespace Game {
 
     // Collision Detection
     bool GameManager::collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& pipes) {
-        // Constants
-        const unsigned char collisionAnomaly = 6;
-        const short birdSize = bird.getBirdSize();
+        // Anomally, to make collsion look good visually
+        const unsigned char collisionAnomaly = 8;
 
-        // Bird Position Information
+        // Bird Information
+        const short birdSize = bird.getBirdSize();
         const short birdXPos = bird.getXPosition();
         const short birdYPos = round(bird.getYPosition());
 
-        // Bird Collision Boundaries Information
-        const unsigned char birdLeftBoundary = birdXPos - birdSize;
-        const unsigned char birdRightBoundary = birdXPos + birdSize;
-
         // Loop through pipes
-        for (const Pipe& pipe : pipes) {
+        for (const Pipe& curr_pipe : pipes) {
             // Pipe information
-            const short pipeXPos = pipe.getXPosition();
-            const short pipeYPos = pipe.getYPosition();
-            const unsigned char pipeGapSize = pipe.getGapSize();
-            const char pipeSpeed = pipe.getPipeSpeed();
+            const short pipeXPos = curr_pipe.getXPosition();
+            const short pipeYPos = curr_pipe.getYPosition();
+            const unsigned char pipeGapSize = curr_pipe.getGapSize();
+            const char pipeSpeed = curr_pipe.getPipeSpeed();
+            const unsigned char pipeWidth = curr_pipe.getPipeWidth();
 
-            // Collision boundaries for the pipe
+            // Collision vertical boundaries for the pipe
             const short pipeTop = pipeYPos - collisionAnomaly;
-            const short pipeBottom = pipeYPos + pipeGapSize + collisionAnomaly-3;
+            const short pipeBottom = pipeYPos + pipeGapSize + collisionAnomaly;
+
+            // Info about when not to check for collision
+            const bool pipeIsBehindTheBird = pipeXPos < (birdXPos - birdSize - pipeSpeed);
+
+            // Info about bird scoring
+            const bool birdPassedThePipe = birdXPos > (pipeXPos + birdSize);
 
             // Collision Range information
-            const bool pipeInCollisionRange = pipeXPos <= birdRightBoundary - collisionAnomaly && pipeXPos >= birdLeftBoundary;
-            const bool pipeIsBehindTheBird = pipeXPos < birdLeftBoundary - pipeSpeed;
-            const bool birdPassedThePipe = birdXPos > pipeXPos + birdSize;
+            const bool pipeInCollisionRange = (pipeXPos <= birdXPos + birdSize) && (pipeXPos + pipeWidth >= birdXPos);
 
             if (pipeIsBehindTheBird)
                 continue; // Continue to the next pipe then
@@ -277,7 +278,7 @@ namespace Game {
 
             if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
-                if ( birdYPos <= pipeTop || birdYPos + birdSize - collisionAnomaly >= pipeBottom )
+                if (birdYPos <= pipeTop || birdYPos + birdSize >= pipeBottom)
                     return true; // Collision detected
                 break;
             }
@@ -302,9 +303,10 @@ namespace Game {
 
     void GameManager::waitForStart(sf::RenderWindow& i_window) {
         drawBackground(i_window);
+        bird.drawBird(i_window);
 
         ScoreText.setCharacterSize(40);
-        ScoreText.setString("Press Up / Space to play");
+        ScoreText.setString("Press Up / Space to Flap");
         ScoreText.setPosition(50,250);
         i_window.draw(ScoreText);
 

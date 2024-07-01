@@ -3,7 +3,7 @@
 #include "../Header/Game.h"
 
 namespace Game {
-	Bird::Bird(): BirdYPosition(20), BirdXPosition(170), IsAlive(1) {
+	Bird::Bird(): BirdYPosition(20), BirdXPosition(170), IsAlive(1), BirdVerticalSpeed(0) {
 		// Load sound files into sound buffers
         FXsound.loadFromFile("Resources/SoundFX/FlapFX.mp3");
 
