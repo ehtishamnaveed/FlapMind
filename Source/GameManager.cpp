@@ -267,7 +267,7 @@ namespace Game {
             const bool pipeIsBehindTheBird = pipeXPos < (birdXPos - birdSize - pipeSpeed);
 
             // Info about bird scoring
-            const bool birdPassedThePipe = birdXPos > (pipeXPos + birdSize);
+            const bool birdPassedThePipe = pipeXPos < (birdXPos - birdSize);
 
             // Collision Range information
             const bool pipeInCollisionRange = (pipeXPos <= birdXPos + birdSize) && (pipeXPos + pipeWidth >= birdXPos);
@@ -280,10 +280,9 @@ namespace Game {
                 // Check for collision excluding the gap area
                 if (birdYPos <= pipeTop || birdYPos + birdSize >= pipeBottom)
                     return true; // Collision detected
-                break;
             }
 
-            else if (birdPassedThePipe) {
+            if (birdPassedThePipe) {
                 updateScore();
                 playScoreFX();
                 break;
