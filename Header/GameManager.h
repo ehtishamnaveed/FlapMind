@@ -31,10 +31,15 @@ namespace Game {
         void displayGameOverOverlay(sf::RenderWindow& window, unsigned short*& bestScore); // End Game Overlay
 
         void turnOffAiMode() { ItsAIMode = false; }
+        void showAiInfo(sf::RenderWindow& window, sf::RectangleShape& background, sf::Text& info_text);
 
     private:
         // Differentiates between 'User' and 'AI'
         bool ItsAIMode;
+        // Generation number for mutation
+        unsigned short Generation; // Keeps track of the current generation number in the genetic algorithm.
+        unsigned short AiHighScore;
+        unsigned short AliveBirds;
 
         static constexpr unsigned char PopulationSize = 12;
         NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI

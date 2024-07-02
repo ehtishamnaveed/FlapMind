@@ -1,11 +1,11 @@
 #include "../Header/NeuralNetwork.h"
-
+// #include<iostream>
 namespace NeuralNetwork {
 	// Constrcutor
-	AI::AI(): Game::Bird(), Fitness(0),
+	AI::AI(): Game::Bird(), FitnessScore(0),
 			  RandomEngine(std::random_device{}()), 
 			  NodeDistribution(-1, 1),
-			  MutationDistribution(0, MutationProbability+1)
+			  MutationDistribution(0, 99)
 			  { BirdYPosition = 300; }
 
 	// Generates random weights for edges
@@ -124,19 +124,21 @@ namespace NeuralNetwork {
 				// Play the flap Sound
 				// playFlapSound();
 	    	}
-	    	updateFitness();
+	    	updateFitnessScore();
 		}
 		else {
-			if (BirdYPosition >= Game::Screen::screenHeight - BirdGroundLimit) {
-				BirdYPosition = Game::Screen::screenHeight - BirdGroundLimit;
-				BirdVerticalSpeed = 0;
-				BirdXPosition--;
+			if (BirdYPosition >= (Game::Screen::screenHeight - BirdGroundLimit)) {
+				if (BirdXPosition >= -50) {
+					BirdYPosition = Game::Screen::screenHeight - BirdGroundLimit;
+					BirdVerticalSpeed = 0;
+					BirdXPosition--;
+				}
 			}
 		}
 	}
 
-	void AI::updateFitness() {
-		Fitness++;
+	void AI::updateFitnessScore() {
+		FitnessScore++;
 	}
 
 	// ++++++++++++++
@@ -162,10 +164,12 @@ namespace NeuralNetwork {
 	            }
 
 	            // Apply mutation if necessary for both weights
-	            if (MutationDistribution(RandomEngine) == 0) {
+	            if (MutationDistribution(RandomEngine) < MutationProbability) {
 	                // If the mutation probability is met, mutate the weights
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = NodeDistribution(RandomEngine);
+	                // std::cerr<<NodeDistribution(RandomEngine)<<"\n\n";
 	                Weights.HiddenToOutputWeights[hiddenIndex][0] = NodeDistribution(RandomEngine);
+	                // std::cerr<<NodeDistribution(RandomEngine)<<"\n\n...............";
 	            }
 	        }
 	    }
@@ -176,6 +180,6 @@ namespace NeuralNetwork {
 		BirdYPosition = 300;
 	 	BirdXPosition = 170;
 	  	IsAlive = true;
-	  	Fitness = 0;
+	  	FitnessScore = 0;
 	}
 }

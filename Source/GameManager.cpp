@@ -5,7 +5,12 @@
 
 namespace Game {
     // Constructor initializes GameManager with default score and font settings
-    GameManager::GameManager(): Score(0), RecentScoreUpdate(false), ItsAIMode(false) {
+    GameManager::GameManager():
+         Score(0), RecentScoreUpdate(false), 
+         ItsAIMode(false), Generation(0),
+         AiHighScore(0) {
+        // Body Of constructor 
+
         // Load font from file
         ScoreFont.loadFromFile("Resources/Font/4Brain.ttf");
 
@@ -24,10 +29,24 @@ namespace Game {
         // Enable Ai Mode, cuz its AI Gameplay
         ItsAIMode = true;
 
+        AliveBirds = PopulationSize;
+
         // Generating Edge Weights for each bird population
         for (NeuralNetwork::AI& aibirds : BirdAI) {
             aibirds.generateEdgeWeights();
         }
+
+        // To display information about AI
+        sf::RectangleShape ai_info_background(sf::Vector2f(250,150));
+        ai_info_background.setFillColor(sf::Color::Black);
+        ai_info_background.setPosition(400.0f,0.0f);
+
+        sf::Font info_font;
+        info_font.loadFromFile("Resources/Font/MenuFont.ttf");
+
+        sf::Text info_text;
+        info_text.setFont(info_font);
+        info_text.setFillColor(sf::Color::White);
 
         // Main AI Gameplay loop
         while (i_window.isOpen()) {
@@ -51,6 +70,9 @@ namespace Game {
 
                     // Check if AI mode is disabled
                     if (!ItsAIMode) {
+                        Generation = 0;
+                        AiHighScore = 0;
+
                         // Reset AI state
                         for (NeuralNetwork::AI& aibirds : BirdAI) {
                             aibirds.resetState();
@@ -82,6 +104,9 @@ namespace Game {
 
             // Displays Score
             i_window.draw(ScoreText);
+
+            // Shows info about AI
+            showAiInfo(i_window, ai_info_background, info_text);
 
             // Displays Window
             i_window.display();
@@ -116,6 +141,7 @@ namespace Game {
                     if (collisionOfBirdWithPipes(aibird, PipeController.getPipes())) {
                         // If collides, The bird Dies
                         aibird.Dies();
+                        AliveBirds--;
                     }
                 }
                 // Else continue to the next bird
@@ -123,6 +149,10 @@ namespace Game {
             }
         }
         else {
+            Generation++;
+            if (Score > AiHighScore)
+                AiHighScore = Score;
+
             // Sorting the Fitness of birds ( greater to smaller ) 
             // std::sort will use the operator functions in the AI class.
             std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
@@ -138,6 +168,7 @@ namespace Game {
             }
             PipeController.resetPipes();
             resetScore();
+            AliveBirds = PopulationSize;
         }
     }
 
@@ -400,5 +431,26 @@ namespace Game {
             window.draw(ScoreText);
 
         window.display();
+    }
+
+    void GameManager::showAiInfo(sf::RenderWindow& window, sf::RectangleShape& background, sf::Text& info_text) {
+        window.draw(background);
+        info_text.setCharacterSize(20);
+
+        info_text.setString("Population: "+std::to_string(PopulationSize));
+        info_text.setPosition(415,0);
+        window.draw(info_text);
+
+        info_text.setString("Generation: "+std::to_string(Generation));
+        info_text.setPosition(415,40);
+        window.draw(info_text);
+
+        info_text.setString("Birds Alive: "+std::to_string(AliveBirds));
+        info_text.setPosition(415,80);
+        window.draw(info_text);
+
+        info_text.setString("High Score: "+std::to_string(AiHighScore));
+        info_text.setPosition(415,120);
+        window.draw(info_text);
     }
 }

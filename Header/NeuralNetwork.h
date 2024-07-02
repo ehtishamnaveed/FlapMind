@@ -42,10 +42,10 @@ namespace NeuralNetwork {
 		void updateBird() override;
 		void resetState() override;
 		
-		void updateFitness();
-		unsigned getFitness() { return Fitness; }
-		bool operator<(AI& i_bird) { return Fitness < i_bird.getFitness(); }
-		bool operator>(AI& i_bird) { return Fitness > i_bird.getFitness(); }
+		void updateFitnessScore();
+		unsigned getFitnessScore() { return FitnessScore; }
+		bool operator<(AI& i_bird) { return FitnessScore < i_bird.getFitnessScore(); }
+		bool operator>(AI& i_bird) { return FitnessScore > i_bird.getFitnessScore(); }
 
 		NodeEdgeWeights& getWeights() { return Weights; }
 
@@ -61,12 +61,12 @@ namespace NeuralNetwork {
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> NodeDistribution;
 
-		static constexpr unsigned char MutationProbability = 24;
+		static constexpr unsigned char MutationProbability = 5;
 		std::uniform_int_distribution<unsigned short> MutationDistribution;
 
 		float BirdNPipeDifference;
 
-		unsigned Fitness;
+		unsigned FitnessScore;
 	};
 }
 

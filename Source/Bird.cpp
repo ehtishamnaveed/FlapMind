@@ -47,7 +47,7 @@ namespace Game {
 		}
 
 		// Check if the Bird reaches the Ground limit
-		if (BirdYPosition >= Screen::screenHeight - BirdGroundLimit) {
+		if (BirdYPosition >= (Screen::screenHeight - BirdGroundLimit)) {
 			// The Bird Dies
 			IsAlive = 0;
 			BirdVerticalSpeed = 0;
