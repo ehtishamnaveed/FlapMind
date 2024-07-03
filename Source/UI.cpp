@@ -299,6 +299,10 @@ namespace UI {
 
     // Display the Project Group Logo
     void MenuManager::displayLogo() {
+    	sf::Image icon;
+    	icon.loadFromFile("Resources/Images/winlogo.png");
+    	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
     	sf::Texture texture;
     	texture.loadFromFile("Resources/Images/LoadingScreen.png");
     	sf::Sprite sprite(texture);
