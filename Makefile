@@ -16,6 +16,9 @@ SRCS := $(wildcard Source/*.cpp)
 # OBJS: List of object files to build from source files.
 OBJS := $(patsubst Source/%.cpp, Build/%.o, $(SRCS))
 
+# Windows-specific flags
+WINDOWS_FLAGS := -mwindows
+
 # Path to the icon file
 ICON_FILE := Resources/Images/Logo.ico
 
@@ -27,7 +30,7 @@ RESOURCE_OBJ := resource.o
 
 # Target to build the FlapMind executable.
 FlapMind: $(OBJS) $(RESOURCE_OBJ)
-	g++ $(LDFLAGS) $(OBJS) $(RESOURCE_OBJ) -o $@ $(LIBS)
+	g++ $(LDFLAGS) $(OBJS) $(RESOURCE_OBJ) -o $@ $(LIBS) $(WINDOWS_FLAGS)
 
 # Rule to compile each source file into an object file.
 Build/%.o: Source/%.cpp
