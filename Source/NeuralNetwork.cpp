@@ -113,6 +113,11 @@ namespace NeuralNetwork {
 
 		// If the Bird is Alive
 		if (IsAlive) {
+			// Check if the Bird reaches the Ground limit
+			if (BirdYPosition >= BirdGroundLimit) {
+				BirdVerticalSpeed = FlapSpeed;
+			}
+
 			if (0 <= BirdVerticalSpeed && shouldFlap()) {
 				// and Make the bird Falp
 	        	BirdVerticalSpeed = FlapSpeed;

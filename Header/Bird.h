@@ -28,7 +28,7 @@ namespace Game {
 	protected:
 		static constexpr char FlapSpeed = -10;
 		static constexpr unsigned char BirdSize = 42;
-		static constexpr int BirdGroundLimit = 550;
+		static constexpr int BirdGroundLimit = 560;
 
 		bool IsAlive;
 		int BirdVerticalSpeed;
@@ -36,6 +36,7 @@ namespace Game {
 		int BirdYPosition;
 
 		sf::Sprite bird;
+		// sf::CircleShape bird;
 	    sf::Texture texture;
 
 	    // Flap Sound

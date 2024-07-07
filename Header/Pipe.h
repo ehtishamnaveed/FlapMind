@@ -3,7 +3,6 @@
 #include "../Header/GameMode.h"
 
 namespace Game {
-
 	enum class VerticalMovement {
 		UP,
 		DOWN
@@ -55,7 +54,7 @@ namespace Game {
 		static constexpr unsigned char EasyPipeSpeed = 4;
 
 		// Variables for Hard gamemode
-		static constexpr unsigned char HardGapSize = 90;
+		static constexpr unsigned char HardGapSize = 100;
 		static constexpr unsigned char HardPipeSpeed = 5;
 
 		// Variables for Crazy gamemode

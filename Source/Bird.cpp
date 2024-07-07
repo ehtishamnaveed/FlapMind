@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "../Header/Bird.h"
 #include "../Header/Game.h"
-#include<iostream>
 
 namespace Game {
 	Bird::Bird(): BirdYPosition(20), BirdXPosition(170), IsAlive(1), BirdVerticalSpeed(0) {
@@ -14,7 +13,7 @@ namespace Game {
 
 	void Bird::drawBird(sf::RenderWindow& i_window) {
 		texture.loadFromFile("Resources/Theme/" + Game::theme_name + "/Birdy.png");
-	    if (0 < BirdVerticalSpeed) {
+	    if (0 <= BirdVerticalSpeed) {
 	    	// Left, Top, Width, Height
 	    	bird.setTextureRect(sf::IntRect(0, 0, 50, BirdSize));
 	    }

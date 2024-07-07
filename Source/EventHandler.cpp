@@ -89,8 +89,8 @@ namespace Game {
 	        while (i_window.waitEvent(event)) {
 	            if (event.type == sf::Event::Closed){
 	                i_window.close();
-	                state = false;
 	                break;
+	                return false;
 	            }
 	            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
 	            	state = true;
