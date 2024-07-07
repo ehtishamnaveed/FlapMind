@@ -3,7 +3,7 @@
 
 namespace Game {
     // Game's Gravity
-    constexpr float gravity = 0.90f;
+    constexpr char gravity = 1;
 
     // Variable for Game Sound FX
     bool mute = false;

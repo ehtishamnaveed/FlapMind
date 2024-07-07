@@ -24,7 +24,7 @@ namespace Game {
         bool collisionOfBirdWithPipes(const Bird& bird, const std::vector<Pipe>& Pipes); // Checks collision of Bird with Pipes
         void drawBackground(sf::RenderWindow& i_window); // Draws the backgound for Game
 
-        void updateScore(); // Updates the score of the user
+        void updateScore(); // Updates the score
         void resetGameState(); // Resets the Game settings
         void resetScore(); // Resets the game score to '0'
         void setGameMode(const GameModes GameType); // It sets the Game Mode type

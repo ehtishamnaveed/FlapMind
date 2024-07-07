@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Header/Bird.h"
 #include "../Header/Game.h"
+#include<iostream>
 
 namespace Game {
 	Bird::Bird(): BirdYPosition(20), BirdXPosition(170), IsAlive(1), BirdVerticalSpeed(0) {
@@ -22,7 +23,7 @@ namespace Game {
 	    }
 
 	    bird.setTexture(texture);
-	    bird.setPosition(BirdXPosition, round(BirdYPosition));
+	    bird.setPosition(BirdXPosition, BirdYPosition);
 
 	    i_window.draw(bird);
 	}
@@ -33,25 +34,22 @@ namespace Game {
 		// And update its Y-axis Position
 		BirdYPosition += BirdVerticalSpeed;
 
-		// If the Bird is Alive
-		if (IsAlive) {
-			// And the Vertical speed is greater OR equal to 0
-			// and the User presses the 'Up Arrow key' or 'Spacebar'
-			if (0 <= BirdVerticalSpeed &&
-				(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
-				// and Make the bird Falp
-	        	BirdVerticalSpeed = FlapSpeed;
-				// Play the flap Sound
-				playFlapSound();
-	    	}
-		}
+		// And the Vertical speed is greater OR equal to 0
+		// and the User presses the 'Up Arrow key' or 'Spacebar'
+		if (0 <= BirdVerticalSpeed &&
+			(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space))) {
+			// and Make the bird Falp
+        	BirdVerticalSpeed = FlapSpeed;
+			// Play the flap Sound
+			playFlapSound();
+    	}
 
-		// Check if the Bird reaches the Ground limit
-		if (BirdYPosition >= (Screen::screenHeight - BirdGroundLimit)) {
+    	// Check if the Bird reaches the Ground limit
+		if (BirdYPosition >= Game::Screen::screenHeight - BirdSize) {
 			// The Bird Dies
 			IsAlive = 0;
 			BirdVerticalSpeed = 0;
-			BirdYPosition = Screen::screenHeight - BirdGroundLimit;
+			BirdYPosition = BirdGroundLimit;
 		}
 	}
 
@@ -63,7 +61,7 @@ namespace Game {
 		return BirdXPosition;
 	}
 
-	const float Bird::getYPosition() const {
+	const int Bird::getYPosition() const {
 		return BirdYPosition;
 	}
 

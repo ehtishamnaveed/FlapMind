@@ -17,7 +17,7 @@ namespace Game {
 		virtual void updateBird();
 
 		const short getXPosition() const;
-		const float getYPosition() const;
+		const int getYPosition() const;
 		const unsigned char getBirdSize() const;
 		const char getFlapSpeed() const;
 
@@ -26,14 +26,14 @@ namespace Game {
 		virtual void resetState(); // Resets the Bird state
 
 	protected:
-		static constexpr char FlapSpeed = -9;
+		static constexpr char FlapSpeed = -10;
 		static constexpr unsigned char BirdSize = 42;
-		static constexpr char BirdGroundLimit = 35;
+		static constexpr int BirdGroundLimit = 550;
 
 		bool IsAlive;
-		float BirdVerticalSpeed;
+		int BirdVerticalSpeed;
 		short BirdXPosition;
-		float BirdYPosition;
+		int BirdYPosition;
 
 		sf::Sprite bird;
 	    sf::Texture texture;

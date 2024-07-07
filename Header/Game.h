@@ -5,7 +5,7 @@
 #include <string>
 
 namespace Game {
-    extern const float gravity; // Gravity of Game
+    extern const char gravity; // Gravity of Game
     extern bool mute; // Mute variable for overall Game Music and FX
 
     extern std::string theme_name; // Variable thats reads and saves the game's theme name

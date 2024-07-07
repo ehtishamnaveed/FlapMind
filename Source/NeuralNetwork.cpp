@@ -33,7 +33,6 @@ namespace NeuralNetwork {
 
 
 	bool AI::activationFunction() {
-		// First input node value is the birdVee
 		Layers.InputLayer[0] = BirdVerticalSpeed;
 		Layers.InputLayer[1] = BirdNPipeDifference;
 
@@ -48,9 +47,9 @@ namespace NeuralNetwork {
 		// hiddenIdx: Index of the current hidden layer node being computed.
 		// inputIdx: Index of the current input layer node being used in the weighted sum calculation.
 
-		// Compute the dot product of input nodes and input-to-hidden weights and add with the respective Hidden Node
+		// Compute the Weighted Sum
 	    for (size_t hiddenIdx = 0; hiddenIdx < hidden_nodes; ++hiddenIdx) {
-	        Layers.HiddenLayer[hiddenIdx ] = 0.0f; // Initialize hidden node to 0.0f
+	        Layers.HiddenLayer[hiddenIdx] = 0.0f; // Initialize hidden node to 0.0f
 
 	        for (size_t inputIdx = 0; inputIdx < input_nodes; ++inputIdx) {
 	            Layers.HiddenLayer[hiddenIdx] += Layers.InputLayer[inputIdx] * Weights.InputToHiddenWeights[inputIdx][hiddenIdx];
@@ -74,7 +73,7 @@ namespace NeuralNetwork {
 		// Initialize output layer node to 0
 	    Layers.OutputLayer[0] = 0.0f;
 
-	    // Compute the dot product of hidden nodes and hidden-to-output weights and add with Output Node
+	    // Compute the Weighted Sum
 	    for (size_t hiddenIdx = 0; hiddenIdx < hidden_nodes; ++hiddenIdx) {
 	        Layers.OutputLayer[0] += Layers.HiddenLayer[hiddenIdx] * Weights.HiddenToOutputWeights[hiddenIdx][0];
 	    }
@@ -93,7 +92,8 @@ namespace NeuralNetwork {
 	void AI::calculateDifference(const std::vector<Game::Pipe>& Pipes) {
 		for (const Game::Pipe& curr_pipe : Pipes) {
 			if (BirdXPosition < curr_pipe.getXPosition() + BirdSize) {
-				BirdNPipeDifference = curr_pipe.getYPosition() + curr_pipe.getGapSize()  - BirdSize - BirdYPosition;
+				// Formula: (Pipe gap center) - (Bird Y position)
+				BirdNPipeDifference = (curr_pipe.getYPosition() + (curr_pipe.getGapSize() / 2)) - BirdYPosition;
 				break;
 			}
 		}
@@ -113,11 +113,6 @@ namespace NeuralNetwork {
 
 		// If the Bird is Alive
 		if (IsAlive) {
-			// Check if the Bird reaches the Ground limit
-			if (BirdYPosition >= Game::Screen::screenHeight - BirdGroundLimit) {
-				BirdVerticalSpeed = FlapSpeed;
-			}
-
 			if (0 <= BirdVerticalSpeed && shouldFlap()) {
 				// and Make the bird Falp
 	        	BirdVerticalSpeed = FlapSpeed;
@@ -126,16 +121,15 @@ namespace NeuralNetwork {
 	    	}
 	    	updateFitnessScore();
 		}
-		else {
-			if (BirdYPosition >= (Game::Screen::screenHeight - BirdGroundLimit)) {
-				if (BirdXPosition >= -50) {
-					BirdYPosition = Game::Screen::screenHeight - BirdGroundLimit;
-					BirdVerticalSpeed = 0;
-					BirdXPosition--;
-				}
+		else if (BirdYPosition >= BirdGroundLimit) {
+			if (BirdXPosition >= -50) {
+				BirdYPosition = BirdGroundLimit;
+				BirdVerticalSpeed = 0;
+				BirdXPosition--;
 			}
 		}
 	}
+
 
 	void AI::updateFitnessScore() {
 		FitnessScore++;
@@ -147,6 +141,7 @@ namespace NeuralNetwork {
 		updateBird();
 		drawBird(i_window);
 	}
+
 
 	void AI::uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2) {
 	    // Iterate over the input to hidden weights
@@ -164,7 +159,7 @@ namespace NeuralNetwork {
 	            }
 
 	            // Apply mutation if necessary for both weights
-	            if (MutationDistribution(RandomEngine) < MutationProbability) {
+	            if (MutationDistribution(RandomEngine) <= MutationProbability) {
 	                // If the mutation probability is met, mutate the weights
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = NodeDistribution(RandomEngine);
 	                // std::cerr<<NodeDistribution(RandomEngine)<<"\n\n";
@@ -174,6 +169,7 @@ namespace NeuralNetwork {
 	        }
 	    }
 	}
+
 
 	void AI::resetState() {
 		BirdVerticalSpeed = 0;
