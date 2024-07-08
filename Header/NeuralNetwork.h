@@ -55,13 +55,14 @@ namespace NeuralNetwork {
 		NeuralLayers Layers;
 		NodeEdgeWeights Weights;
 
-		std::mt19937_64 RandomEngine;
+		std::default_random_engine RandomEngine; 
+		// std::mt19937_64 RandomEngine;
 		// std::minstd_rand RandomEngine;
 
 		//This is the range in which the weights can be.
-		std::uniform_real_distribution<float> NodeDistribution;
+		std::uniform_real_distribution<float> WeightDistribution;
 
-		static constexpr unsigned char MutationProbability = 50;
+		// static constexpr unsigned char MutationProbability = 50;
 		std::uniform_int_distribution<unsigned short> MutationDistribution;
 
 		float BirdNPipeDifference;

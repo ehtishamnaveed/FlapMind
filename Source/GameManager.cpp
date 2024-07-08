@@ -279,7 +279,7 @@ namespace Game {
         // const unsigned char collisionAnomaly = 8;
 
         // Bird Information
-        const short birdSize = bird.getBirdSize();
+        const short birdSize = 38;
         const short birdXPos = bird.getXPosition();
         const short birdYPos = bird.getYPosition();
 
@@ -311,7 +311,7 @@ namespace Game {
 
             if (pipeInCollisionRange) {
                 // Check for collision excluding the gap area
-                if (birdYPos <= pipeTop || birdYPos + birdSize >= pipeBottom) {
+                if (birdYPos <= pipeTop || birdYPos + 30 >= pipeBottom) {
                     // std::cout<<"\n Collision\nTop"<<birdYPos<<" - "<<pipeTop<<"\nBottom"<<birdYPos + birdSize<<" - "<<pipeBottom ;
                     return true; // Collision detected
                 }

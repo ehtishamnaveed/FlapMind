@@ -35,7 +35,8 @@ namespace Game {
 		std::vector<Pipe> Pipes;
 		bool PipesCanMoveVertically; // Flag to check if pipes can move vertically
 
-		std::mt19937_64 RandomEngine;
+		// std::mt19937_64 RandomEngine;
+		std::default_random_engine RandomEngine;
 		unsigned short GeneratorTimer;
 		std::uniform_int_distribution<unsigned short> Y_Distribution;
 

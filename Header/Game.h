@@ -6,7 +6,8 @@
 
 namespace Game {
     extern const char gravity; // Gravity of Game
-    extern bool mute; // Mute variable for overall Game Music and FX
+    extern bool mute; // To mute or unmute Game FX
+    extern bool pause; //To play or stop Music
 
     extern std::string theme_name; // Variable thats reads and saves the game's theme name
 

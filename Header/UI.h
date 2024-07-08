@@ -95,8 +95,7 @@ namespace UI {
         // Display the Project Group Logo for 3 seconds
         void displayLogo();
 
-        // Music and FX
-        void playLoadingFX();
+        // Music
         void playMainMenuMusic();
         void stopMainMenuMusic();
 
@@ -114,9 +113,7 @@ namespace UI {
         sf::RenderWindow window;
         Game::GameManager GameController;
 
-        // Loading Screen Sound
-        sf::SoundBuffer FXsound;
-        sf::Sound LoadingFX;
+        sf::Music mainMenuMusic;
     };
 }
 

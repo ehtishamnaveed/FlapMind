@@ -72,25 +72,29 @@ namespace Game {
 
 	        // To 'Play' the Menu Music
 	        case sf::Keyboard::P:
-	        	MenuHandler.playMainMenuMusic();
-	         	break;
-
-	        // To 'Stop' the Menu Music
-	        case sf::Keyboard::S:
-	        	MenuHandler.stopMainMenuMusic();
+	        	// If the Game is not already mute
+	        	if (!Game::pause) {
+	        		// Then Mute the game
+	          		Game::pause = true;
+	          		MenuHandler.stopMainMenuMusic();
+	          	}
+	          	else {
+	          		// Else Unmute the Game
+	          		Game::pause = false;
+	          		MenuHandler.playMainMenuMusic();
+	          	}
 	         	break;
 	    }
     }
 
     // Handles Game Over state
     bool EventHandler::processGameOverState(sf::RenderWindow& i_window) {
-    	bool state;
+    	bool state = false;
     	sf::Event event;
 	        while (i_window.waitEvent(event)) {
 	            if (event.type == sf::Event::Closed){
 	                i_window.close();
 	                break;
-	                return false;
 	            }
 	            else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Enter) {
 	            	state = true;
@@ -98,7 +102,6 @@ namespace Game {
 	            }
 	            else if (event.type == sf::Event::KeyPressed
 	            	&& event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Backspace) {
-	            	state = false;
 	            	break;
 	            }
 	        }

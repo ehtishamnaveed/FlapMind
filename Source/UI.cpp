@@ -290,11 +290,8 @@ namespace UI {
     	// Window FrameRateLimit
     	window.setFramerateLimit(60);
 
-    	// Load Loading Screen FX
-        FXsound.loadFromFile("Resources/SoundFX/Loading.wav");
-
-        // Associate sound buffer with sound object
-        LoadingFX.setBuffer(FXsound);
+    	mainMenuMusic.openFromFile("Resources/Bird is a Word.mp3");
+    	mainMenuMusic.setLoop(true);
     }
 
     // Display the Project Group Logo
@@ -309,8 +306,16 @@ namespace UI {
     	window.draw(sprite);
     	window.display();
 
+    	// Loading Screen Sound
+        sf::SoundBuffer FXsound;
+        sf::Sound LoadingFX;
+    	// Load Loading Screen FX
+        FXsound.loadFromFile("Resources/SoundFX/Loading.wav");
+        // Associate sound buffer with sound object
+        LoadingFX.setBuffer(FXsound);
     	// Play the Loading Screen Sound
-		playLoadingFX();
+		if (!Game::mute)
+        	LoadingFX.play();
 
 		// Hold the Screen for 3 seconds for the Logo to stay
 	    sf::Clock clock;
@@ -327,8 +332,6 @@ namespace UI {
     // Displays the Menu
 	void MenuManager::displayMenu(UI::Menu*& currentMenu) {
 		displayLogo();
-
-    	playMainMenuMusic();
     	
     	// Seed for rand()
     	srand(static_cast<unsigned>(std::chrono::system_clock::now().time_since_epoch().count()));
@@ -494,28 +497,14 @@ namespace UI {
     	}
     }
 
-    // Function to play Loading sound
-    void MenuManager::playLoadingFX() {
-    	if (!Game::mute)
-        	LoadingFX.play();
-    }
-
     // Play MainMenu Music
     void MenuManager::playMainMenuMusic() {
-    	if (!Game::mute) {
-    		// Load the MainMenu sound file
-		    FXsound.loadFromFile("Resources/Bird is a Word.mp3");
-		    LoadingFX.setBuffer(FXsound);
-
-		    // Play the sound in a loop
-		    LoadingFX.setLoop(true);
-		    LoadingFX.play();
-    	}
+	    mainMenuMusic.play();
     }
 
     // Stops the Music
     void MenuManager::stopMainMenuMusic() {
-    	LoadingFX.stop();
+    	mainMenuMusic.stop();
     }
 
 // END OF NAMESPACE

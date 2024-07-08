@@ -4,8 +4,8 @@ namespace NeuralNetwork {
 	// Constrcutor
 	AI::AI(): Game::Bird(), FitnessScore(0),
 			  RandomEngine(std::random_device{}()), 
-			  NodeDistribution(-1, 1),
-			  MutationDistribution(0, 99)
+			  WeightDistribution(-1, 1),
+			  MutationDistribution(1, 100)
 			  { BirdYPosition = 300; }
 
 	// Generates random weights for edges
@@ -16,7 +16,7 @@ namespace NeuralNetwork {
 	        // Connect each 'Input Layer node' to every 'Hidden layer Node'
 			for (size_t hiddenNode = 0; hiddenNode < hidden_nodes; ++hiddenNode) {
 	            // Generate a random weight for each edge
-				Weights.InputToHiddenWeights[inputNode][hiddenNode] = NodeDistribution(RandomEngine);
+				Weights.InputToHiddenWeights[inputNode][hiddenNode] = WeightDistribution(RandomEngine);
 	        }	
 	    }
 
@@ -26,7 +26,7 @@ namespace NeuralNetwork {
 	        // Connect each 'Hidden Layer node' to the 'Output layer Node'
 			for (size_t outputNode = 0; outputNode < output_nodes; ++outputNode) {
 	            // Generate a random weight for each edge
-				Weights.HiddenToOutputWeights[hiddenNode][outputNode] = NodeDistribution(RandomEngine);
+				Weights.HiddenToOutputWeights[hiddenNode][outputNode] = WeightDistribution(RandomEngine);
  	        }
 	    }
 	}
@@ -152,24 +152,22 @@ namespace NeuralNetwork {
 	    // Iterate over the input to hidden weights
 	    for (size_t inputIndex = 0; inputIndex < input_nodes; ++inputIndex) {
 	        for (size_t hiddenIndex = 0; hiddenIndex < hidden_nodes; ++hiddenIndex) {
-	            // Randomly select the weight source from either parent
-	            if (rand() % 2 == 0) {
-	                // If the random number is even, select weights from parentWeight1
+	            // There is a '48%' chance it can have genes from parent nodes
+	            if (MutationDistribution(RandomEngine) <= 48) {
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight1.InputToHiddenWeights[inputIndex][hiddenIndex];
 	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight1.HiddenToOutputWeights[hiddenIndex][0];
-	            } else {
-	                // If the random number is odd, select weights from parentWeight2
+	            }
+	            else if (MutationDistribution(RandomEngine) <= 96) {
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight2.InputToHiddenWeights[inputIndex][hiddenIndex];
 	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight2.HiddenToOutputWeights[hiddenIndex][0];
 	            }
 
-	            // Apply mutation if necessary for both weights
-	            if (MutationDistribution(RandomEngine) <= MutationProbability) {
-	                // If the mutation probability is met, mutate the weights
-	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = NodeDistribution(RandomEngine);
-	                // std::cerr<<NodeDistribution(RandomEngine)<<"\n\n";
-	                Weights.HiddenToOutputWeights[hiddenIndex][0] = NodeDistribution(RandomEngine);
-	                // std::cerr<<NodeDistribution(RandomEngine)<<"\n\n...............";
+	            // And there is the remaining '4%' chance of Mutation
+	            else {
+	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = WeightDistribution(RandomEngine);
+	                // std::cerr<<WeightDistribution(RandomEngine)<<"\n\n";
+	                Weights.HiddenToOutputWeights[hiddenIndex][0] = WeightDistribution(RandomEngine);
+	                // std::cerr<<WeightDistribution(RandomEngine)<<"\n\n...............";
 	            }
 	        }
 	    }

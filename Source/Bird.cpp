@@ -15,10 +15,10 @@ namespace Game {
 		texture.loadFromFile("Resources/Theme/" + Game::theme_name + "/Birdy.png");
 	    if (0 <= BirdVerticalSpeed) {
 	    	// Left, Top, Width, Height
-	    	bird.setTextureRect(sf::IntRect(0, 0, 50, BirdSize));
+	    	bird.setTextureRect(sf::IntRect(0, 0, 40, BirdSize));
 	    }
 	    else {
-	    	bird.setTextureRect(sf::IntRect(50, 0, 50, BirdSize));
+	    	bird.setTextureRect(sf::IntRect(40, 0, 44, BirdSize));
 	    }
 
 	    bird.setTexture(texture);

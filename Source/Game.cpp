@@ -7,6 +7,7 @@ namespace Game {
 
     // Variable for Game Sound FX
     bool mute = false;
+    bool pause = false;
 
     // Variable to load Theme name form file
     std::string theme_name;
@@ -28,6 +29,7 @@ namespace Game {
             hardmode_highscore = 0;
             crazymode_highscore = 0;
             mute = true;
+            pause = true;
             return;
         }
         
@@ -36,7 +38,7 @@ namespace Game {
         bool anyDataRead = false;
         while (std::getline(inputFile, info)) {
             std::istringstream data(info);
-            if (data >> theme_name >> easymode_highscore >> hardmode_highscore >> crazymode_highscore >> mute) {
+            if (data >> theme_name >> easymode_highscore >> hardmode_highscore >> crazymode_highscore >> mute >> pause) {
                 anyDataRead = true;
             }
         }
@@ -48,6 +50,7 @@ namespace Game {
             hardmode_highscore = 0;
             crazymode_highscore = 0;
             mute = true;
+            pause = true;
         }
         inputFile.close();
     }
@@ -60,7 +63,8 @@ namespace Game {
                        << easymode_highscore << " "
                        << hardmode_highscore << " "
                        << crazymode_highscore << " "
-                       << mute;
+                       << mute << " "
+                       << pause;
             outputFile.close();
         }
     }

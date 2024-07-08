@@ -27,8 +27,8 @@ namespace Game {
 
 	protected:
 		static constexpr char FlapSpeed = -10;
-		static constexpr unsigned char BirdSize = 42;
-		static constexpr int BirdGroundLimit = 560;
+		static constexpr unsigned char BirdSize = 30;
+		static constexpr int BirdGroundLimit = 570;
 
 		bool IsAlive;
 		int BirdVerticalSpeed;
