@@ -51,13 +51,14 @@ namespace NeuralNetwork {
 
 		void uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2);
 
+		static const unsigned char getInfoAboutMutatedBirds() { return MutatedBirds; }
+		static void updateInfoAboutMutatedBirds() { MutatedBirds++; };
+
 	private:
 		NeuralLayers Layers;
 		NodeEdgeWeights Weights;
 
 		std::default_random_engine RandomEngine; 
-		// std::mt19937_64 RandomEngine;
-		// std::minstd_rand RandomEngine;
 
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> WeightDistribution;
@@ -68,6 +69,8 @@ namespace NeuralNetwork {
 		float BirdNPipeDifference;
 
 		unsigned FitnessScore;
+
+		static unsigned char MutatedBirds;
 	};
 }
 

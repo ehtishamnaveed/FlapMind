@@ -1,6 +1,7 @@
 #include "../Header/NeuralNetwork.h"
 // #include<iostream>
 namespace NeuralNetwork {
+	unsigned char NeuralNetwork::AI::MutatedBirds = 0;
 	// Constrcutor
 	AI::AI(): Game::Bird(), FitnessScore(0),
 			  RandomEngine(std::random_device{}()), 
@@ -56,13 +57,6 @@ namespace NeuralNetwork {
 	        }
 	    	// +++++ Hyberbolic Tangent 
 	        	Layers.HiddenLayer[hiddenIdx] = std::tanh(Layers.HiddenLayer[hiddenIdx]);
-
-	        // if (0 >= Layers.HiddenLayer[hiddenIdx]) {
-	        // 	Layers.HiddenLayer[hiddenIdx] = std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx])) - 1.0f;
-	        // }
-	        // else {
-	        // 	Layers.HiddenLayer[hiddenIdx] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.HiddenLayer[hiddenIdx]));
-	        // }
         }
 	}
 
@@ -79,19 +73,12 @@ namespace NeuralNetwork {
 	    }
 	    // +++++ Hyberbolic Tangent
 	    	Layers.OutputLayer[0] = std::tanh(Layers.OutputLayer[0]);
-
-	    // if (0 >= Layers.HiddenLayer[0]) {
-        // 	Layers.OutputLayer[0] = std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0])) - 1.0f;
-        // }
-        // else {
-        // 	Layers.OutputLayer[0] = 1.0f - std::pow(2.0f, static_cast<float>(Layers.OutputLayer[0]));
-        // }
 	}
 
 
 	void AI::calculateDifference(const std::vector<Game::Pipe>& Pipes) {
 		for (const Game::Pipe& curr_pipe : Pipes) {
-			if (BirdXPosition < curr_pipe.getXPosition() + BirdSize) {
+			if (BirdXPosition < curr_pipe.getXPosition() + curr_pipe.getPipeWidth()) {
 				// Formula: (Pipe gap center) - (Bird Y position)
 				BirdNPipeDifference = (curr_pipe.getYPosition() + (curr_pipe.getGapSize() / 2)) - BirdYPosition;
 				break;
@@ -149,27 +136,45 @@ namespace NeuralNetwork {
 
 
 	void AI::uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2) {
+	    bool mutationOccurred = false;
+	    int chance; 
+
 	    // Iterate over the input to hidden weights
 	    for (size_t inputIndex = 0; inputIndex < input_nodes; ++inputIndex) {
 	        for (size_t hiddenIndex = 0; hiddenIndex < hidden_nodes; ++hiddenIndex) {
-	            // There is a '48%' chance it can have genes from parent nodes
-	            if (MutationDistribution(RandomEngine) <= 48) {
+	            chance = MutationDistribution(RandomEngine);
+	            if (chance <= 45) {
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight1.InputToHiddenWeights[inputIndex][hiddenIndex];
-	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight1.HiddenToOutputWeights[hiddenIndex][0];
 	            }
-	            else if (MutationDistribution(RandomEngine) <= 96) {
+	            else if (chance <= 90) {
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = parentWeight2.InputToHiddenWeights[inputIndex][hiddenIndex];
-	                Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight2.HiddenToOutputWeights[hiddenIndex][0];
 	            }
-
-	            // And there is the remaining '4%' chance of Mutation
 	            else {
 	                Weights.InputToHiddenWeights[inputIndex][hiddenIndex] = WeightDistribution(RandomEngine);
-	                // std::cerr<<WeightDistribution(RandomEngine)<<"\n\n";
-	                Weights.HiddenToOutputWeights[hiddenIndex][0] = WeightDistribution(RandomEngine);
-	                // std::cerr<<WeightDistribution(RandomEngine)<<"\n\n...............";
+	                mutationOccurred = true;
 	            }
 	        }
+	    }
+
+	    // Separately handle hidden to output weights
+	    for (size_t hiddenIndex = 0; hiddenIndex < hidden_nodes; ++hiddenIndex) {
+	        chance = MutationDistribution(RandomEngine);
+	        if (chance <= 45) {
+	            Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight1.HiddenToOutputWeights[hiddenIndex][0];
+	        }
+	        else if (chance <= 90) {
+	            Weights.HiddenToOutputWeights[hiddenIndex][0] = parentWeight2.HiddenToOutputWeights[hiddenIndex][0];
+	        }
+	        else {
+	            Weights.HiddenToOutputWeights[hiddenIndex][0] = WeightDistribution(RandomEngine);
+	            mutationOccurred = true;
+	        }
+	    }
+
+	    // Update info about mutated birds only if a mutation actually occurred
+	    if (mutationOccurred) {
+	    	MutatedBirds++;
+	        // updateInfoAboutMutatedBirds();
 	    }
 	}
 
@@ -180,5 +185,6 @@ namespace NeuralNetwork {
 	 	BirdXPosition = 170;
 	  	IsAlive = true;
 	  	FitnessScore = 0;
+	  	MutatedBirds = 0;
 	}
 }

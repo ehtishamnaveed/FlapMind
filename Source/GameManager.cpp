@@ -2,6 +2,7 @@
 #include "../Header/Game.h"
 #include "../Header/GameManager.h"
 #include "../Header/EventHandler.h"
+#include <vector>
 // #include<iostream>
 
 namespace Game {
@@ -9,7 +10,8 @@ namespace Game {
     GameManager::GameManager():
          Score(0), RecentScoreUpdate(false), 
          ItsAIMode(false), Generation(0),
-         AiHighScore(0) {
+         AiHighScore(0),
+         Mutation(0) {
         // Body Of constructor 
 
         // Load font from file
@@ -38,15 +40,16 @@ namespace Game {
         }
 
         // To display information about AI
-        sf::RectangleShape ai_info_background(sf::Vector2f(250,150));
+        sf::RectangleShape ai_info_background(sf::Vector2f(250,190));
         ai_info_background.setFillColor(sf::Color::Black);
-        ai_info_background.setPosition(400.0f,0.0f);
+        ai_info_background.setPosition(380.0f,0.0f);
 
         sf::Font info_font;
         info_font.loadFromFile("Resources/Font/MenuFont.ttf");
 
         sf::Text info_text;
         info_text.setFont(info_font);
+        info_text.setCharacterSize(20);
         info_text.setFillColor(sf::Color::White);
 
         // Main AI Gameplay loop
@@ -114,6 +117,7 @@ namespace Game {
         } 
     }
 
+
     void GameManager::controlAIBehaviour(sf::RenderWindow& i_window) {
         RecentScoreUpdate = false;
         bool needrestart = true;
@@ -162,6 +166,7 @@ namespace Game {
             for (size_t curr_bird = 2 ; curr_bird < PopulationSize ; ++curr_bird) {
                 BirdAI[curr_bird].uniformCrossoverWithMutation(BirdAI[0].getWeights(), BirdAI[1].getWeights());
             }
+            Mutation = NeuralNetwork::AI::getInfoAboutMutatedBirds();
 
             // We reset the AI, Pipes and Score
             for (NeuralNetwork::AI& aibirds : BirdAI) {
@@ -305,6 +310,7 @@ namespace Game {
             // Collision Range information
             const bool pipeInCollisionRange = (pipeXPos < birdXPos + birdSize) && (birdXPos < pipeXPos + pipeWidth);
 
+
             if (pipeIsBehindTheBird)
                 continue; // Continue to the next pipe then
             // And skip the below statemnts
@@ -439,22 +445,28 @@ namespace Game {
 
     void GameManager::showAiInfo(sf::RenderWindow& window, sf::RectangleShape& background, sf::Text& info_text) {
         window.draw(background);
-        info_text.setCharacterSize(20);
 
-        info_text.setString("Population: "+std::to_string(PopulationSize));
-        info_text.setPosition(415,0);
-        window.draw(info_text);
+        const float x_pos = 395.0f;
+        const float y_pos = 40.0f;
+        
+        // Vector Container containing information about AI for display
+        std::vector<std::pair<std::string, int>> ai_infoLines = {
+            {"Population: ", PopulationSize},
+            {"Generation: ", Generation},
+            {"Birds Alive: ", AliveBirds},
+            {"High Score: ", AiHighScore},
+            {"Mutated Birds: ", Mutation}
+        };
 
-        info_text.setString("Generation: "+std::to_string(Generation));
-        info_text.setPosition(415,40);
-        window.draw(info_text);
+        for (size_t line = 0; line < ai_infoLines.size(); ++line) {
+            // First getting the Info from the Vector Container
+            info_text.setString(ai_infoLines[line].first + std::to_string(ai_infoLines[line].second));
 
-        info_text.setString("Birds Alive: "+std::to_string(AliveBirds));
-        info_text.setPosition(415,80);
-        window.draw(info_text);
+            //Setting up the position for text
+            info_text.setPosition(x_pos, line * y_pos);
 
-        info_text.setString("High Score: "+std::to_string(AiHighScore));
-        info_text.setPosition(415,120);
-        window.draw(info_text);
+            // Drawing on screen
+            window.draw(info_text);
+        }
     }
 }

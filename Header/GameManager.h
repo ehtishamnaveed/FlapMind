@@ -40,6 +40,7 @@ namespace Game {
         unsigned short Generation; // Keeps track of the current generation number in the genetic algorithm.
         unsigned short AiHighScore;
         unsigned short AliveBirds;
+        unsigned char Mutation;
 
         static constexpr unsigned char PopulationSize = 12;
         NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI
