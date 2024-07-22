@@ -1,7 +1,7 @@
 #include "../Header/NeuralNetwork.h"
 // #include<iostream>
 namespace NeuralNetwork {
-	unsigned char NeuralNetwork::AI::MutatedBirds = 0;
+	unsigned char AI::MutatedBirds = 0;
 	// Constrcutor
 	AI::AI(): Game::Bird(), FitnessScore(0),
 			  RandomEngine(std::random_device{}()), 

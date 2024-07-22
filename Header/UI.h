@@ -4,8 +4,6 @@
 #include "../Header/GameManager.h"
 #include "../Header/Game.h"
 #include <string>
-#include <chrono>
-#include <thread>
 
 namespace UI {
     class Menu {
@@ -25,6 +23,12 @@ namespace UI {
         void moveDown();
         int getSelectedState();
         virtual void drawBackground(sf::RenderWindow& i_window) = 0;
+
+        // Mouse support related functions
+        void handleMouseMove(sf::Vector2i mousePosition);
+        bool handleMouseClick(sf::Vector2i mousePosition);
+        int getMenuItemAtPosition(sf::Vector2i mousePosition);
+        bool isCursorOverItem(const sf::RectangleShape& item, sf::Vector2i mousePosition);
 
     protected:
         const short Width;
@@ -81,39 +85,7 @@ namespace UI {
     public:
         ControlsMenu();
         void drawBackground(sf::RenderWindow& i_window) override;
-        void showControls(sf::RenderWindow& i_window,std::string control_type,float x_pos,float y_pos);
-    };
-
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    // Manager for Menus
-    class MenuManager {
-    public:
-        MenuManager();
-        // Display the Project Group Logo for 3 seconds
-        void displayLogo();
-
-        // Music
-        void playMainMenuMusic();
-        void stopMainMenuMusic();
-
-        void displayMenu(UI::Menu*& currentMenu);
-        
-        // Handles Specific Menu State
-        void handleMenuStateChange(UI::Menu*& currentMenu);
-        void handleMainMenu(UI::Menu*& currentMenu);
-        void handlePlayMenu(UI::Menu*& currentMenu);
-        void handleThemeMenu(UI::Menu*& currentMenu);
-        void handleControlsMenu(UI::Menu*& currentMenu);
-
-    private:
-        Game::EventHandler EventManager;
-        sf::RenderWindow window;
-        Game::GameManager GameController;
-
-        sf::Music mainMenuMusic;
+        void showControls(sf::RenderWindow& i_window, std::string control_type, float x_pos, float y_pos);
     };
 }
 

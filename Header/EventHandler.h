@@ -4,8 +4,8 @@
 #include "../Header/PipeManager.h"
 #include "../Header/GameManager.h"
 
-namespace UI {
-    class Menu; // Forward declaration
+namespace UI { // Forward declaration
+    class Menu;
     class MenuManager;
 }
 
@@ -25,6 +25,9 @@ namespace Game {
 
         // Handles specific Key pressed Events for AI gameplay only
         void processAiGameplayKeyPressed(const sf::Keyboard::Key& key, PipeManager& PipeController, GameManager& GameController);
+
+        // Handles mouse
+        void processMouseClick(UI::Menu*& currentMenu, UI::MenuManager& MenuHandler);
 
     private:
         // Hover Sound

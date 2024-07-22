@@ -2,7 +2,7 @@
 #include "../Header/EventHandler.h"
 #include "../Header/Game.h"
 #include "../Header/UI.h"
-
+#include "../Header/MenuManager.h"
 
 namespace Game {
 	EventHandler::EventHandler() {
@@ -55,6 +55,7 @@ namespace Game {
 	        // To go the 'Main Menu'
 	        case sf::Keyboard::Escape:
 	        case sf::Keyboard::Backspace:
+	        	playFX();
 	          	delete currentMenu;
 	            currentMenu = new UI::MainMenu();
 	            break;
@@ -102,6 +103,7 @@ namespace Game {
 	            }
 	            else if (event.type == sf::Event::KeyPressed
 	            	&& event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Backspace) {
+	            	playFX();
 	            	break;
 	            }
 	        }
@@ -113,32 +115,43 @@ namespace Game {
      	switch (key) {
 	        // Change Game Mode to 'easy'
 	        case sf::Keyboard::E:
+	        	playFX();
 	        	GameController.setGameMode(GameModes::Easy);
 	            break;
 
 	        // Change Game Mode to 'hard'
 	        case sf::Keyboard::H:
+	        	playFX();
 	            GameController.setGameMode(GameModes::Hard);
 	            break;
 
 	        // Change Game Mode to 'crazy'
 	        case sf::Keyboard::C:
+	        	playFX();
 	            GameController.setGameMode(GameModes::Crazy);
 	            break;
 
 	        // To go the 'Main Menu'
 	        case sf::Keyboard::Escape:
 	        case sf::Keyboard::Backspace:
+	        	playFX();
 	        	GameController.turnOffAiMode();
 	            break;
 
 	        // Move pipes vertically
 	        case sf::Keyboard::M:
+	        	playFX();
 	        	if (!PipeController.movementIsEnabled())
 	        		PipeController.allowPipesVerticalMovement();
 	        	else
 	        		PipeController.stopPipesVerticalMovement();
 	         	break;
 	    }
+	}
+
+	// Handles Mouse
+	void EventHandler::processMouseClick(UI::Menu*& currentMenu, UI::MenuManager& MenuHandler) {
+	    EnterFX();
+	    MenuHandler.handleMenuStateChange(currentMenu);
 	}
 }

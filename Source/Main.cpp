@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Header/Game.h"
 #include "../Header/UI.h"
+#include "../Header/MenuManager.h"
 
 int main() {
     // Load the Game Settings

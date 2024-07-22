@@ -40,7 +40,7 @@ namespace Game {
         }
 
         // To display information about AI
-        sf::RectangleShape ai_info_background(sf::Vector2f(250,190));
+        sf::RectangleShape ai_info_background(sf::Vector2f(250,170));
         ai_info_background.setFillColor(sf::Color::Black);
         ai_info_background.setPosition(380.0f,0.0f);
 
@@ -447,14 +447,14 @@ namespace Game {
         window.draw(background);
 
         const float x_pos = 395.0f;
-        const float y_pos = 40.0f;
+        const float y_pos = 35.0f;
         
         // Vector Container containing information about AI for display
         std::vector<std::pair<std::string, int>> ai_infoLines = {
             {"Population: ", PopulationSize},
             {"Generation: ", Generation},
             {"Birds Alive: ", AliveBirds},
-            {"High Score: ", AiHighScore},
+            {"Best Score: ", AiHighScore},
             {"Mutated Birds: ", Mutation}
         };
 
