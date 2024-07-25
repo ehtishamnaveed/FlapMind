@@ -136,29 +136,36 @@ namespace UI {
     	unsigned short* bestScore;
     	stopMainMenuMusic();
 
-    	// While game restart is true
+		// Select the Gamemode and its respective Highscore too
+    	switch (currentMenu->getSelectedState()) {
+			// Easy
+			case 0:
+				bestScore = &Game::easymode_highscore;
+				GameController.setGameMode(Game::GameModes::Easy);
+				break;
+
+			// Hard
+			case 1:
+				bestScore = &Game::hardmode_highscore;
+				GameController.setGameMode(Game::GameModes::Hard);
+				break;
+
+			// Crazy
+			case 2:
+				bestScore = &Game::crazymode_highscore;
+				GameController.setGameMode(Game::GameModes::Crazy);
+				break;
+
+			// Back to Main Menu
+			case 3:
+				delete currentMenu;
+    			currentMenu = new UI::MainMenu();
+				return;
+		}
+
+		// While game restart is true
     	while (game_restart_state) {
     		GameController.waitForStart(window);
-    		// Keep the last selected game mode
-	    	switch (currentMenu->getSelectedState()) {
-				// Easy
-				case 0:
-					bestScore = &Game::easymode_highscore;
-					GameController.setGameMode(Game::GameModes::Easy);
-					break;
-
-				// Hard
-				case 1:
-					bestScore = &Game::hardmode_highscore;
-					GameController.setGameMode(Game::GameModes::Hard);
-					break;
-
-				// Crazy
-				case 2:
-					bestScore = &Game::crazymode_highscore;
-					GameController.setGameMode(Game::GameModes::Crazy);
-					break;
-			}
 			// Get into the Playthrough
 			GameController.runGame(window);
 
@@ -189,6 +196,10 @@ namespace UI {
 			case 2:
 				Game::theme_name = "SunSet";
 				break;
+
+			// Back to Main Menu
+			case 3:
+				break;
 		}
 		delete currentMenu;
         currentMenu = new UI::MainMenu();
@@ -215,6 +226,12 @@ namespace UI {
     		case 2:
     			controls->showControls(window,"AudioControls",50.0f,180.0f);
     			break;
+
+    		// Back to Main Menu
+			case 3:
+				delete currentMenu;
+        		currentMenu = new UI::MainMenu();
+				break;
 		}
     }
 

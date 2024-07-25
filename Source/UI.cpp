@@ -73,7 +73,7 @@ namespace UI {
 	    return false;  // Indicates no menu item was clicked
 	}
 
-	// Function to determine which menu item is at a given position
+	// Function to determine which menu item is at a given mouse position
 	int Menu::getMenuItemAtPosition(sf::Vector2i mousePosition) {
 		// Iterate through all menu items
 	    for (size_t itemIndex = 0; itemIndex < MenuSize; ++itemIndex) {
@@ -109,29 +109,81 @@ namespace UI {
 		    MenuText[iterator].setPosition(Width/2 - 120, Height/2 + iterator * 50);
 
 		    // Add box behind the text
-	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setSize(sf::Vector2f(220,50));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width / 2 - 125, Height / 2 + iterator * 50 - 5);
+	        MenuBox[iterator].setPosition(Width/2 - 135, Height/2 + iterator * 50-5);
+
+	        switch(iterator) {
+		        case 0:
+		            MenuText[iterator].setString("Play");
+		            MenuText[iterator].setFillColor(sf::Color::White);
+		            break;
+		        case 1:
+		            MenuText[iterator].setString("AI Play");
+		            MenuText[iterator].setFillColor(sf::Color::Black);
+		            break;
+		        case 2:
+		            MenuText[iterator].setString("Themes");
+		            MenuText[iterator].setFillColor(sf::Color::Black);
+		            break;
+		        case 3:
+		            MenuText[iterator].setString("Controls");
+		            MenuText[iterator].setFillColor(sf::Color::Black);
+		            break;
+	    	}
 		}
 
 		// Set the initial box to be selected
     	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 
-		// Play
-		MenuText[0].setString("Play");
-		MenuText[0].setFillColor(sf::Color::White);
 
-		// AI Playthrough
-		MenuText[1].setString("AI Play");
-		MenuText[1].setFillColor(sf::Color::Black);
 
-		// Theme
-		MenuText[2].setString("Theme");
-		MenuText[2].setFillColor(sf::Color::Black);
+		// // Add some padding to the box size
+	    // float paddingX = 15.0f; // Horizontal padding
+	    // float paddingY = 8.0f; // Vertical padding
 
-		// Controls
-		MenuText[3].setString("Controls");
-		MenuText[3].setFillColor(sf::Color::Black);
+		// for (size_t iterator = 0; iterator < MenuSize; ++iterator) {
+		// 	// Set Text Font
+		//     MenuText[iterator].setFont(menuFont);
+		//     // Set Font Size
+		//     MenuText[iterator].setCharacterSize(30);
+		//     // Set Font Position
+		//     MenuText[iterator].setPosition(Width/2 - 120, Height/2 + iterator * 50);
+
+		//     // Set the text content
+		//     switch(iterator) {
+		//         case 0:
+		//             MenuText[iterator].setString("Play");
+		//             MenuText[iterator].setFillColor(sf::Color::White);
+		//             break;
+		//         case 1:
+		//             MenuText[iterator].setString("AI Play");
+		//             MenuText[iterator].setFillColor(sf::Color::Black);
+		//             break;
+		//         case 2:
+		//             MenuText[iterator].setString("Themes");
+		//             MenuText[iterator].setFillColor(sf::Color::Black);
+		//             break;
+		//         case 3:
+		//             MenuText[iterator].setString("Controls");
+		//             MenuText[iterator].setFillColor(sf::Color::Black);
+		//             break;
+		//     }
+
+		//     // Get the bounds of the text
+		//     sf::FloatRect textBounds = MenuText[iterator].getLocalBounds();
+
+		//     // Set the size of the box based on the text size plus padding
+		//     MenuBox[iterator].setSize(sf::Vector2f(textBounds.width + paddingX * 2, textBounds.height + paddingY * 2));
+
+		//     // Position the box to center it around the text
+		//     MenuBox[iterator].setPosition(Width/2 - 132, Height/2 + iterator * 50);
+
+		//     MenuBox[iterator].setFillColor(sf::Color::Transparent);
+		// }
+
+		// // Set the initial box to be selected
+		// MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Draw the Backgound for Main Menu
@@ -154,7 +206,7 @@ namespace UI {
 
 // PlayMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	PlayMenu::PlayMenu(): Menu(3) {
+	PlayMenu::PlayMenu(): Menu(4) {
 
 		for (size_t iterator = 0; iterator < MenuSize; ++iterator) {
 			MenuText[iterator].setFont(menuFont);
@@ -162,9 +214,9 @@ namespace UI {
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
 
 		    // Add box behind the text
-	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setSize(sf::Vector2f(220, 50));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width / 2 - 125, 180 + iterator * 80);
+	        MenuBox[iterator].setPosition(Width / 2 - 135, 180 + iterator * 80-5);
 		}
 
 		// Set the initial box to be selected
@@ -181,6 +233,10 @@ namespace UI {
 		// Crazy
 		MenuText[2].setFillColor(sf::Color::Black);
 		MenuText[2].setString("Crazy");
+
+		// Back
+		MenuText[3].setFillColor(sf::Color::Black);
+		MenuText[3].setString("(Back)");
 	}
 
 	// Draw the Backgound for Play Menu
@@ -200,7 +256,7 @@ namespace UI {
 
 // ThemeMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	ThemeMenu::ThemeMenu(): Menu(3) {
+	ThemeMenu::ThemeMenu(): Menu(4) {
 		// Initilizeing Themes array
 		Themes[0] = "ClearSky";
 		Themes[1] = "DarkNight";
@@ -213,9 +269,9 @@ namespace UI {
 		    MenuText[iterator].setPosition(Width/2 - 120, 180 + iterator * 80);
 
 		    // Add box behind the text
-	        MenuBox[iterator].setSize(sf::Vector2f(250, 40));
+	        MenuBox[iterator].setSize(sf::Vector2f(250, 50));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width / 2 - 125, 180 + iterator * 80);
+	        MenuBox[iterator].setPosition(Width / 2 - 135, 180 + iterator * 80-5);
 		}
 
 		// Set the initial box to be selected
@@ -232,11 +288,18 @@ namespace UI {
 		// SunSet
 		MenuText[2].setFillColor(sf::Color::Black);
 		MenuText[2].setString("SunSet");
+
+		// Back
+		MenuText[3].setFillColor(sf::Color::Black);
+		MenuText[3].setString("(Back)");
 	}
 
 	// Draw the Backgound for Play Menu
 	void ThemeMenu::drawBackground(sf::RenderWindow& i_window) {
-        background_texture.loadFromFile("Resources/Theme/"+Themes[SelectedMenu]+"/Preview.png");
+		if (SelectedMenu > 2)
+			background_texture.loadFromFile("Resources/Theme/" + Game::theme_name + "/Preview.png");
+		else
+			background_texture.loadFromFile("Resources/Theme/" + Themes[SelectedMenu] + "/Preview.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
     }
@@ -251,7 +314,7 @@ namespace UI {
 
 // ControlsMenu //
 	// Constructor Initilizes the Font and the Text on the window
-	ControlsMenu::ControlsMenu(): Menu(3) {
+	ControlsMenu::ControlsMenu(): Menu(4) {
 
 		for (size_t iterator = 0; iterator < MenuSize; ++iterator) {
 			MenuText[iterator].setFont(menuFont);
@@ -259,9 +322,9 @@ namespace UI {
 		    MenuText[iterator].setPosition(Width/2 - 190, 180 + iterator * 80);
 
 		    // Add box behind the text
-	        MenuBox[iterator].setSize(sf::Vector2f(360, 40));
+	        MenuBox[iterator].setSize(sf::Vector2f(360, 50));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
-	        MenuBox[iterator].setPosition(Width/2 - 195, 180 + iterator * 80);
+	        MenuBox[iterator].setPosition(Width/2 - 200, 180 + iterator * 80-5);
 		}
 
 		// Set the initial box to be selected
@@ -278,6 +341,10 @@ namespace UI {
 		// Crazy
 		MenuText[2].setFillColor(sf::Color::Black);
 		MenuText[2].setString("Audio Controls");
+
+		// Back
+		MenuText[3].setFillColor(sf::Color::Black);
+		MenuText[3].setString("(Back)");
 	}
 
 	// Draw the Backgound for Play Menu
@@ -297,10 +364,11 @@ namespace UI {
 
         controls.setPosition(x_pos,y_pos);
 
-        i_window.draw(controls);
-        i_window.display();
+    	i_window.draw(controls);
+    	i_window.display();
 
         while (i_window.isOpen()) {
+        
         	// Check for events
 			sf::Event event;
 	        while (i_window.waitEvent(event)) {
