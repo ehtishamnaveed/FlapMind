@@ -72,6 +72,7 @@ namespace UI {
     public:
         ThemeMenu();
         void drawBackground(sf::RenderWindow& i_window) override;
+        std::string getTheme();
 
     private:
         std::string Themes[3];

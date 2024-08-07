@@ -9,30 +9,34 @@ namespace Game {
     // Constructor initializes GameManager with default score and font settings
     GameManager::GameManager():
          Score(0), RecentScoreUpdate(false), 
+
          ItsAIMode(false), Generation(0),
+
          AiHighScore(0),
+         
          Mutation(0) {
-        // Body Of constructor 
+            // Load font from file
+            ScoreFont.loadFromFile("Resources/Font/4Brain.ttf");
 
-        // Load font from file
-        ScoreFont.loadFromFile("Resources/Font/4Brain.ttf");
-
-        // Set up ScoreText properties
-        ScoreText.setFont(ScoreFont);
-        ScoreText.setCharacterSize(60);
-        ScoreText.setFillColor(sf::Color::Black);
-        ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
-        ScoreText.setString(std::to_string(Score));
-    }
+            // Set up ScoreText properties
+            ScoreText.setFont(ScoreFont);
+            ScoreText.setCharacterSize(60);
+            ScoreText.setFillColor(sf::Color::Black);
+            ScoreText.setPosition(Game::Screen::screenWidth/2-20 , Game::Screen::screenHeight/20-20);
+            ScoreText.setString(std::to_string(Score));
+        }
 
     void GameManager::runAiGameplay(sf::RenderWindow& i_window) {
+        // Visualizer
+        // LineChart = new Chart();
+
         // Temporary instance to handle AI Gameplay Events
         Game::EventHandler* EventManager = new EventHandler();
 
         // Enable Ai Mode, cuz its AI Gameplay
         ItsAIMode = true;
-
         AliveBirds = PopulationSize;
+        Mutation = 0;
 
         // Generating Edge Weights for each bird population
         for (NeuralNetwork::AI& aibirds : BirdAI) {
@@ -63,6 +67,7 @@ namespace Game {
                 if (event.type == sf::Event::Closed){
                     // Clean up temporary memory first
                     delete EventManager;
+                    // delete LineChart;
                     // then close the window
                     i_window.close();
                     break;
@@ -90,6 +95,7 @@ namespace Game {
 
                         // Clean up temporary memory 
                         delete EventManager;
+                        // delete LineChart;
 
                         // Gameplay is Over 
                         return;
@@ -161,6 +167,14 @@ namespace Game {
             // Sorting the Fitness of birds ( greater to smaller ) 
             // std::sort will use the operator functions in the AI class.
             std::sort(std::begin(BirdAI), std::end(BirdAI), std::greater<>());
+
+            // Saves the AI Progress Information
+            saveGenerationMetrics(Generation,Score,BirdAI[0].getFitnessScore());
+
+            // Line Chart for AI PROGRESS
+            // LineChart->reset();
+            // LineChart->initialize("generation_metrics.csv");
+            // LineChart->draw();
 
             // We won't change the weights of the first 2 birds since they're the BEST!
             for (size_t curr_bird = 2 ; curr_bird < PopulationSize ; ++curr_bird) {
@@ -274,6 +288,7 @@ namespace Game {
         else {
             Score++;
             ScoreText.setString(std::to_string(Score));
+            playScoreFX();
         }
     }
 
@@ -325,7 +340,6 @@ namespace Game {
 
             if (birdPassedThePipe) {
                 updateScore();
-                playScoreFX();
                 break;
             }
         }
@@ -468,5 +482,21 @@ namespace Game {
             // Drawing on screen
             window.draw(info_text);
         }
+    }
+
+    void GameManager::saveGenerationMetrics(unsigned short generationNo,unsigned short score,unsigned short bestFitness) {
+        const std::string filename = "generation_metrics.csv";
+        bool fileExists = std::filesystem::exists(filename);
+        
+        // Open the file in append mode
+        std::ofstream outFile(filename, std::ios::app);
+
+        // Write header if file did not exist
+        if (!fileExists) {
+            outFile << "Generation,Score,Best Fitness\n";
+        }
+
+        // Write the metrics
+        outFile << generationNo << "," << score << "," << bestFitness << "\n";
     }
 }

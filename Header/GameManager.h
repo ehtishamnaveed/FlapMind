@@ -1,10 +1,12 @@
 #ifndef GAMEMANAGER_H
 #define GAMEMANAGER_H
 
+#include <filesystem> // C++17 or later
 #include "../Header/Bird.h"
 #include "../Header/PipeManager.h"
 #include "../Header/GameMode.h"
 #include "../Header/NeuralNetwork.h"
+#include "../Header/Chart.h"
 
 namespace Game {
     class GameManager {
@@ -33,19 +35,23 @@ namespace Game {
         void turnOffAiMode() { ItsAIMode = false; }
         void showAiInfo(sf::RenderWindow& window, sf::RectangleShape& background, sf::Text& info_text);
 
+        // Saves the AI Information to 'generation_metrics.csv' file
+        void saveGenerationMetrics(unsigned short generationNo,unsigned short score,unsigned short bestFitness);
+
     private:
-        // Differentiates between 'User' and 'AI'
-        bool ItsAIMode;
-        // Generation number for mutation
+        bool ItsAIMode; // Differentiates between 'User' and 'AI'
         unsigned short Generation; // Keeps track of the current generation number in the genetic algorithm.
         unsigned short AiHighScore;
         unsigned short AliveBirds;
-        unsigned char Mutation;
+        unsigned char Mutation; // Tells about the No. of Mutated Birds
 
-        static constexpr unsigned char PopulationSize = 12;
+        static constexpr unsigned char PopulationSize = 10;
         NeuralNetwork::AI BirdAI[PopulationSize]; // THE AI
         Bird bird;
         PipeManager PipeController;
+
+        // AI Visualizer
+        // Chart* LineChart;
 
         // Score Attributes
         unsigned short Score;

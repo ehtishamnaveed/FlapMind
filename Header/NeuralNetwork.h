@@ -43,13 +43,14 @@ namespace NeuralNetwork {
 		void resetState() override;
 		
 		void updateFitnessScore();
-		unsigned getFitnessScore() { return FitnessScore; }
+		unsigned short getFitnessScore() { return FitnessScore; }
+		
 		bool operator<(AI& i_bird) { return FitnessScore < i_bird.getFitnessScore(); }
 		bool operator>(AI& i_bird) { return FitnessScore > i_bird.getFitnessScore(); }
 
 		NodeEdgeWeights& getWeights() { return Weights; }
 
-		void uniformCrossoverWithMutation(const NodeEdgeWeights& parentWeight1, const NodeEdgeWeights& parentWeight2);
+		void uniformCrossoverWithMutation(const NodeEdgeWeights& parent1Weight, const NodeEdgeWeights& parent2Weight);
 
 		static const unsigned char getInfoAboutMutatedBirds() { return MutatedBirds; }
 		static void updateInfoAboutMutatedBirds() { MutatedBirds++; };
@@ -63,14 +64,20 @@ namespace NeuralNetwork {
 		//This is the range in which the weights can be.
 		std::uniform_real_distribution<float> WeightDistribution;
 
-		// static constexpr unsigned char MutationProbability = 50;
 		std::uniform_int_distribution<unsigned short> MutationDistribution;
 
 		float BirdNPipeDifference;
 
-		unsigned FitnessScore;
+		unsigned short FitnessScore;
 
 		static unsigned char MutatedBirds;
+
+		static constexpr float WeightDistRange = 0.1;
+
+		static constexpr unsigned char MutationDistRange = 1;
+
+		static constexpr unsigned char Parent1Threshold = 49;
+		static constexpr unsigned char Parent2Threshold = Parent1Threshold * 2;
 	};
 }
 

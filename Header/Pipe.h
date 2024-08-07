@@ -26,13 +26,22 @@ namespace Game {
 
 		// Generates the Movement Direction for the Pipe 
 		void generateVerticalMovementDirection();
+
 		// Sets the Movement Limit
 		void setVerticalMovementLimits(unsigned char& PipeIndent);
+		
 		// Moves the Pipe Vertically Up and Down
 		void moveVertically();
 
 		bool haveMovement() { return IsPipeMoving; }
 		void becomeMoveable() { IsPipeMoving = true; }
+
+		// int getMovementDirection() const {
+		// 	if (IsPipeMoving){
+		// 		return PipeMovementDirection == VerticalMovement::UP ? 0:1;
+		// 	}
+		// 	return -1;
+		// }
 
 	private:
 		bool IsPipeMoving;

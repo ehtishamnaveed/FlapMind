@@ -135,55 +135,6 @@ namespace UI {
 
 		// Set the initial box to be selected
     	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-
-
-
-		// // Add some padding to the box size
-	    // float paddingX = 15.0f; // Horizontal padding
-	    // float paddingY = 8.0f; // Vertical padding
-
-		// for (size_t iterator = 0; iterator < MenuSize; ++iterator) {
-		// 	// Set Text Font
-		//     MenuText[iterator].setFont(menuFont);
-		//     // Set Font Size
-		//     MenuText[iterator].setCharacterSize(30);
-		//     // Set Font Position
-		//     MenuText[iterator].setPosition(Width/2 - 120, Height/2 + iterator * 50);
-
-		//     // Set the text content
-		//     switch(iterator) {
-		//         case 0:
-		//             MenuText[iterator].setString("Play");
-		//             MenuText[iterator].setFillColor(sf::Color::White);
-		//             break;
-		//         case 1:
-		//             MenuText[iterator].setString("AI Play");
-		//             MenuText[iterator].setFillColor(sf::Color::Black);
-		//             break;
-		//         case 2:
-		//             MenuText[iterator].setString("Themes");
-		//             MenuText[iterator].setFillColor(sf::Color::Black);
-		//             break;
-		//         case 3:
-		//             MenuText[iterator].setString("Controls");
-		//             MenuText[iterator].setFillColor(sf::Color::Black);
-		//             break;
-		//     }
-
-		//     // Get the bounds of the text
-		//     sf::FloatRect textBounds = MenuText[iterator].getLocalBounds();
-
-		//     // Set the size of the box based on the text size plus padding
-		//     MenuBox[iterator].setSize(sf::Vector2f(textBounds.width + paddingX * 2, textBounds.height + paddingY * 2));
-
-		//     // Position the box to center it around the text
-		//     MenuBox[iterator].setPosition(Width/2 - 132, Height/2 + iterator * 50);
-
-		//     MenuBox[iterator].setFillColor(sf::Color::Transparent);
-		// }
-
-		// // Set the initial box to be selected
-		// MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
 	}
 
 	// Draw the Backgound for Main Menu
@@ -259,7 +210,7 @@ namespace UI {
 	ThemeMenu::ThemeMenu(): Menu(4) {
 		// Initilizeing Themes array
 		Themes[0] = "ClearSky";
-		Themes[1] = "DarkNight";
+		Themes[1] = "NightCity";
 		Themes[2] = "SunSet";
 
 
@@ -272,26 +223,36 @@ namespace UI {
 	        MenuBox[iterator].setSize(sf::Vector2f(250, 50));
 	        MenuBox[iterator].setFillColor(sf::Color::Transparent);
 	        MenuBox[iterator].setPosition(Width / 2 - 135, 180 + iterator * 80-5);
+
+	        switch(iterator) {
+	        	case 0:
+	        		// ClearSky 
+					MenuText[iterator].setFillColor(sf::Color::White);
+					MenuText[iterator].setString(Themes[iterator]);
+	        		break;
+
+	        	case 1:
+	        		// NightCity
+	        		MenuText[iterator].setFillColor(sf::Color::Black);
+					MenuText[iterator].setString(Themes[iterator]);
+					break;
+
+				case 2:
+					// SunSet
+					MenuText[iterator].setFillColor(sf::Color::Black);
+					MenuText[iterator].setString(Themes[iterator]);
+					break;
+
+				case 3:
+					// Back
+					MenuText[iterator].setFillColor(sf::Color::Black);
+					MenuText[iterator].setString("(Back)");
+					break;
+	        }
 		}
 
 		// Set the initial box to be selected
     	MenuBox[SelectedMenu].setFillColor(sf::Color::Black);
-
-		// ClearSky 
-		MenuText[0].setFillColor(sf::Color::White);
-		MenuText[0].setString("ClearSky");
-
-		// Medium
-		MenuText[1].setFillColor(sf::Color::Black);
-		MenuText[1].setString("DarkNight");
-
-		// SunSet
-		MenuText[2].setFillColor(sf::Color::Black);
-		MenuText[2].setString("SunSet");
-
-		// Back
-		MenuText[3].setFillColor(sf::Color::Black);
-		MenuText[3].setString("(Back)");
 	}
 
 	// Draw the Backgound for Play Menu
@@ -302,6 +263,11 @@ namespace UI {
 			background_texture.loadFromFile("Resources/Theme/" + Themes[SelectedMenu] + "/Preview.png");
         background_sprite.setTexture(background_texture);
         i_window.draw(background_sprite);
+    }
+
+    // Return the Selected Theme
+    std::string ThemeMenu::getTheme() {
+		return Themes[SelectedMenu];
     }
 
 

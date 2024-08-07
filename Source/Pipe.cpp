@@ -84,7 +84,7 @@ namespace Game {
 	}
 
 	void Pipe::setVerticalMovementLimits(unsigned char& PipeIndent) {
-		TopScreenLimit = PipeIndent - GapSize + 106;
+		TopScreenLimit = PipeIndent - GapSize + 110;
 		BottomScreenLimit = Game::Screen::screenHeight - PipeIndent;
 	}
 

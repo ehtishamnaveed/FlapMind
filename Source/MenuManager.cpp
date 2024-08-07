@@ -181,26 +181,16 @@ namespace UI {
 
     // Theme Menu Handler
     void MenuManager::handleThemeMenu(UI::Menu*& currentMenu) {
-    	switch (currentMenu->getSelectedState()) {
-			// ClearSky Theme
-			case 0:
-				Game::theme_name = "ClearSky";
-				break;
+    	// Using the ThemeMenu pointer
+    	// Because getTheme() is defined in ThemeMenu class
+    	UI::ThemeMenu* themeSelection;
+    	themeSelection = dynamic_cast<ThemeMenu*>(currentMenu);
 
-			// DarkNight Theme
-			case 1:
-				Game::theme_name = "DarkNight";
-				break;
+    	// If a Theme is selected
+    	if (currentMenu->getSelectedState() < 3)
+    		// Apply the Theme
+    		Game::theme_name = themeSelection->getTheme();
 
-			// SunSet Theme
-			case 2:
-				Game::theme_name = "SunSet";
-				break;
-
-			// Back to Main Menu
-			case 3:
-				break;
-		}
 		delete currentMenu;
         currentMenu = new UI::MainMenu();
     }
